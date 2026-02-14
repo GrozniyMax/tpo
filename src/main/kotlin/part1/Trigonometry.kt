@@ -1,10 +1,10 @@
 package tpo.maxim.part1
 
-import java.lang.Double.isNaN
 import kotlin.Int
 import kotlin.math.abs
-import kotlin.math.pow
 import kotlin.math.sqrt
+
+private const val PI = 3.141592653589793
 
 
 fun myArcsin(x: Double, n: Int = Int.MAX_VALUE, eps: Double = Double.MIN_VALUE): Double {
@@ -16,7 +16,7 @@ fun myArcsin(x: Double, n: Int = Int.MAX_VALUE, eps: Double = Double.MIN_VALUE):
     if (abs(x) >= 0.999999) {
         val sqrtTerm = sqrt(1.0 - x * x)
         val result = myArcsin(sqrtTerm, n)
-        return if (x > 0) Math.PI / 2 - result else -Math.PI / 2 + result
+        return if (x > 0) PI / 2 - result else -PI / 2 + result
     }
 
     var result = x

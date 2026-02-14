@@ -73,14 +73,14 @@ class RedBlackTreeTest {
 
     @ParameterizedTest
     @ValueSource(ints = [1, 2, 3, 4, 5])
-    fun `test add return true for new elements`(value: Int) {
+    fun `true при добавлении нового элемента`(value: Int) {
         val tree = RedBlackTree<Int>()
         assertTrue(tree.add(value))
     }
 
     @ParameterizedTest
     @ValueSource(ints = [1, 2, 3, 4, 5])
-    fun `test add return false for duplicate elements`(value: Int) {
+    fun `false при добавлении для дубликата`(value: Int) {
         val tree = RedBlackTree<Int>()
         tree.add(value)
         assertFalse(tree.add(value))
@@ -88,7 +88,7 @@ class RedBlackTreeTest {
 
     @ParameterizedTest
     @ValueSource(ints = [1, 2, 3, 4, 5])
-    fun `test remove return true for existing elements`(value: Int) {
+    fun `true при удалении существующего элемента`(value: Int) {
         val tree = RedBlackTree<Int>()
         tree.add(value)
         assertTrue(tree.remove(value))
@@ -96,14 +96,14 @@ class RedBlackTreeTest {
 
     @ParameterizedTest
     @ValueSource(ints = [1, 2, 3, 4, 5])
-    fun `test remove return false for non-existing elements`(value: Int) {
+    fun `false при удалении несуществующего элемента`(value: Int) {
         val tree = RedBlackTree<Int>()
         assertFalse(tree.remove(value))
     }
 
     @ParameterizedTest
     @ValueSource(ints = [1, 2, 3, 4, 5])
-    fun `test contains return true for existing elements`(value: Int) {
+    fun `true при проверке наличия существующего элемента`(value: Int) {
         val tree = RedBlackTree<Int>()
         tree.add(value)
         assertTrue(tree.contains(value))
@@ -111,7 +111,7 @@ class RedBlackTreeTest {
 
     @ParameterizedTest
     @ValueSource(ints = [10, 20, 30, 40, 50])
-    fun `test contains return false for non-existing elements`(value: Int) {
+    fun `false при проверке наличия несуществующего элемента`(value: Int) {
         val tree = RedBlackTree<Int>()
         tree.add(1)
         tree.add(2)
