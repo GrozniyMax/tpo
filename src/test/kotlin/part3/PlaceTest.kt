@@ -18,9 +18,11 @@ class PlaceTest {
     companion object {
         @JvmStatic
         fun emptyPlaceProvider(): Stream<Place> {
+            val planet = Planet("Марс", emptySet())
+
             return Stream.of(
-                Planet("Марс", emptySet()),
-                Room(emptyList(), emptySet())
+                planet,
+                Room(emptyList(), alreadyIn = emptySet(), planet = planet)
             )
         }
     }

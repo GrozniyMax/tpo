@@ -8,19 +8,6 @@ import tpo.maxim.part3.Room
 import tpo.maxim.part3.Species
 
 fun main() {
-    val table = Furniture("Стол", listOf("Стеклянный", "с наградами"))
-    val chair = Furniture("Стул", listOf("Обитый плюшем"))
-
-    val they = generateThey()
-
-    val marsian = Person("Никита", Species.MARSIAN)
-
-    val room = Room(alreadyIn = setOf(marsian), funiture = listOf(table, chair))
-
-    val planet = Planet("Планета каталога", alreadyIn = setOf(they))
-
-    they.leave(planet)
-    they.appear(room)
 
 }
 

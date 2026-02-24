@@ -1,5 +1,9 @@
 package tpo.maxim.part3
 
+enum class Position {
+    STANDING,
+    SITTING
+}
 
 interface Actor {
 
@@ -17,6 +21,20 @@ class Person(
     val name: String,
     val race: Species,
 ): Actor {
+
+    private var sittingOn: Chair? = null
+
+    fun sit(chair: Chair) {
+        chair.sit(this)
+        sittingOn = chair
+    }
+
+    fun getUp() {
+        sittingOn?.getUp(this)
+        sittingOn = null
+    }
+
+    fun position() = if (sittingOn == null) Position.STANDING else Position.SITTING
 
     override fun toString(): String {
         return "$race $name"

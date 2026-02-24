@@ -1,9 +1,8 @@
 package tpo.maxim.part3
 
-
 abstract class Place(
     alreadyIn: Set<Actor>,
-    val name: String,
+    val name: String
 ){
     private val people: MutableSet<Actor> = mutableSetOf()
 
@@ -43,7 +42,7 @@ abstract class Place(
 }
 
 class Planet(
-    name: String, alreadyIn: Set<Actor>
+    name: String, alreadyIn: Set<Actor> = emptySet()
 ): Place(name = name, alreadyIn =  alreadyIn) {
     override fun reportWentIn(subject: Actor) {
         println("$subject появился на планете $name")
@@ -57,7 +56,9 @@ class Planet(
 
 
 class Room(
-    private val funiture: List<Furniture>, alreadyIn: Set<Actor>
+    private val furniture: List<Furniture>,
+    val planet: Planet,
+    alreadyIn: Set<Actor>
 ): Place(name = "Комната", alreadyIn =  alreadyIn) {
 
     override fun reportWentIn(subject: Actor) {
@@ -69,14 +70,6 @@ class Room(
     }
 
     override fun toString(): String {
-        val result = StringBuilder("Комната заполненная мебелью: ").let {
-            funiture.forEach {
-                it.name.let {
-                    it -> it + ", "
-                }
-            }
-        }
-
-        return result.toString()
+        return name;
     }
 }
