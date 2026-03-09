@@ -1,139 +1,134 @@
-package tpo.maxim.part2
+package part2
 
-/**
- * Реализация красно-черного дерева с упрощенным интерфейсом.
- * Красно-черное дерево - это самобалансирующееся двоичное дерево поиска,
- * которое гарантирует O(log n) время выполнения основных операций.
- */
+enum class Color {
+    RED,
+    BLACK,
+}
+
+data class Node<T>(
+    var value: T,
+    var color: Color = Color.RED,
+    var left: Node<T>? = null,
+    var right: Node<T>? = null,
+    var parent: Node<T>? = null,
+)
+
 class RedBlackTree<T : Comparable<T>> {
-
-    private class Node<T>(val data: T) {
-        var left: Node<T>? = null
-        var right: Node<T>? = null
-        var parent: Node<T>? = null
-        var isRed: Boolean = true
-    }
-
     private var root: Node<T>? = null
-    private var _size: Int = 0
 
-    /**
-     * Возвращает количество элементов в дереве.
-     */
-    val size: Int
-        get() = _size
+    fun add(value: T) {
+        val newNode = Node(value)
 
-    /**
-     * Добавляет элемент в дерево.
-     *
-     * @param element Элемент для добавления.
-     * @return true если элемент был добавлен, false если элемент уже существует.
-     */
-    fun add(element: T): Boolean {
-        if (contains(element)) {
-            return false
+        val currentRoot = root
+        if (currentRoot == null) {
+            root = newNode
+            newNode.color = Color.BLACK // Корень всегда черный
+            return
         }
 
-        val newNode = Node(element)
-        insertNode(newNode)
-        fixInsert(newNode)
-        _size++
-        return true
-    }
-
-    private fun insertNode(node: Node<T>) {
-        var current = root
+        var current: Node<T>? = currentRoot
         var parent: Node<T>? = null
 
-        // Найдем место для вставки
         while (current != null) {
             parent = current
-            current = if (node.data < current.data) {
-                current.left
-            } else {
-                current.right
+            current = when {
+                value < current.value -> current.left
+                value > current.value -> current.right
+                else -> return // Значение уже существует
             }
         }
 
-        node.parent = parent
-        when {
-            parent == null -> root = node  // Дерево пустое
-            node.data < parent.data -> parent.left = node
-            else -> parent.right = node
+        newNode.parent = parent
+        parent?.let {
+            if (value < it.value) {
+                it.left = newNode
+            } else {
+                it.right = newNode
+            }
         }
 
-        node.isRed = true
+        // Балансировка после вставки
+        balanceAfterInsert(newNode)
     }
 
-    private fun fixInsert(node: Node<T>) {
+    private fun balanceAfterInsert(node: Node<T>) {
         var current = node
 
-        // Исправляем возможные нарушения свойств красно-черного дерева
-        while (current.parent?.isRed == true) {
-            val parent = current.parent!!
-            val grandParent = parent.parent
+        while (current != root && current.parent?.color == Color.RED) {
+            val parent = current.parent ?: break
+            val grandparent = parent.parent ?: break
 
-            if (parent === grandParent?.left) {
-                val uncle = grandParent.right
+            if (parent == grandparent.left) {
+                val uncle = grandparent.right
 
-                // Случай 1: дядя красный
-                if (uncle?.isRed == true) {
-                    parent.isRed = false
-                    uncle.isRed = false
-                    grandParent.isRed = true
-                    current = grandParent
+                // Случай 1: Дядя красный
+                if (uncle?.color == Color.RED) {
+                    parent.color = Color.BLACK
+                    uncle.color = Color.BLACK
+                    grandparent.color = Color.RED
+                    current = grandparent
                 } else {
-                    // Случай 2: current - правый ребенок
-                    if (current === parent.right) {
+                    val currentParent = current.parent
+                    // Случай 2: Дядя черный и узел - правый ребенок
+                    if (current == parent.right) {
                         current = parent
                         rotateLeft(current)
                     }
-                    // Случай 3: current - левый ребенок
-                    current.parent?.isRed = false
-                    current.parent?.parent?.isRed = true
-                    current.parent?.parent?.let { rotateRight(it) }
+
+                    // Случай 3: Дядя черный и узел - левый ребенок
+                    if (currentParent != null) {
+                        currentParent.color = Color.BLACK
+                        currentParent.parent?.let {
+                            it.color = Color.RED
+                            rotateRight(it)
+                        }
+                    }
                 }
             } else {
-                val uncle = grandParent?.left
+                val uncle = grandparent.left
 
-                // Случай 1: дядя красный
-                if (uncle?.isRed == true) {
-                    parent.isRed = false
-                    uncle.isRed = false
-                    grandParent.isRed = true
-                    current = grandParent
+                // Случай 1: Дядя красный (зеркальный)
+                if (uncle?.color == Color.RED) {
+                    parent.color = Color.BLACK
+                    uncle.color = Color.BLACK
+                    grandparent.color = Color.RED
+                    current = grandparent
                 } else {
-                    // Случай 2: current - левый ребенок
-                    if (current === parent.left) {
+                    // Случай 2: Дядя черный и узел - левый ребенок (зеркальный)
+                    if (current == parent.left) {
                         current = parent
                         rotateRight(current)
                     }
-                    // Случай 3: current - правый ребенок
-                    current.parent?.isRed = false
-                    current.parent?.parent?.isRed = true
-                    current.parent?.parent?.let { rotateLeft(it) }
+
+                    // Случай 3: Дядя черный и узел - правый ребенок (зеркальный)
+                    val currentParent = current.parent
+                    if (currentParent != null) {
+                        currentParent.color = Color.BLACK
+                        currentParent.parent?.let {
+                            it.color = Color.RED
+                            rotateLeft(it)
+                        }
+                    }
                 }
             }
         }
 
-        // Корень всегда черный
-        root?.isRed = false
+        root?.color = Color.BLACK
     }
 
     private fun rotateLeft(node: Node<T>) {
         val rightChild = node.right ?: return
-        node.right = rightChild.left
 
-        if (rightChild.left != null) {
-            rightChild.left?.parent = node
-        }
+        node.right = rightChild.left
+        rightChild.left?.parent = node
 
         rightChild.parent = node.parent
 
+        val nodeParent = node.parent
         when {
-            node.parent == null -> root = rightChild
-            node === node.parent?.left -> node.parent?.left = rightChild
-            else -> node.parent?.right = rightChild
+            nodeParent == null -> root = rightChild
+            node == nodeParent.left -> nodeParent.left = rightChild
+            else -> nodeParent.right = rightChild
         }
 
         rightChild.left = node
@@ -142,213 +137,161 @@ class RedBlackTree<T : Comparable<T>> {
 
     private fun rotateRight(node: Node<T>) {
         val leftChild = node.left ?: return
-        node.left = leftChild.right
 
-        if (leftChild.right != null) {
-            leftChild.right?.parent = node
-        }
+        node.left = leftChild.right
+        leftChild.right?.parent = node
 
         leftChild.parent = node.parent
 
+        val nodeParent = node.parent
         when {
-            node.parent == null -> root = leftChild
-            node === node.parent?.right -> node.parent?.right = leftChild
-            else -> node.parent?.left = leftChild
+            nodeParent == null -> root = leftChild
+            node == nodeParent.right -> nodeParent.right = leftChild
+            else -> nodeParent.left = leftChild
         }
 
         leftChild.right = node
         node.parent = leftChild
     }
 
-    /**
-     * Проверяет, содержится ли элемент в дереве.
-     *
-     * @param element Элемент для поиска.
-     * @return true если элемент содержится в дереве, иначе false.
-     */
-    fun contains(element: T): Boolean {
-        var current = root
-        while (current != null) {
-            when {
-                element < current.data -> current = current.left
-                element > current.data -> current = current.right
-                else -> return true
+    fun contains(value: T): Boolean {
+        return findNode(value) != null
+    }
+
+    fun delete(value: T) {
+        val nodeToDelete = findNode(value) ?: return
+
+        var replacementNode: Node<T>?
+        var nodeToFix: Node<T>?
+        var originalColor = nodeToDelete.color
+
+        when {
+            nodeToDelete.left == null -> {
+                replacementNode = nodeToDelete.right
+                transplant(nodeToDelete, nodeToDelete.right)
+                nodeToFix = replacementNode
+            }
+
+            nodeToDelete.right == null -> {
+                replacementNode = nodeToDelete.left
+                transplant(nodeToDelete, nodeToDelete.left)
+                nodeToFix = replacementNode
+            }
+
+            else -> {
+                replacementNode = minimum(nodeToDelete.right) ?: return
+
+                originalColor = replacementNode.color
+                nodeToFix = replacementNode.right
+
+                if (replacementNode.parent == nodeToDelete) {
+                    nodeToFix?.parent = replacementNode
+                } else {
+                    transplant(replacementNode, replacementNode.right)
+                    replacementNode.right = nodeToDelete.right
+                    replacementNode.right?.parent = replacementNode
+                }
+
+                transplant(nodeToDelete, replacementNode)
+                replacementNode.left = nodeToDelete.left
+                replacementNode.left?.parent = replacementNode
+                replacementNode.color = nodeToDelete.color
             }
         }
-        return false
+
+        if (originalColor == Color.BLACK) {
+            nodeToFix?.let { balanceAfterDelete(it) }
+        }
     }
 
-    /**
-     * Удаляет элемент из дерева.
-     *
-     * @param element Элемент для удаления.
-     * @return true если элемент был удален, false если элемент не найден.
-     */
-    fun remove(element: T): Boolean {
-        val node = findNode(element) ?: return false
-        deleteNode(node)
-        _size--
-        return true
-    }
-
-    private fun findNode(element: T): Node<T>? {
+    private fun findNode(value: T): Node<T>? {
         var current = root
+
         while (current != null) {
-            when {
-                element < current.data -> current = current.left
-                element > current.data -> current = current.right
+            current = when {
+                value < current.value -> current.left
+                value > current.value -> current.right
                 else -> return current
             }
         }
+
         return null
     }
 
-    private fun deleteNode(node: Node<T>) {
-        var toDelete = node
-        var originalColor = toDelete.isRed
-
-        val replacement = when {
-            node.left == null -> {
-                val replacement = node.right
-                transplant(node, replacement)
-                replacement
-            }
-            node.right == null -> {
-                val replacement = node.left
-                transplant(node, replacement)
-                replacement
-            }
-            else -> {
-                // Найдем преемника
-                val successor = findMinimum(node.right!!)
-                originalColor = successor.isRed
-                val replacement = successor.right
-
-                if (successor.parent === node) {
-                    replacement?.parent = successor
-                } else {
-                    transplant(successor, successor.right)
-                    successor.right = node.right
-                    successor.right?.parent = successor
-                }
-
-                transplant(node, successor)
-                successor.left = node.left
-                successor.left?.parent = successor
-                successor.isRed = node.isRed
-                replacement
-            }
-        }
-
-        // Если удалили черный узел, нужно восстановить свойства дерева
-        if (!originalColor) {
-            replacement?.let { fixDelete(it) }
-        }
-    }
-
-    private fun transplant(oldNode: Node<T>, newNode: Node<T>?) {
-        when {
-            oldNode.parent == null -> root = newNode
-            oldNode === oldNode.parent?.left -> oldNode.parent?.left = newNode
-            else -> oldNode.parent?.right = newNode
-        }
-        newNode?.parent = oldNode.parent
-    }
-
-    private fun findMinimum(node: Node<T>): Node<T> {
+    private fun minimum(node: Node<T>?): Node<T>? {
         var current = node
-        while (current.left != null) {
-            current = current.left!!
+        while (current?.left != null) {
+            current = current.left
         }
         return current
     }
 
-    private fun fixDelete(node: Node<T>?) {
-        var current = node ?: return
+    private fun transplant(oldNode: Node<T>, newNode: Node<T>?) {
+        val oldNodeParent = oldNode.parent
+        when {
+            oldNodeParent == null -> root = newNode
+            else -> oldNodeParent.left = newNode
+        }
+        newNode?.parent = oldNodeParent
+    }
 
-        while (current !== root && !current.isRed) {
-            if (current === current.parent?.left) {
-                var sibling = current.parent?.right ?: break
+    private fun balanceAfterDelete(node: Node<T>) {
+        var current = node
 
-                // Случай 1: брат красный
-                if (sibling.isRed) {
-                    sibling.isRed = false
-                    current.parent?.isRed = true
-                    rotateLeft(current.parent!!)
-                    sibling = current.parent?.right ?: break
-                }
+        while (current != root && current.color == Color.BLACK) {
+            val currentParent = current.parent ?: break
 
-                // Случай 2: оба ребенка брата черные
-                if (!(sibling.left?.isRed ?: false) && !(sibling.right?.isRed ?: false)) {
-                    sibling.isRed = true
-                    current = current.parent!!
+            if (current == currentParent.left) {
+                var sibling = currentParent.right
+
+                if (sibling?.color == Color.RED) {
+                    // Случай 1: Брат красный
+                    sibling.color = Color.BLACK
+                    currentParent.color = Color.RED
+                    rotateLeft(currentParent)
+                } else if (sibling?.left?.color == Color.BLACK && sibling.right?.color == Color.BLACK) {
+                    // Случай 2: Брат черный и оба его ребенка черные
+                    sibling.color = Color.RED
+                    current = currentParent
+                } else if (sibling?.right?.color == Color.BLACK) {
+                    // Случай 3: Брат черный, левый ребенок красный, правый черный
+                    sibling.left?.color = Color.BLACK
+                    sibling.color = Color.RED
+                    rotateRight(sibling)
                 } else {
-                    // Случай 3: правый ребенок брата черный
-                    if (!(sibling.right?.isRed ?: false)) {
-                        sibling.left?.isRed = false
-                        sibling.isRed = true
-                        rotateRight(sibling)
-                        sibling = current.parent?.right ?: break
-                    }
-
-                    // Случай 4: правый ребенок брата красный
-                    sibling.isRed = current.parent?.isRed ?: false
-                    current.parent?.isRed = false
-                    sibling.right?.isRed = false
-                    current.parent?.let { rotateLeft(it) }
-                    current = root!!
-                }
-            } else {
-                var sibling = current.parent?.left ?: break
-
-                // Случай 1: брат красный
-                if (sibling.isRed) {
-                    sibling.isRed = false
-                    current.parent?.isRed = true
-                    rotateRight(current.parent!!)
-                    sibling = current.parent?.left ?: break
-                }
-
-                // Случай 2: оба ребенка брата черные
-                if (!(sibling.right?.isRed ?: false) && !(sibling.left?.isRed ?: false)) {
-                    sibling.isRed = true
-                    current = current.parent!!
-                } else {
-                    // Случай 3: левый ребенок брата черный
-                    if (!(sibling.left?.isRed ?: false)) {
-                        sibling.right?.isRed = false
-                        sibling.isRed = true
-                        rotateLeft(sibling)
-                        sibling = current.parent?.left ?: break
-                    }
-
-                    // Случай 4: левый ребенок брата красный
-                    sibling.isRed = current.parent?.isRed ?: false
-                    current.parent?.isRed = false
-                    sibling.left?.isRed = false
-                    current.parent?.let { rotateRight(it) }
-                    current = root!!
+                    // Случай 4: Брат черный, правый ребенок красный
+                    sibling?.color = currentParent.color
+                    currentParent.color = Color.BLACK
+                    sibling?.right?.color = Color.BLACK
+                    rotateLeft(currentParent)
+                    root?.let { current = it }
                 }
             }
         }
 
-        current.isRed = false
+        current.color = Color.BLACK
     }
 
-    /**
-     * Выполняет обход дерева в порядке возрастания и применяет функцию к каждому элементу.
-     *
-     * @param action Функция, которая будет применена к каждому элементу.
-     */
-    fun forEachOrdered(action: (T) -> Unit) {
-        inOrderTraversal(root, action)
+    fun toList(): List<T> {
+        val result = mutableListOf<T>()
+        inOrderTraversal(root, result)
+        return result
     }
 
-    private fun inOrderTraversal(node: Node<T>?, action: (T) -> Unit) {
-        if (node != null) {
-            inOrderTraversal(node.left, action)
-            action(node.data)
-            inOrderTraversal(node.right, action)
-        }
+    private fun inOrderTraversal(node: Node<T>?, result: MutableList<T>) {
+        if (node == null) return
+
+        inOrderTraversal(node.left, result)
+        result.add(node.value)
+        inOrderTraversal(node.right, result)
+    }
+
+    fun isEmpty(): Boolean = root == null
+
+    fun size(): Int = countNodes(root)
+
+    private fun countNodes(node: Node<T>?): Int {
+        if (node == null) return 0
+        return 1 + countNodes(node.left) + countNodes(node.right)
     }
 }

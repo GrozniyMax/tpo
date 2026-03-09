@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.1.21"
     jacoco
+    id("org.jetbrains.kotlinx.kover") version "0.8.3"
 }
 
 group = "tpo.maxim"
@@ -20,14 +21,43 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
-    finalizedBy("jacocoTestReport") // Генерация отчёта после выполнения тестов
 }
-
-tasks.jacocoTestReport {
+kover {
     reports {
-        html.required.set(true) // Людям удобнее читать HTML
+        filters {
+            excludes {
+                classes(
+                    "*\$\$inlined\$*",
+                    "*\$lambda\$*",
+                )
+                annotatedBy(
+                    "*Generated*",
+                )
+            }
+        }
+
+        verify {
+            rule {
+                minBound(25)
+            }
+        }
     }
 }
+
+tasks.register("reports") {
+    group = "reporting"
+    description = "Открывает отчёты в браузере"
+
+    dependsOn(tasks.test, tasks.named("koverHtmlReport"))
+
+    doLast {
+        exec { commandLine("open", "build/reports/tests/test/index.html") }
+        exec { commandLine("open", "build/reports/kover/html/index.html") }
+    }
+}
+
+
+
 
 kotlin {
     jvmToolchain(21)

@@ -1,165 +1,182 @@
 package part2
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
-import tpo.maxim.part2.RedBlackTree
+
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 
 class RedBlackTreeTest {
 
-    @Test
-    fun `Несколько элементов, должен содержать все`() {
-        val tree = RedBlackTree<Int>()
+    private lateinit var tree: RedBlackTree<Int>
 
-        assertTrue(tree.add(10))
-        assertTrue(tree.add(5))
-        assertTrue(tree.add(15))
-        assertTrue(tree.add(3))
-        assertTrue(tree.add(7))
-        assertTrue(tree.add(12))
-        assertTrue(tree.add(17))
-
-        assertTrue(tree.contains(10))
-        assertTrue(tree.contains(5))
-        assertTrue(tree.contains(15))
-        assertTrue(tree.contains(3))
-        assertTrue(tree.contains(7))
-        assertTrue(tree.contains(12))
-        assertTrue(tree.contains(17))
-
-        assertFalse(tree.contains(1))
-        assertFalse(tree.contains(20))
+    @BeforeEach
+    fun setup() {
+        tree = RedBlackTree()
     }
 
     @Test
-    fun `удаление элемента`() {
-        val tree = RedBlackTree<Int>()
+    fun `Пустое дерево и базовые операции`() {
+        assertTrue(tree.isEmpty())
+        assertEquals(0, tree.size())
+        assertFalse(tree.contains(value = 10))
 
-        // Add elements
-        tree.add(10)
-        tree.add(5)
-        tree.add(15)
-        tree.add(3)
-        tree.add(7)
-
-        assertTrue(tree.remove(5))
-        assertFalse(tree.contains(5))
-        assertFalse(tree.remove(5))
-
-        assertThat(tree.toList())
-            .containsExactly(3, 7, 10, 15)
-
-    }
-    
-    @Test
-    fun `проверка forEachOrdered`() {
-        val tree = RedBlackTree<Int>()
-
-        tree.add(10)
-        tree.add(5)
-        tree.add(15)
-        tree.add(3)
-        tree.add(7)
-        tree.add(12)
-        tree.add(17)
-
-        assertEquals(listOf(3, 5, 7, 10, 12, 15, 17), tree.toList())
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = [1, 2, 3, 4, 5])
-    fun `true при добавлении нового элемента`(value: Int) {
-        val tree = RedBlackTree<Int>()
-        assertTrue(tree.add(value))
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = [1, 2, 3, 4, 5])
-    fun `false при добавлении для дубликата`(value: Int) {
-        val tree = RedBlackTree<Int>()
-        tree.add(value)
-        assertFalse(tree.add(value))
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = [1, 2, 3, 4, 5])
-    fun `true при удалении существующего элемента`(value: Int) {
-        val tree = RedBlackTree<Int>()
-        tree.add(value)
-        assertTrue(tree.remove(value))
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = [1, 2, 3, 4, 5])
-    fun `false при удалении несуществующего элемента`(value: Int) {
-        val tree = RedBlackTree<Int>()
-        assertFalse(tree.remove(value))
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = [1, 2, 3, 4, 5])
-    fun `true при проверке наличия существующего элемента`(value: Int) {
-        val tree = RedBlackTree<Int>()
-        tree.add(value)
-        assertTrue(tree.contains(value))
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = [10, 20, 30, 40, 50])
-    fun `false при проверке наличия несуществующего элемента`(value: Int) {
-        val tree = RedBlackTree<Int>()
-        tree.add(1)
-        tree.add(2)
-        tree.add(3)
-        tree.add(4)
-        tree.add(5)
-        assertFalse(tree.contains(value))
+        tree.add(value = 10)
+        assertFalse(tree.isEmpty())
+        assertEquals(1, tree.size())
+        assertTrue(tree.contains(value = 10))
     }
 
     @Test
-    fun `у пустого дерева size = 0`() {
-        val tree = RedBlackTree<Int>()
-        assertEquals(0, tree.size)
+    fun `Вставка и поиск элементов`() {
+        tree.add(value = 10)
+        tree.add(value = 5)
+        tree.add(value = 15)
+
+        assertTrue(tree.contains(value = 10))
+        assertTrue(tree.contains(value = 5))
+        assertTrue(tree.contains(value = 15))
+        assertFalse(tree.contains(value = 20))
+        assertEquals(listOf(5, 10, 15), tree.toList())
     }
 
     @Test
-    fun `при добавлении элемента size увеличивается`() {
-        val tree = RedBlackTree<Int>()
+    fun `Вставка в возрастающем порядке`() {
+        (1..5).forEach { tree.add(value = it) }
 
-        assertTrue(tree.add(10))
-        assertEquals(1, tree.size)
-
-        assertTrue(tree.add(5))
-        assertEquals(2, tree.size)
-
-        assertTrue(tree.add(15))
-        assertEquals(3, tree.size)
+        assertEquals(5, tree.size())
+        assertEquals((1..5).toList(), tree.toList())
     }
 
-    fun `удаление элемента уменьшает size`() {
-        val tree = RedBlackTree<Int>()
-        tree.add(10)
-        tree.add(5)
-        tree.add(15)
+    @Test
+    fun `Вставка в убывающем порядке`() {
+        (5 downTo 1).forEach { tree.add(value = it) }
 
-        assertTrue(tree.remove(5))
-        assertEquals(2, tree.size)
-
-        assertTrue(tree.remove(10))
-        assertEquals(1, tree.size)
-
-        assertTrue(tree.remove(15))
-        assertEquals(0, tree.size)
+        assertEquals(5, tree.size())
+        assertEquals((1..5).toList(), tree.toList())
     }
 
-    fun <T : Comparable<T>> RedBlackTree<T>.toList(): List<T> {
-        val result = mutableListOf<T>()
-        this.forEachOrdered { result.add(it) }
-        return result
+    @Test
+    fun `Вставка дубликатов`() {
+        tree.add(value = 10)
+        tree.add(value = 10)
+
+        assertEquals(1, tree.size())
+    }
+
+    @Test
+    fun `Удаление единственного элемента`() {
+        tree.add(value = 10)
+        tree.delete(value = 10)
+
+        assertTrue(tree.isEmpty())
+        assertFalse(tree.contains(value = 10))
+    }
+
+    @Test
+    fun `Удаление несуществующего элемента`() {
+        tree.add(value = 10)
+        tree.delete(value = 20)
+
+        assertEquals(1, tree.size())
+    }
+
+    @Test
+    fun `Удаление узла с одним ребенком`() {
+        tree.add(value = 10)
+        tree.add(value = 5)
+        tree.add(value = 3)
+
+        tree.delete(value = 5)
+
+        assertEquals(listOf(3, 10), tree.toList())
+    }
+
+    @Test
+    fun `Удаление узла с двумя детьми`() {
+        tree.add(value = 10)
+        tree.add(value = 5)
+        tree.add(value = 15)
+        tree.add(value = 3)
+        tree.add(value = 7)
+
+        tree.delete(value = 5)
+
+        assertFalse(tree.contains(value = 5))
+        assertEquals(listOf(3, 7, 10, 15), tree.toList())
+    }
+
+    @Test
+    fun `Удаление корня`() {
+        tree.add(value = 10)
+        tree.add(value = 5)
+        tree.add(value = 15)
+
+        tree.delete(value = 10)
+
+        assertEquals(listOf(5, 15), tree.toList())
+    }
+
+    @Test
+    fun `Последовательное удаление всех элементов`() {
+        (1..5).forEach { tree.add(value = it) }
+        (1..5).forEach { tree.delete(value = it) }
+
+        assertTrue(tree.isEmpty())
+    }
+
+    @Test
+    fun `Смешанные операции вставки и удаления`() {
+        tree.add(value = 50)
+        tree.add(value = 25)
+        tree.add(value = 75)
+        tree.add(value = 10)
+
+        tree.delete(value = 25)
+        assertFalse(tree.contains(value = 25))
+
+        tree.add(value = 30)
+        assertTrue(tree.contains(value = 30))
+
+        tree.delete(value = 50)
+        assertFalse(tree.contains(value = 50))
+
+        assertEquals(listOf(10, 30, 75), tree.toList())
+    }
+
+    @Test
+    fun `Отрицательные числа и граничные значения`() {
+        tree.add(value = -10)
+        tree.add(value = 0)
+        tree.add(value = 10)
+        tree.add(value = Int.MAX_VALUE)
+        tree.add(value = Int.MIN_VALUE)
+
+        assertEquals(5, tree.size())
+        assertTrue(tree.contains(value = -10))
+        assertTrue(tree.contains(value = Int.MAX_VALUE))
+        assertTrue(tree.contains(value = Int.MIN_VALUE))
+        assertEquals(listOf(Int.MIN_VALUE, -10, 0, 10, Int.MAX_VALUE), tree.toList())
+    }
+
+    @Test
+    fun `Брат черный, левый ребенок красный, правый черный`() {
+        val insertions = listOf(41, 19, 8, 39, 21, 97, 109, 82, 58, 72)
+        val deletions = listOf(39, 8, 19, 41, 82)
+
+        insertions.forEach { tree.add(value = it) }
+        deletions.forEach { tree.delete(value = it) }
+
+        assertEquals(listOf(21, 58, 72, 97, 109), tree.toList())
+        assertEquals(5, tree.size())
+    }
+
+    @Test
+    fun `Проверка enum Color`() {
+        val colors = Color.entries
+        assertEquals(2, colors.size)
+        assertTrue(colors.contains(Color.RED))
+        assertTrue(colors.contains(Color.BLACK))
     }
 }
