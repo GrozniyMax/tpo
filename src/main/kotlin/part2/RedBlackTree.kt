@@ -47,7 +47,6 @@ class RedBlackTree<T : Comparable<T>> {
             }
         }
 
-        // Балансировка после вставки
         balanceAfterInsert(newNode)
     }
 
