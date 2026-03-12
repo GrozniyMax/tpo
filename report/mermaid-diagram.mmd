@@ -1,0 +1,109 @@
+classDiagram
+    class Species {
+        <<enumeration>>
+        MARSIAN
+        HUMAN
+    }
+    
+    class Position {
+        <<enumeration>>
+        STANDING
+        SITTING
+    }
+    
+    class Actor {
+        <<interface>>
+        +appear(place: Place)
+        +leave(place: Place)
+    }
+    
+    class Person {
+        +name: String
+        +race: Species
+        +sittingOn: Chair
+        +sit(chair: Chair)
+        +getUp()
+        +position() Position
+        +toString() String
+    }
+    
+    class Company {
+        +name: String
+        +people: MutableList~Person~
+        +toString() String
+    }
+    
+    class Place {
+        <<abstract>>
+        #people: MutableSet~Actor~
+        +name: String
+        +wentIn(subject: Actor)
+        +wentOut(subject: Actor)
+        #reportWentIn(subject: Actor)*
+        #reportWentOut(subject: Actor)*
+    }
+    
+    class Planet {
+        +name: String
+        #reportWentIn(subject: Actor)
+        #reportWentOut(subject: Actor)
+    }
+    
+    class Room {
+        +furniture: List~Furniture~
+        +planet: Planet
+        +name: String
+        #reportWentIn(subject: Actor)
+        #reportWentOut(subject: Actor)
+        +toString() String
+    }
+    
+    class Furniture {
+        <<interface>>
+    }
+    
+    class Table {
+        +capacity: Int
+        +items: MutableSet~Items~
+        +addItem(item: Items)
+        +removeItem(item: Items)
+        +contains(item: Items) bool
+    }
+    
+    class Chair {
+        +material: String
+        +sitter: Actor
+        +sit(actor: Actor)
+        +getUp(actor: Actor)
+    }
+    
+    class Items {
+        <<interface>>
+    }
+    
+    class Medal {
+        +reason: String
+    }
+    
+    class Cup {
+        +competition: String
+        +year: Int
+    }
+    
+    Actor <|.. Person : implements
+    Actor <|.. Company : implements
+    Place <|-- Planet : extends
+    Place <|-- Room : extends
+    Person -- Species : has
+    Person -- Chair : sitsOn
+    Person -- Position : has
+    Company o-- Person : contains
+    Room o-- Furniture : contains
+    Room -- Planet : locatedOn
+    Place o-- Actor : contains
+    Furniture <|.. Table : implements
+    Furniture <|.. Chair : implements
+    Table o-- Items : contains
+    Items <|.. Medal : implements
+    Items <|.. Cup : implements
+    Chair -- Actor : hasSitter
