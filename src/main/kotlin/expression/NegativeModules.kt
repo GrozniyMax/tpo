@@ -5,7 +5,7 @@ import tpo.maxim.*
 /**
  * Вычисляет ((((csc(x) / csc(x)) / sec(x)) - sin(x)) + cot(x)) ^ 3
  */
-fun module1(x: Double, epsilon: Double = 1e-10): Double {
+fun module1(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
     val cscx = csc(x, epsilon)
     val secx = sec(x, epsilon)
     val sinx = sin(x, epsilon)
@@ -24,7 +24,7 @@ fun module1(x: Double, epsilon: Double = 1e-10): Double {
 /**
  * Вычисляет cos(x) + csc(x)
  */
-fun module2(x: Double, epsilon: Double = 1e-10): Double {
+fun module2(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
     val cosx = cos(x, epsilon)
     val cscx = csc(x, epsilon)
     return cosx + cscx
@@ -33,7 +33,7 @@ fun module2(x: Double, epsilon: Double = 1e-10): Double {
 /**
  * Вычисляет sec(x) - sin(x)
  */
-fun module3(x: Double, epsilon: Double = 1e-10): Double {
+fun module3(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
     val secx = sec(x, epsilon)
     val sinx = sin(x, epsilon)
     return secx - sinx
@@ -42,7 +42,7 @@ fun module3(x: Double, epsilon: Double = 1e-10): Double {
 /**
  * Вычисляет ((...^3) + (cos(x) + csc(x))) - (sec(x) - sin(x))
  */
-fun module4Numerator(x: Double, epsilon: Double = 1e-10): Double {
+fun module4Numerator(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
     val module1 = module1(x, epsilon)
     val module2 = module2(x, epsilon)
     val module3 = module3(x, epsilon)
@@ -53,7 +53,7 @@ fun module4Numerator(x: Double, epsilon: Double = 1e-10): Double {
 /**
  * Вычисляет знаменатель (cot(x) ^ 2) / (csc(x) + sec(x))
  */
-fun module4Denominator(x: Double, epsilon: Double = 1e-10): Double {
+fun module4Denominator(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
     val cotx = cot(x, epsilon)
     val cscx = csc(x, epsilon)
     val secx = sec(x, epsilon)
@@ -67,7 +67,7 @@ fun module4Denominator(x: Double, epsilon: Double = 1e-10): Double {
 /**
  * Вычисляет дробь: (...)/[(cot(x) ^ 2) / (csc(x) + sec(x))]
  */
-fun module5(x: Double, epsilon: Double = 1e-10): Double {
+fun module5(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
     val numerator = module4Numerator(x, epsilon)
     val denominator = module4Denominator(x, epsilon)
     return numerator / denominator
@@ -77,7 +77,7 @@ fun module5(x: Double, epsilon: Double = 1e-10): Double {
 /**
  * Вычисляет знаменатель всей большой дроби
  */
-fun module6Numerator(x: Double, epsilon: Double = 1e-10): Double {
+fun module6Numerator(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
     val mainFraction = module5(x, epsilon)
     val sinx = sin(x, epsilon)
     val sinSquared = sinx * sinx
@@ -89,7 +89,7 @@ fun module6Numerator(x: Double, epsilon: Double = 1e-10): Double {
 /**
  * Полное выражение для x <= 0
  */
-fun negativeExpression(x: Double, epsilon: Double = 1e-10): Double {
+fun negativeExpression(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
     require(x <= 0) { "x должен быть <= 0" }
 
     val module8 = module6Numerator(x, epsilon)

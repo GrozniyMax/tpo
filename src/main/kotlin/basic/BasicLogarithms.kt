@@ -2,7 +2,7 @@ package tpo.maxim
 
 import kotlin.math.abs
 
-fun ln(x: Double, epsilon: Double = 1e-10): Double {
+fun ln(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
     if (x <= 0) {
         return Double.NaN
     }
@@ -23,7 +23,7 @@ fun ln(x: Double, epsilon: Double = 1e-10): Double {
     return 2.0 * result
 }
 
-fun log(x: Double, base: Double, epsilon: Double = 1e-10): Double {
+fun log(x: Double, base: Double, epsilon: Double = Double.MIN_VALUE): Double {
     if (x <= 0 || base <= 0 || base == 1.0) {
         return Double.NaN
     }

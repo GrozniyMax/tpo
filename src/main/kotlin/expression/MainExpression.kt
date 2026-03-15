@@ -7,7 +7,7 @@ import tpo.maxim.expression.positiveExpression
  * - для x <= 0: тригонометрическое выражение
  * - для x > 0: логарифмическое выражение
  */
-fun computeExpression(x: Double, epsilon: Double = 1e-10): Double {
+fun computeExpression(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
     return if (x < 0) {
         negativeExpression(x, epsilon)
     } else {
