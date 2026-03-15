@@ -12,7 +12,8 @@ import basic.sec
 import basic.sin
 import basic.cos
 import basic.cot
-import tpo.maxim.expression.*
+import expression.*
+import org.junit.jupiter.api.BeforeEach
 import java.math.BigDecimal
 import java.math.MathContext
 
@@ -21,6 +22,11 @@ class NegativeModulesTest {
     private val mc = MathContext.DECIMAL128
     private val epsilon = BigDecimal("1E-10", mc)
     private val testEpsilon = BigDecimal("1E-9", mc)
+
+    @BeforeEach
+    fun setUp() {
+        mockkStatic("basic.BasicTrigonometryKt")
+    }
 
     @AfterEach
     fun tearDown() {
@@ -40,7 +46,6 @@ class NegativeModulesTest {
         val cotResult = BigDecimal(cotResultStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         
-        mockkStatic("tpo.maxim.BasicTrigonometryKt")
         every { csc(x, epsilon, mc) } returns cscResult
         every { sec(x, epsilon, mc) } returns secResult
         every { sin(x, epsilon, mc) } returns sinResult
@@ -61,8 +66,7 @@ class NegativeModulesTest {
         val cosResult = BigDecimal(cosResultStr, mc)
         val cscResult = BigDecimal(cscResultStr, mc)
         val expected = BigDecimal(expectedStr, mc)
-        
-        mockkStatic("tpo.maxim.BasicTrigonometryKt")
+
         every { cos(x, epsilon, mc) } returns cosResult
         every { csc(x, epsilon, mc) } returns cscResult
 
@@ -82,7 +86,6 @@ class NegativeModulesTest {
         val sinResult = BigDecimal(sinResultStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         
-        mockkStatic("tpo.maxim.BasicTrigonometryKt")
         every { sec(x, epsilon, mc) } returns secResult
         every { sin(x, epsilon, mc) } returns sinResult
 
@@ -103,7 +106,6 @@ class NegativeModulesTest {
         val module3Result = BigDecimal(module3ResultStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         
-        mockkStatic("tpo.maxim.expression.NegativeModulesKt")
         every { module1(x, epsilon, mc) } returns module1Result
         every { module2(x, epsilon, mc) } returns module2Result
         every { module3(x, epsilon, mc) } returns module3Result
@@ -125,7 +127,6 @@ class NegativeModulesTest {
         val secResult = BigDecimal(secResultStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         
-        mockkStatic("tpo.maxim.BasicTrigonometryKt")
         every { cot(x, epsilon, mc) } returns cotResult
         every { csc(x, epsilon, mc) } returns cscResult
         every { sec(x, epsilon, mc) } returns secResult
@@ -146,7 +147,7 @@ class NegativeModulesTest {
         val denominatorResult = BigDecimal(denominatorResultStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         
-        mockkStatic("tpo.maxim.expression.NegativeModulesKt")
+        mockkStatic("expression.NegativeModulesKt")
         every { module4Numerator(x, epsilon, mc) } returns numeratorResult
         every { module4Denominator(x, epsilon, mc) } returns denominatorResult
 

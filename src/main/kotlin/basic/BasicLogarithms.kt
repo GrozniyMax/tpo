@@ -1,8 +1,7 @@
-package tpo.maxim
+package basic
 
 import java.math.BigDecimal
 import java.math.MathContext
-import java.math.RoundingMode
 
 private val DEFAULT_MATH_CONTEXT = MathContext.DECIMAL128
 

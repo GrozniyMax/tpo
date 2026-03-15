@@ -7,9 +7,9 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import tpo.maxim.expression.*
-import tpo.maxim.ln
-import tpo.maxim.log
+import basic.ln
+import basic.log
+import expression.*
 import java.math.BigDecimal
 import java.math.MathContext
 
@@ -39,7 +39,7 @@ class PositiveModulesTest {
         val expected = BigDecimal(expectedStr, mc)
         val logResult = BigDecimal(logResultStr, mc)
         
-        mockkStatic("tpo.maxim.BasicLogarithmsKt")
+        mockkStatic("basic.BasicLogarithmsKt")
         every { log(x, BigDecimal(10), epsilon, mc) } returns logResult
 
         val result = log10Squared(x, epsilon, mc)
@@ -63,7 +63,7 @@ class PositiveModulesTest {
         val log10Result = BigDecimal(log10ResultStr, mc)
         val log2Result = BigDecimal(log2ResultStr, mc)
         
-        mockkStatic("tpo.maxim.BasicLogarithmsKt")
+        mockkStatic("basic.BasicLogarithmsKt")
         every { log(x, BigDecimal(10), epsilon, mc) } returns log10Result
         every { log(x, BigDecimal(2), epsilon, mc) } returns log2Result
 
@@ -86,7 +86,7 @@ class PositiveModulesTest {
         val log2Result = BigDecimal(log2ResultStr, mc)
         val log3Result = BigDecimal(log3ResultStr, mc)
         
-        mockkStatic("tpo.maxim.BasicLogarithmsKt")
+        mockkStatic("basic.BasicLogarithmsKt")
         every { log(x, BigDecimal(10), epsilon, mc) } returns log10Result
         every { log(x, BigDecimal(2), epsilon, mc) } returns log2Result
         every { log(x, BigDecimal(3), epsilon, mc) } returns log3Result
@@ -110,7 +110,7 @@ class PositiveModulesTest {
         val log3Result = BigDecimal(log3ResultStr, mc)
         val log5Result = BigDecimal(log5ResultStr, mc)
         
-        mockkStatic("tpo.maxim.BasicLogarithmsKt")
+        mockkStatic("basic.BasicLogarithmsKt")
         every { log(x, BigDecimal(10), epsilon, mc) } returns log10Result
         every { log(x, BigDecimal(2), epsilon, mc) } returns log2Result
         every { log(x, BigDecimal(3), epsilon, mc) } returns log3Result
@@ -133,7 +133,7 @@ class PositiveModulesTest {
         val expected = BigDecimal(expectedStr, mc)
         val lnResult = BigDecimal(lnResultStr, mc)
         
-        mockkStatic("tpo.maxim.BasicLogarithmsKt")
+        mockkStatic("basic.BasicLogarithmsKt")
         every { ln(x, epsilon, mc) } returns lnResult
 
         val result = lnCubed(x, epsilon, mc)
@@ -163,7 +163,7 @@ class PositiveModulesTest {
         val log5Result = BigDecimal(log5ResultStr, mc)
         val lnResult = BigDecimal(lnResultStr, mc)
         
-        mockkStatic("tpo.maxim.BasicLogarithmsKt")
+        mockkStatic("basic.BasicLogarithmsKt")
         every { log(x, BigDecimal(10), epsilon, mc) } returns log10Result
         every { log(x, BigDecimal(2), epsilon, mc) } returns log2Result
         every { log(x, BigDecimal(3), epsilon, mc) } returns log3Result

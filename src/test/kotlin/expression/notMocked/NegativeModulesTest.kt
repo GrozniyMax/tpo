@@ -1,12 +1,12 @@
 package expression.notMocked
 
+import expression.*
 import io.mockk.unmockkAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import tpo.maxim.expression.*
 import java.math.BigDecimal
 import java.math.MathContext
 

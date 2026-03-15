@@ -1,6 +1,7 @@
 package tpo.maxim
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import basic.ln
+import basic.log
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.params.ParameterizedTest

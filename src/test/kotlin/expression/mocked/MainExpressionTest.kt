@@ -1,5 +1,6 @@
 package expression.mocked
 
+import expression.negativeExpression
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
@@ -7,16 +8,15 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import expression.positiveExpression
 import tpo.maxim.expression.computeExpression
-import tpo.maxim.expression.negativeExpression
-import tpo.maxim.expression.positiveExpression
 import java.math.BigDecimal
 import java.math.MathContext
 
 class MainExpressionTest {
 
     private val mc = MathContext.DECIMAL128
-    private val epsilon = BigDecimal("1E-10", mc)
+    private val epsilon = BigDecimal("1E-20", mc)
     private val testEpsilon = BigDecimal("1E-9", mc)
 
     @AfterEach
@@ -32,8 +32,8 @@ class MainExpressionTest {
         val x = BigDecimal(xStr, mc)
         val expectedResult = BigDecimal(expectedResultStr, mc)
 
-        mockkStatic("tpo.maxim.expression.NegativeModulesKt")
-        mockkStatic("tpo.maxim.expression.PositiveModulesKt")
+        mockkStatic("expression.NegativeModulesKt")
+        mockkStatic("expression.PositiveModulesKt")
         every { negativeExpression(any(), any(), any()) } returns BigDecimal(5, mc)
         every { positiveExpression(any(), any(), any()) } returns BigDecimal(10, mc)
 
@@ -51,8 +51,8 @@ class MainExpressionTest {
         val x = BigDecimal(xStr, mc)
         val expectedResult = BigDecimal(expectedResultStr, mc)
 
-        mockkStatic("tpo.maxim.expression.NegativeModulesKt")
-        mockkStatic("tpo.maxim.expression.PositiveModulesKt")
+        mockkStatic("expression.NegativeModulesKt")
+        mockkStatic("expression.PositiveModulesKt")
         every { negativeExpression(any(), any(), any()) } returns BigDecimal(5, mc)
         every { positiveExpression(any(), any(), any()) } returns BigDecimal(10, mc)
 

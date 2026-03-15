@@ -1,10 +1,9 @@
-package tpo.maxim.expression
+package expression
 
-import tpo.maxim.ln
-import tpo.maxim.log
+import basic.ln
+import basic.log
 import java.math.BigDecimal
 import java.math.MathContext
-import java.math.RoundingMode
 
 private val DEFAULT_MATH_CONTEXT = MathContext.DECIMAL128
 private val DEFAULT_EPSILON = BigDecimal("1E-50", DEFAULT_MATH_CONTEXT)
