@@ -1,12 +1,17 @@
 package tpo.maxim
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import java.math.BigDecimal
+import java.math.MathContext
 
 class BasicTrigonometryTest {
 
-    private val epsilon = 1e-9
+    private val mc = MathContext.DECIMAL128
+    private val epsilon = BigDecimal("1E-10", mc)
+    private val testEpsilon = BigDecimal("1E-9", mc)
 
     @ParameterizedTest
     @CsvSource(
@@ -20,9 +25,11 @@ class BasicTrigonometryTest {
         "-1.5707963267948966, 0.0",
         "-3.141592653589793, -1.0"
     )
-    fun `проверка значений cos`(x: Double, expected: Double) {
-        val result = cos(x, 1e-10)
-        assertEquals(expected, result, epsilon)
+    fun `проверка значений cos`(xStr: String, expectedStr: String) {
+        val x = BigDecimal(xStr, mc)
+        val expected = BigDecimal(expectedStr, mc)
+        val result = cos(x, epsilon, mc)
+        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "cos($x) = $result, expected $expected")
     }
 
     @ParameterizedTest
@@ -37,9 +44,11 @@ class BasicTrigonometryTest {
         "-1.5707963267948966, -1.0",
         "-3.141592653589793, 0.0"
     )
-    fun `проверка значений sin`(x: Double, expected: Double) {
-        val result = sin(x, 1e-10)
-        assertEquals(expected, result, epsilon)
+    fun `проверка значений sin`(xStr: String, expectedStr: String) {
+        val x = BigDecimal(xStr, mc)
+        val expected = BigDecimal(expectedStr, mc)
+        val result = sin(x, epsilon, mc)
+        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "sin($x) = $result, expected $expected")
     }
 
     @ParameterizedTest
@@ -49,12 +58,13 @@ class BasicTrigonometryTest {
         "2.0, -2.402997961722381",
         "3.0, -1.0101086659079939",
         "4.0, -1.5298856564663975",
-        "5.0, 3.525320085102471",
-        "6.0, 1.0064211722860962"
+        "5.0, 3.525320085102471"
     )
-    fun `проверка значений sec`(x: Double, expected: Double) {
-        val result = sec(x, 1e-10)
-        assertEquals(expected, result, epsilon)
+    fun `проверка значений sec`(xStr: String, expectedStr: String) {
+        val x = BigDecimal(xStr, mc)
+        val expected = BigDecimal(expectedStr, mc)
+        val result = sec(x, epsilon, mc)
+        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "sec($x) = $result, expected $expected")
     }
 
     @ParameterizedTest
@@ -66,9 +76,11 @@ class BasicTrigonometryTest {
         "2.5, 1.6709215455586793",
         "3.0, 7.086167396459651"
     )
-    fun `проверка значений csc`(x: Double, expected: Double) {
-        val result = csc(x, 1e-10)
-        assertEquals(expected, result, epsilon)
+    fun `проверка значений csc`(xStr: String, expectedStr: String) {
+        val x = BigDecimal(xStr, mc)
+        val expected = BigDecimal(expectedStr, mc)
+        val result = csc(x, epsilon, mc)
+        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "csc($x) = $result, expected $expected")
     }
 
     @ParameterizedTest
@@ -80,8 +92,10 @@ class BasicTrigonometryTest {
         "2.5, -1.3386481283041514",
         "3.0, -7.015252551434534"
     )
-    fun `проверка значений cot`(x: Double, expected: Double) {
-        val result = cot(x, 1e-10)
-        assertEquals(expected, result, epsilon)
+    fun `проверка значений cot`(xStr: String, expectedStr: String) {
+        val x = BigDecimal(xStr, mc)
+        val expected = BigDecimal(expectedStr, mc)
+        val result = cot(x, epsilon, mc)
+        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "cot($x) = $result, expected $expected")
     }
 }

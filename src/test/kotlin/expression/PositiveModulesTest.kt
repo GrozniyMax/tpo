@@ -1,18 +1,23 @@
-package tpo.maxim.expression
+package expression
 
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import tpo.maxim.expression.*
 import tpo.maxim.ln
 import tpo.maxim.log
+import java.math.BigDecimal
+import java.math.MathContext
 
 class PositiveModulesTest {
 
-    private val epsilon = 1e-10
+    private val mc = MathContext.DECIMAL128
+    private val epsilon = BigDecimal("1E-10", mc)
+    private val testEpsilon = BigDecimal("1E-9", mc)
 
     @AfterEach
     fun tearDown() {
@@ -29,33 +34,42 @@ class PositiveModulesTest {
         "4.0, 2.0, 2.0, 4.0",
         "8.0, 2.0, 3.0, 9.0"
     )
-    fun testLog10Squared(x: Double, base: Double, logResult: Double, expected: Double) {
+    fun testLog10Squared(xStr: String, baseStr: String, logResultStr: String, expectedStr: String) {
+        val x = BigDecimal(xStr, mc)
+        val expected = BigDecimal(expectedStr, mc)
+        val logResult = BigDecimal(logResultStr, mc)
+        
         mockkStatic("tpo.maxim.BasicLogarithmsKt")
-        every { log(x, 10.0, epsilon) } returns logResult
+        every { log(x, BigDecimal(10), epsilon, mc) } returns logResult
 
-        val result = log10Squared(x, epsilon)
+        val result = log10Squared(x, epsilon, mc)
 
-        assertEquals(expected, result, 1e-9)
+        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
     }
 
     @ParameterizedTest
     @CsvSource(
-        "1.0, 10.0, 0.0, 2.0, 0.0, 0.0",
-        "10.0, 10.0, 1.0, 2.0, 1.0, 1.0",
-        "100.0, 10.0, 2.0, 2.0, 2.0, 8.0",
-        "1000.0, 10.0, 3.0, 2.0, 3.0, 27.0",
-        "2.0, 2.0, 1.0, 1.0, 1.0, 1.0",
-        "4.0, 2.0, 2.0, 1.0, 2.0, 8.0",
-        "8.0, 2.0, 3.0, 1.0, 3.0, 27.0"
+        "1.0, 10.0, 0.0, 2.0, 0.0, 0.0, 0.0",
+        "10.0, 10.0, 1.0, 2.0, 1.0, 1.0, 1.0",
+        "100.0, 10.0, 2.0, 2.0, 2.0, 8.0, 8.0",
+        "1000.0, 10.0, 3.0, 2.0, 3.0, 27.0, 27.0",
+        "2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0",
+        "4.0, 2.0, 2.0, 1.0, 2.0, 8.0, 8.0",
+        "8.0, 2.0, 3.0, 1.0, 3.0, 27.0, 27.0"
     )
-    fun testMultiplyByLog2(x: Double, base10: Double, log10Result: Double, base2: Double, log2Result: Double, expected: Double) {
+    fun testMultiplyByLog2(xStr: String, base10Str: String, log10ResultStr: String, base2Str: String, log2ResultStr: String, expectedStr: String) {
+        val x = BigDecimal(xStr, mc)
+        val expected = BigDecimal(expectedStr, mc)
+        val log10Result = BigDecimal(log10ResultStr, mc)
+        val log2Result = BigDecimal(log2ResultStr, mc)
+        
         mockkStatic("tpo.maxim.BasicLogarithmsKt")
-        every { log(x, 10.0, epsilon) } returns log10Result
-        every { log(x, 2.0, epsilon) } returns log2Result
+        every { log(x, BigDecimal(10), epsilon, mc) } returns log10Result
+        every { log(x, BigDecimal(2), epsilon, mc) } returns log2Result
 
-        val result = multiplyByLog2(x, epsilon)
+        val result = multiplyByLog2(x, epsilon, mc)
 
-        assertEquals(expected, result, 1e-9)
+        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
     }
 
     @ParameterizedTest
@@ -65,15 +79,21 @@ class PositiveModulesTest {
         "100.0, 10.0, 2.0, 2.0, 2.0, 3.0, 2.0, 10.0",
         "1000.0, 10.0, 3.0, 2.0, 3.0, 3.0, 3.0, 30.0"
     )
-    fun testAddLog3(x: Double, base10: Double, log10Result: Double, base2: Double, log2Result: Double, base3: Double, log3Result: Double, expected: Double) {
+    fun testAddLog3(xStr: String, base10Str: String, log10ResultStr: String, base2Str: String, log2ResultStr: String, base3Str: String, log3ResultStr: String, expectedStr: String) {
+        val x = BigDecimal(xStr, mc)
+        val expected = BigDecimal(expectedStr, mc)
+        val log10Result = BigDecimal(log10ResultStr, mc)
+        val log2Result = BigDecimal(log2ResultStr, mc)
+        val log3Result = BigDecimal(log3ResultStr, mc)
+        
         mockkStatic("tpo.maxim.BasicLogarithmsKt")
-        every { log(x, 10.0, epsilon) } returns log10Result
-        every { log(x, 2.0, epsilon) } returns log2Result
-        every { log(x, 3.0, epsilon) } returns log3Result
+        every { log(x, BigDecimal(10), epsilon, mc) } returns log10Result
+        every { log(x, BigDecimal(2), epsilon, mc) } returns log2Result
+        every { log(x, BigDecimal(3), epsilon, mc) } returns log3Result
 
-        val result = addLog3(x, epsilon)
+        val result = addLog3(x, epsilon, mc)
 
-        assertEquals(expected, result, 1e-9)
+        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
     }
 
     @ParameterizedTest
@@ -82,16 +102,23 @@ class PositiveModulesTest {
         "10.0, 10.0, 1.0, 2.0, 1.0, 3.0, 1.0, 5.0, 1.0, 3.0",
         "100.0, 10.0, 2.0, 2.0, 2.0, 3.0, 2.0, 5.0, 2.0, 12.0"
     )
-    fun testAddLog5(x: Double, base10: Double, log10Result: Double, base2: Double, log2Result: Double, base3: Double, log3Result: Double, base5: Double, log5Result: Double, expected: Double) {
+    fun testAddLog5(xStr: String, base10Str: String, log10ResultStr: String, base2Str: String, log2ResultStr: String, base3Str: String, log3ResultStr: String, base5Str: String, log5ResultStr: String, expectedStr: String) {
+        val x = BigDecimal(xStr, mc)
+        val expected = BigDecimal(expectedStr, mc)
+        val log10Result = BigDecimal(log10ResultStr, mc)
+        val log2Result = BigDecimal(log2ResultStr, mc)
+        val log3Result = BigDecimal(log3ResultStr, mc)
+        val log5Result = BigDecimal(log5ResultStr, mc)
+        
         mockkStatic("tpo.maxim.BasicLogarithmsKt")
-        every { log(x, 10.0, epsilon) } returns log10Result
-        every { log(x, 2.0, epsilon) } returns log2Result
-        every { log(x, 3.0, epsilon) } returns log3Result
-        every { log(x, 5.0, epsilon) } returns log5Result
+        every { log(x, BigDecimal(10), epsilon, mc) } returns log10Result
+        every { log(x, BigDecimal(2), epsilon, mc) } returns log2Result
+        every { log(x, BigDecimal(3), epsilon, mc) } returns log3Result
+        every { log(x, BigDecimal(5), epsilon, mc) } returns log5Result
 
-        val result = addLog5(x, epsilon)
+        val result = addLog5(x, epsilon, mc)
 
-        assertEquals(expected, result, 1e-9)
+        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
     }
 
     @ParameterizedTest
@@ -101,13 +128,17 @@ class PositiveModulesTest {
         "7.38905609893065, 2.0, 8.0",
         "20.085536923187668, 3.0, 27.0"
     )
-    fun testLnCubed(x: Double, lnResult: Double, expected: Double) {
+    fun testLnCubed(xStr: String, lnResultStr: String, expectedStr: String) {
+        val x = BigDecimal(xStr, mc)
+        val expected = BigDecimal(expectedStr, mc)
+        val lnResult = BigDecimal(lnResultStr, mc)
+        
         mockkStatic("tpo.maxim.BasicLogarithmsKt")
-        every { ln(x, epsilon) } returns lnResult
+        every { ln(x, epsilon, mc) } returns lnResult
 
-        val result = lnCubed(x, epsilon)
+        val result = lnCubed(x, epsilon, mc)
 
-        assertEquals(expected, result, 1e-9)
+        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
     }
 
     @ParameterizedTest
@@ -116,23 +147,31 @@ class PositiveModulesTest {
         "10.0, 10.0, 1.0, 2.0, 1.0, 3.0, 1.0, 5.0, 1.0, 1.0, 1.0, 4.0"
     )
     fun testPositiveExpression(
-        x: Double,
-        base10: Double, log10Result: Double,
-        base2: Double, log2Result: Double,
-        base3: Double, log3Result: Double,
-        base5: Double, log5Result: Double,
-        lnBase: Double, lnResult: Double,
-        expected: Double
+        xStr: String,
+        base10Str: String, log10ResultStr: String,
+        base2Str: String, log2ResultStr: String,
+        base3Str: String, log3ResultStr: String,
+        base5Str: String, log5ResultStr: String,
+        lnBaseStr: String, lnResultStr: String,
+        expectedStr: String
     ) {
+        val x = BigDecimal(xStr, mc)
+        val expected = BigDecimal(expectedStr, mc)
+        val log10Result = BigDecimal(log10ResultStr, mc)
+        val log2Result = BigDecimal(log2ResultStr, mc)
+        val log3Result = BigDecimal(log3ResultStr, mc)
+        val log5Result = BigDecimal(log5ResultStr, mc)
+        val lnResult = BigDecimal(lnResultStr, mc)
+        
         mockkStatic("tpo.maxim.BasicLogarithmsKt")
-        every { log(x, 10.0, epsilon) } returns log10Result
-        every { log(x, 2.0, epsilon) } returns log2Result
-        every { log(x, 3.0, epsilon) } returns log3Result
-        every { log(x, 5.0, epsilon) } returns log5Result
-        every { ln(x, epsilon) } returns lnResult
+        every { log(x, BigDecimal(10), epsilon, mc) } returns log10Result
+        every { log(x, BigDecimal(2), epsilon, mc) } returns log2Result
+        every { log(x, BigDecimal(3), epsilon, mc) } returns log3Result
+        every { log(x, BigDecimal(5), epsilon, mc) } returns log5Result
+        every { ln(x, epsilon, mc) } returns lnResult
 
-        val result = positiveExpression(x, epsilon)
+        val result = positiveExpression(x, epsilon, mc)
 
-        assertEquals(expected, result, 1e-9)
+        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
     }
 }

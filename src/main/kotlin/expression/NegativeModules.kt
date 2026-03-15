@@ -1,99 +1,105 @@
-package expression
+package tpo.maxim.expression
 
 import tpo.maxim.*
+import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
+
+private val DEFAULT_MATH_CONTEXT = MathContext.DECIMAL128
+private val DEFAULT_EPSILON = BigDecimal("1E-50", DEFAULT_MATH_CONTEXT)
 
 /**
  * Вычисляет ((((csc(x) / csc(x)) / sec(x)) - sin(x)) + cot(x)) ^ 3
  */
-fun module1(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    val cscx = csc(x, epsilon)
-    val secx = sec(x, epsilon)
-    val sinx = sin(x, epsilon)
-    val cotx = cot(x, epsilon)
+fun module1(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    val cscx = csc(x, epsilon, mc)
+    val secx = sec(x, epsilon, mc)
+    val sinx = sin(x, epsilon, mc)
+    val cotx = cot(x, epsilon, mc)
 
     // (csc(x) / csc(x)) / sec(x) - sin(x) + cot(x)
-    val step1 = cscx / cscx           // = 1
-    val step2 = step1 / secx          // = cos(x)
-    val step3 = step2 - sinx
-    val step4 = step3 + cotx
+    val step1 = cscx.divide(cscx, mc)           // = 1
+    val step2 = step1.divide(secx, mc)          // = cos(x)
+    val step3 = step2.subtract(sinx, mc)
+    val step4 = step3.add(cotx, mc)
 
     // Возведение в куб
-    return step4 * step4 * step4
+    return step4.multiply(step4, mc).multiply(step4, mc)
 }
 
 /**
  * Вычисляет cos(x) + csc(x)
  */
-fun module2(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    val cosx = cos(x, epsilon)
-    val cscx = csc(x, epsilon)
-    return cosx + cscx
+fun module2(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    val cosx = cos(x, epsilon, mc)
+    val cscx = csc(x, epsilon, mc)
+    return cosx.add(cscx, mc)
 }
 
 /**
  * Вычисляет sec(x) - sin(x)
  */
-fun module3(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    val secx = sec(x, epsilon)
-    val sinx = sin(x, epsilon)
-    return secx - sinx
+fun module3(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    val secx = sec(x, epsilon, mc)
+    val sinx = sin(x, epsilon, mc)
+    return secx.subtract(sinx, mc)
 }
 
 /**
  * Вычисляет ((...^3) + (cos(x) + csc(x))) - (sec(x) - sin(x))
  */
-fun module4Numerator(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    val module1 = module1(x, epsilon)
-    val module2 = module2(x, epsilon)
-    val module3 = module3(x, epsilon)
+fun module4Numerator(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    val module1Val = module1(x, epsilon, mc)
+    val module2Val = module2(x, epsilon, mc)
+    val module3Val = module3(x, epsilon, mc)
 
-    return (module1 + module2) - module3
+    return module1Val.add(module2Val, mc).subtract(module3Val, mc)
 }
 
 /**
  * Вычисляет знаменатель (cot(x) ^ 2) / (csc(x) + sec(x))
  */
-fun module4Denominator(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    val cotx = cot(x, epsilon)
-    val cscx = csc(x, epsilon)
-    val secx = sec(x, epsilon)
+fun module4Denominator(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    val cotx = cot(x, epsilon, mc)
+    val cscx = csc(x, epsilon, mc)
+    val secx = sec(x, epsilon, mc)
 
-    val cotSquared = cotx * cotx
-    val cscSecSum = cscx + secx
+    val cotSquared = cotx.multiply(cotx, mc)
+    val cscSecSum = cscx.add(secx, mc)
 
-    return cotSquared / cscSecSum
+    return cotSquared.divide(cscSecSum, mc)
 }
 
 /**
  * Вычисляет дробь: (...)/[(cot(x) ^ 2) / (csc(x) + sec(x))]
  */
-fun module5(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    val numerator = module4Numerator(x, epsilon)
-    val denominator = module4Denominator(x, epsilon)
-    return numerator / denominator
+fun module5(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    val numerator = module4Numerator(x, epsilon, mc)
+    val denominator = module4Denominator(x, epsilon, mc)
+    return numerator.divide(denominator, mc)
 }
 
 
 /**
  * Вычисляет знаменатель всей большой дроби
  */
-fun module6Numerator(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    val mainFraction = module5(x, epsilon)
-    val sinx = sin(x, epsilon)
-    val sinSquared = sinx * sinx
+fun module6Numerator(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    val mainFraction = module5(x, epsilon, mc)
+    val sinx = sin(x, epsilon, mc)
+    val sinSquared = sinx.multiply(sinx, mc)
 
-    val product = mainFraction * sinSquared
-    return product * product
+    val product = mainFraction.multiply(sinSquared, mc)
+    return product.multiply(product, mc)
 }
 
 /**
  * Полное выражение для x <= 0
  */
-fun negativeExpression(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    require(x <= 0) { "x должен быть <= 0" }
+fun negativeExpression(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    require(x.compareTo(BigDecimal.ZERO) <= 0) { "x должен быть <= 0" }
 
-    val module8 = module6Numerator(x, epsilon)
-    val cotx = cot(x, epsilon)
+    val module8 = module6Numerator(x, epsilon, mc)
+    val cotx = cot(x, epsilon, mc)
 
-    return module8 / cotx
+    return module8.divide(cotx, mc)
 }

@@ -1,16 +1,20 @@
-package expression
+package tpo.maxim.expression
 
-import tpo.maxim.expression.positiveExpression
+import java.math.BigDecimal
+import java.math.MathContext
+
+private val DEFAULT_MATH_CONTEXT = MathContext.DECIMAL128
+private val DEFAULT_EPSILON = BigDecimal("1E-50", DEFAULT_MATH_CONTEXT)
 
 /**
  * Вычисляет значение кусочной функции:
  * - для x <= 0: тригонометрическое выражение
  * - для x > 0: логарифмическое выражение
  */
-fun computeExpression(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    return if (x < 0) {
-        negativeExpression(x, epsilon)
+fun computeExpression(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    return if (x.compareTo(BigDecimal.ZERO) < 0) {
+        negativeExpression(x, epsilon, mc)
     } else {
-        positiveExpression(x, epsilon)
+        positiveExpression(x, epsilon, mc)
     }
 }

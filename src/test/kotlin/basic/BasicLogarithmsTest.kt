@@ -2,12 +2,17 @@ package tpo.maxim
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import java.math.BigDecimal
+import java.math.MathContext
 
 class BasicLogarithmsTest {
 
-    private val epsilon = 1e-9
+    private val mc = MathContext.DECIMAL128
+    private val epsilon = BigDecimal("1E-10", mc)
+    private val testEpsilon = BigDecimal("1E-9", mc)
 
     @ParameterizedTest
     @CsvSource(
@@ -26,9 +31,11 @@ class BasicLogarithmsTest {
         "5.0, 1.6094379124341003",
         "10.0, 2.302585092994046"
     )
-    fun `проверка значений ln`(x: Double, expected: Double) {
-        val result = ln(x, 1e-10)
-        assertEquals(expected, result, epsilon)
+    fun `проверка значений ln`(xStr: String, expectedStr: String) {
+        val x = BigDecimal(xStr, mc)
+        val expected = BigDecimal(expectedStr, mc)
+        val result = ln(x, epsilon, mc)
+        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "ln($x) = $result, expected $expected")
     }
 
     @ParameterizedTest
@@ -47,9 +54,12 @@ class BasicLogarithmsTest {
         "100.0, 100.0, 1.0",
         "2.718281828459045, 2.718281828459045, 1.0"
     )
-    fun `проверка значений log`(x: Double, base: Double, expected: Double) {
-        val result = log(x, base, 1e-10)
-        assertEquals(expected, result, epsilon)
+    fun `проверка значений log`(xStr: String, baseStr: String, expectedStr: String) {
+        val x = BigDecimal(xStr, mc)
+        val base = BigDecimal(baseStr, mc)
+        val expected = BigDecimal(expectedStr, mc)
+        val result = log(x, base, epsilon, mc)
+        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "log($x, $base) = $result, expected $expected")
     }
 
     @ParameterizedTest
@@ -58,9 +68,11 @@ class BasicLogarithmsTest {
         "-1.0, 10.0",
         "-100.0, 2.0"
     )
-    fun `ln должен возвращать NaN для недопустимых значений`(x: Double, base: Double) {
-        val actual = ln(x, 1e-10)
-        assertEquals(Double.NaN, actual)
+    fun `ln должен выбрасывать исключение для недопустимых значений`(xStr: String, baseStr: String) {
+        val x = BigDecimal(xStr, mc)
+        assertThrows(IllegalArgumentException::class.java) {
+            ln(x, epsilon, mc)
+        }
     }
 
     @ParameterizedTest
@@ -69,8 +81,11 @@ class BasicLogarithmsTest {
         "10.0, -1.0",
         "10.0, 1.0"
     )
-    fun `log должен возвращать NaN для недопустимых значений`(x: Double, base: Double) {
-        val actual = log(x, base, 1e-10)
-        assertEquals(Double.NaN, actual)
+    fun `log должен выбрасывать исключение для недопустимых значений`(xStr: String, baseStr: String) {
+        val x = BigDecimal(xStr, mc)
+        val base = BigDecimal(baseStr, mc)
+        assertThrows(IllegalArgumentException::class.java) {
+            log(x, base, epsilon, mc)
+        }
     }
 }

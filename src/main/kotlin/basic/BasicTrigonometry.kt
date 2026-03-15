@@ -1,35 +1,63 @@
 package tpo.maxim
 
-import kotlin.math.PI
-import kotlin.math.abs
+import java.math.BigDecimal
+import java.math.MathContext
+import java.math.RoundingMode
 
-fun cos(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    var result = 0.0
-    var term = 1.0
+private val DEFAULT_MATH_CONTEXT = MathContext.DECIMAL128
+
+/**
+ * Вычисляет cos(x) с использованием ряда Тейлора
+ * cos(x) = Σ((-1)^n * x^(2n) / (2n)!) для n=0 до ∞
+ */
+fun cos(x: BigDecimal, epsilon: BigDecimal = BigDecimal("1E-50", DEFAULT_MATH_CONTEXT), mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    val xMod = x.remainder(BigDecimal(2 * Math.PI).setScale(50, RoundingMode.HALF_UP), mc)
+    
+    var result = BigDecimal.ZERO
+    var term = BigDecimal.ONE
     var n = 0
 
-    while (abs(term) >= epsilon) {
-        result += term
+    while (term.abs().compareTo(epsilon) >= 0) {
+        result = result.add(term, mc)
         n++
-        term *= -x * x / ((2 * n - 1) * 2 * n)
+        val numerator = term.multiply(xMod.multiply(xMod, mc).negate(mc), mc)
+        val denominator = BigDecimal((2 * n - 1) * 2 * n)
+        term = numerator.divide(denominator, mc)
     }
 
     return result
 }
 
-fun sin(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    val piOver2 = PI / 2
-    return cos(piOver2 - x, epsilon)
+/**
+ * Вычисляет sin(x) через cos(π/2 - x)
+ */
+fun sin(x: BigDecimal, epsilon: BigDecimal = BigDecimal("1E-50", DEFAULT_MATH_CONTEXT), mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    val piOver2 = BigDecimal(Math.PI / 2).setScale(50, RoundingMode.HALF_UP)
+    val adjustedX = piOver2.subtract(x, mc)
+    return cos(adjustedX, epsilon, mc)
 }
 
-fun sec(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    return 1.0 / cos(x, epsilon)
+/**
+ * Вычисляет sec(x) = 1 / cos(x)
+ */
+fun sec(x: BigDecimal, epsilon: BigDecimal = BigDecimal("1E-50", DEFAULT_MATH_CONTEXT), mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    val cosX = cos(x, epsilon, mc)
+    return BigDecimal.ONE.divide(cosX, mc)
 }
 
-fun csc(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    return 1.0 / sin(x, epsilon)
+/**
+ * Вычисляет csc(x) = 1 / sin(x)
+ */
+fun csc(x: BigDecimal, epsilon: BigDecimal = BigDecimal("1E-50", DEFAULT_MATH_CONTEXT), mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    val sinX = sin(x, epsilon, mc)
+    return BigDecimal.ONE.divide(sinX, mc)
 }
 
-fun cot(x: Double, epsilon: Double = Double.MIN_VALUE): Double {
-    return cos(x, epsilon) / sin(x, epsilon)
+/**
+ * Вычисляет cot(x) = cos(x) / sin(x)
+ */
+fun cot(x: BigDecimal, epsilon: BigDecimal = BigDecimal("1E-50", DEFAULT_MATH_CONTEXT), mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
+    val cosX = cos(x, epsilon, mc)
+    val sinX = sin(x, epsilon, mc)
+    return cosX.divide(sinX, mc)
 }

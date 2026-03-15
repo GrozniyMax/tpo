@@ -1,9 +1,11 @@
 import expression.*
 import tpo.maxim.expression.*
+import java.math.BigDecimal
+import java.math.MathContext
 
 data class ModuleInstance(
     val description: String,
-    val function: (Double, Double) -> Double
+    val function: (BigDecimal, MathContext) -> BigDecimal
 )
 
 data class ModuleDescription(
@@ -44,35 +46,35 @@ private object NegativeModuleHandler : ModuleHandler {
     private val modules: Map<String, ModuleInstance> = mapOf(
         "module1" to ModuleInstance(
             description = "Вычисляет ((((csc(x) / csc(x)) / sec(x)) - sin(x)) + cot(x)) ^ 3",
-            function = ::module1
+            function = { x, mc -> module1(x, BigDecimal("1E-50", mc), mc) }
         ),
         "module2" to ModuleInstance(
             description = "Вычисляет cos(x) + csc(x)",
-            function = ::module2
+            function = { x, mc -> module2(x, BigDecimal("1E-50", mc), mc) }
         ),
         "module3" to ModuleInstance(
             description = "Вычисляет sec(x) - sin(x)",
-            function = ::module3
+            function = { x, mc -> module3(x, BigDecimal("1E-50", mc), mc) }
         ),
         "module4Numerator" to ModuleInstance(
             description = "Вычисляет ((...^3) + (cos(x) + csc(x))) - (sec(x) - sin(x))",
-            function = ::module4Numerator
+            function = { x, mc -> module4Numerator(x, BigDecimal("1E-50", mc), mc) }
         ),
         "module4Denominator" to ModuleInstance(
             description = "Вычисляет знаменатель (cot(x) ^ 2) / (csc(x) + sec(x))",
-            function = ::module4Denominator
+            function = { x, mc -> module4Denominator(x, BigDecimal("1E-50", mc), mc) }
         ),
         "module5" to ModuleInstance(
             description = "Вычисляет дробь: (...)/[(cot(x) ^ 2) / (csc(x) + sec(x))]",
-            function = ::module5
+            function = { x, mc -> module5(x, BigDecimal("1E-50", mc), mc) }
         ),
         "module6Numerator" to ModuleInstance(
             description = "Вычисляет знаменатель всей большой дроби",
-            function = ::module6Numerator
+            function = { x, mc -> module6Numerator(x, BigDecimal("1E-50", mc), mc) }
         ),
         "negativeExpression" to ModuleInstance(
             description = "Полное выражение для x <= 0",
-            function = ::negativeExpression
+            function = { x, mc -> negativeExpression(x, BigDecimal("1E-50", mc), mc) }
         )
     )
 
@@ -94,27 +96,27 @@ private object PositiveModuleHandler: ModuleHandler {
     private val modules: Map<String, ModuleInstance> = mapOf(
         "log10Squared" to ModuleInstance(
             description = "Вычисляет: log_10(x) * log_10(x)",
-            function = ::log10Squared
+            function = { x, mc -> log10Squared(x, BigDecimal("1E-50", mc), mc) }
         ),
         "multiplyByLog2" to ModuleInstance(
             description = "Вычисляет: (log_10(x) * log_10(x)) * log_2(x)",
-            function = ::multiplyByLog2
+            function = { x, mc -> multiplyByLog2(x, BigDecimal("1E-50", mc), mc) }
         ),
         "addLog3" to ModuleInstance(
             description = "Вычисляет: ((log_10(x) * log_10(x)) * log_2(x)) + log_3(x)",
-            function = ::addLog3
+            function = { x, mc -> addLog3(x, BigDecimal("1E-50", mc), mc) }
         ),
         "addLog5" to ModuleInstance(
-            description = "Вычисляет: (((log_10(x) * log_10(x)) * log_2(x)) + log_3(x)) + log_5(x)",
-            function = ::addLog5
+            description = "Вычисляет: (((log_10(x) * log_10(x)) * log_10(x)) + log_3(x)) + log_5(x)",
+            function = { x, mc -> addLog5(x, BigDecimal("1E-50", mc), mc) }
         ),
         "lnCubed" to ModuleInstance(
             description = "Вычисляет: ln(x) ^ 3",
-            function = ::lnCubed
+            function = { x, mc -> lnCubed(x, BigDecimal("1E-50", mc), mc) }
         ),
         "positiveExpression" to ModuleInstance(
             description = "Вычисляет полное выражение для x > 0",
-            function = ::positiveExpression
+            function = { x, mc -> positiveExpression(x, BigDecimal("1E-50", mc), mc) }
         )
     )
 

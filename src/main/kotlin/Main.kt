@@ -1,5 +1,7 @@
 import java.io.File
 import java.io.PrintWriter
+import java.math.BigDecimal
+import java.math.MathContext
 import expression.*
 import tpo.maxim.expression.*
 
@@ -42,10 +44,10 @@ fun main() {
         }
 
     // Шаг 5: Ввод начального значения x
-    val startX = readDoubleInput("Введите начальное значение x: ")
+    val startX = readBigDecimalInput("Введите начальное значение x: ")
 
     // Шаг 6: Ввод шага
-    val step = readDoubleInput("Введите шаг: ")
+    val step = readBigDecimalInput("Введите шаг: ")
 
     // Шаг 7: Ввод количества итераций
     val iterations = readIntInput("Введите количество итераций: ")
@@ -58,6 +60,7 @@ fun main() {
     )
 
     // Шаг 9: Вычисление и запись в файл
+    val mc = MathContext.DECIMAL128
     try {
         PrintWriter(File(outputFileName)).use { writer ->
             writer.println("x,result")
@@ -65,14 +68,14 @@ fun main() {
             var x = startX
             for (i in 0 until iterations) {
                 try {
-                    val result = module.function(x, 1e-10)
+                    val result = module.function(x, mc)
                     writer.println("$x,$result")
                     println("x = $x, result = $result")
                 } catch (e: Exception) {
                     println("Ошибка вычисления при x = $x: ${e.message}")
                     writer.println("$x,ERROR: ${e.message}")
                 }
-                x += step
+                x = x.add(step, mc)
             }
         }
         println("\nРезультаты успешно записаны в файл: $outputFileName")
@@ -100,15 +103,15 @@ fun readInputWithValidation(
 }
 
 /**
- * Читает double значение с обработкой ошибок
+ * Читает BigDecimal значение с обработкой ошибок
  */
-fun readDoubleInput(prompt: String): Double {
+fun readBigDecimalInput(prompt: String): BigDecimal {
     while (true) {
         print(prompt)
         val input = readlnOrNull()?.trim()
         if (input != null) {
             try {
-                return input.toDouble()
+                return BigDecimal(input)
             } catch (e: NumberFormatException) {
                 println("Ошибка: введите корректное числовое значение. Попробуйте снова.")
             }
