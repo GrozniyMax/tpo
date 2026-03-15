@@ -1,9 +1,8 @@
 package tpo.maxim.expression
 
-import tpo.maxim.*
+import basic.*
 import java.math.BigDecimal
 import java.math.MathContext
-import java.math.RoundingMode
 
 private val DEFAULT_MATH_CONTEXT = MathContext.DECIMAL128
 private val DEFAULT_EPSILON = BigDecimal("1E-50", DEFAULT_MATH_CONTEXT)
@@ -17,13 +16,11 @@ fun module1(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContex
     val sinx = sin(x, epsilon, mc)
     val cotx = cot(x, epsilon, mc)
 
-    // (csc(x) / csc(x)) / sec(x) - sin(x) + cot(x)
-    val step1 = cscx.divide(cscx, mc)           // = 1
-    val step2 = step1.divide(secx, mc)          // = cos(x)
+    val step1 = cscx.divide(cscx, mc)
+    val step2 = step1.divide(secx, mc)
     val step3 = step2.subtract(sinx, mc)
     val step4 = step3.add(cotx, mc)
 
-    // Возведение в куб
     return step4.multiply(step4, mc).multiply(step4, mc)
 }
 
@@ -46,7 +43,7 @@ fun module3(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContex
 }
 
 /**
- * Вычисляет ((...^3) + (cos(x) + csc(x))) - (sec(x) - sin(x))
+ * Вычисляет ((...) + (...)) - (...)
  */
 fun module4Numerator(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
     val module1Val = module1(x, epsilon, mc)
@@ -71,7 +68,7 @@ fun module4Denominator(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc:
 }
 
 /**
- * Вычисляет дробь: (...)/[(cot(x) ^ 2) / (csc(x) + sec(x))]
+ * Вычисляет дробь: (...)/(...)
  */
 fun module5(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
     val numerator = module4Numerator(x, epsilon, mc)
@@ -96,10 +93,10 @@ fun module6Numerator(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: M
  * Полное выражение для x <= 0
  */
 fun negativeExpression(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
-    require(x.compareTo(BigDecimal.ZERO) <= 0) { "x должен быть <= 0" }
+    require(x <= BigDecimal.ZERO) { "x должен быть <= 0" }
 
-    val module8 = module6Numerator(x, epsilon, mc)
+    val module6 = module6Numerator(x, epsilon, mc)
     val cotx = cot(x, epsilon, mc)
 
-    return module8.divide(cotx, mc)
+    return module6.divide(cotx, mc)
 }

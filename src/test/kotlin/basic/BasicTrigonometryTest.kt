@@ -1,6 +1,6 @@
 package tpo.maxim
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import basic.*
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -29,7 +29,7 @@ class BasicTrigonometryTest {
         val x = BigDecimal(xStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         val result = cos(x, epsilon, mc)
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "cos($x) = $result, expected $expected")
+        assertEquals(expected, result, "cos($x) = $result, expected $expected")
     }
 
     @ParameterizedTest
@@ -48,7 +48,7 @@ class BasicTrigonometryTest {
         val x = BigDecimal(xStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         val result = sin(x, epsilon, mc)
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "sin($x) = $result, expected $expected")
+        assertEquals(expected, result, "sin($x) = $result, expected $expected")
     }
 
     @ParameterizedTest
@@ -64,7 +64,7 @@ class BasicTrigonometryTest {
         val x = BigDecimal(xStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         val result = sec(x, epsilon, mc)
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "sec($x) = $result, expected $expected")
+        assertEquals(expected, result, "sec($x) = $result, expected $expected")
     }
 
     @ParameterizedTest
@@ -80,7 +80,7 @@ class BasicTrigonometryTest {
         val x = BigDecimal(xStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         val result = csc(x, epsilon, mc)
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "csc($x) = $result, expected $expected")
+        assertEquals(expected, result, "csc($x) = $result, expected $expected")
     }
 
     @ParameterizedTest
@@ -96,6 +96,13 @@ class BasicTrigonometryTest {
         val x = BigDecimal(xStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         val result = cot(x, epsilon, mc)
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "cot($x) = $result, expected $expected")
+        assertEquals(expected, result, "cot($x) = $result, expected $expected")
+    }
+
+    private fun assertEquals(expected: BigDecimal, actual: BigDecimal, message: String) {
+        assertTrue(
+            expected.subtract(actual, mc).abs() <= testEpsilon,
+            message
+        )
     }
 }

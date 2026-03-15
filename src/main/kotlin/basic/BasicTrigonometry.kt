@@ -1,4 +1,4 @@
-package tpo.maxim
+package basic
 
 import java.math.BigDecimal
 import java.math.MathContext
@@ -6,12 +6,16 @@ import java.math.RoundingMode
 
 private val DEFAULT_MATH_CONTEXT = MathContext.DECIMAL128
 
+private fun computePi(mc: MathContext): BigDecimal {
+    return BigDecimal("3.14159265358979323846264338327950288419716939937510", mc)
+}
+
 /**
  * Вычисляет cos(x) с использованием ряда Тейлора
  * cos(x) = Σ((-1)^n * x^(2n) / (2n)!) для n=0 до ∞
  */
 fun cos(x: BigDecimal, epsilon: BigDecimal = BigDecimal("1E-50", DEFAULT_MATH_CONTEXT), mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
-    val xMod = x.remainder(BigDecimal(2 * Math.PI).setScale(50, RoundingMode.HALF_UP), mc)
+    val xMod = x.remainder(computePi(mc).multiply(BigDecimal.TWO), mc)
     
     var result = BigDecimal.ZERO
     var term = BigDecimal.ONE
@@ -57,7 +61,9 @@ fun csc(x: BigDecimal, epsilon: BigDecimal = BigDecimal("1E-50", DEFAULT_MATH_CO
  * Вычисляет cot(x) = cos(x) / sin(x)
  */
 fun cot(x: BigDecimal, epsilon: BigDecimal = BigDecimal("1E-50", DEFAULT_MATH_CONTEXT), mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
-    val cosX = cos(x, epsilon, mc)
-    val sinX = sin(x, epsilon, mc)
+    val workingEpsilon = epsilon.divide(BigDecimal("100"), mc)
+
+    val cosX = cos(x, workingEpsilon, mc)
+    val sinX = sin(x, workingEpsilon, mc)
     return cosX.divide(sinX, mc)
 }

@@ -8,7 +8,6 @@ import tpo.maxim.expression.*
 fun main() {
     println("=== Консольное приложение для вычисления модулей ===\n")
 
-    // Шаг 1: Вывод списка доступных модулей
     println("Доступные модули:")
     val allDescriptions = MainModuleHandler.getModuleDescription()
     allDescriptions.forEach { desc ->
@@ -16,14 +15,12 @@ fun main() {
     }
     println()
 
-    // Шаг 2: Ввод типа модуля
     val moduleType = readInputWithValidation(
         prompt = "Введите тип модуля (negative или positive): ",
         validator = { it in listOf("negative", "positive") },
         errorMessage = "Ошибка: тип модуля должен быть 'negative' или 'positive'. Попробуйте снова."
     )
 
-    // Шаг 3: Ввод названия модуля
     val availableModules = MainModuleHandler.getModulesDescriptions(moduleType).toSet()
     println("\nДоступные модули для типа '$moduleType':")
     availableModules.forEach { desc ->
@@ -36,30 +33,24 @@ fun main() {
         errorMessage = "Ошибка: неверное название модуля. Выберите из списка выше. Попробуйте снова."
     )
 
-    // Шаг 4: Получение модуля
     val module = MainModuleHandler.getModule(moduleType, moduleName)
         ?: run {
             println("Ошибка: модуль '$moduleName' не найден.")
             return
         }
 
-    // Шаг 5: Ввод начального значения x
     val startX = readBigDecimalInput("Введите начальное значение x: ")
 
-    // Шаг 6: Ввод шага
     val step = readBigDecimalInput("Введите шаг: ")
 
-    // Шаг 7: Ввод количества итераций
     val iterations = readIntInput("Введите количество итераций: ")
 
-    // Шаг 8: Ввод имени выходного файла
     val outputFileName = readInputWithValidation(
         prompt = "Введите имя выходного CSV файла: ",
         validator = { fileName -> fileName.isNotBlank() && fileName.endsWith(".csv") },
         errorMessage = "Ошибка: имя файла должно быть не пустым и заканчиваться на '.csv'. Попробуйте снова."
     )
 
-    // Шаг 9: Вычисление и запись в файл
     val mc = MathContext.DECIMAL128
     try {
         PrintWriter(File(outputFileName)).use { writer ->

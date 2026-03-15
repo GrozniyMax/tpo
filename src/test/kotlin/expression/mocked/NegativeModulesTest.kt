@@ -1,4 +1,4 @@
-package expression
+package expression.mocked
 
 import io.mockk.every
 import io.mockk.mockkStatic
@@ -7,11 +7,11 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import tpo.maxim.csc
-import tpo.maxim.sec
-import tpo.maxim.sin
-import tpo.maxim.cos
-import tpo.maxim.cot
+import basic.csc
+import basic.sec
+import basic.sin
+import basic.cos
+import basic.cot
 import tpo.maxim.expression.*
 import java.math.BigDecimal
 import java.math.MathContext
@@ -32,7 +32,7 @@ class NegativeModulesTest {
         "0.0, 1.0, 1.0, 0.0, 1.0, 8.0",
         "-1.0, 2.0, 2.0, 1.0, 1.0, 0.125"
     )
-    fun testModule1(xStr: String, cscResultStr: String, secResultStr: String, sinResultStr: String, cotResultStr: String, expectedStr: String) {
+    fun `Проверка вычисления module1`(xStr: String, cscResultStr: String, secResultStr: String, sinResultStr: String, cotResultStr: String, expectedStr: String) {
         val x = BigDecimal(xStr, mc)
         val cscResult = BigDecimal(cscResultStr, mc)
         val secResult = BigDecimal(secResultStr, mc)
@@ -48,7 +48,7 @@ class NegativeModulesTest {
 
         val result = module1(x, epsilon, mc)
 
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
+        assertEquals(expected, result)
     }
 
     @ParameterizedTest
@@ -56,7 +56,7 @@ class NegativeModulesTest {
         "0.0, 1.0, 1.0, 2.0",
         "-1.0, 0.5, 2.0, 2.5"
     )
-    fun testModule2(xStr: String, cosResultStr: String, cscResultStr: String, expectedStr: String) {
+    fun `Проверка вычисления module2`(xStr: String, cosResultStr: String, cscResultStr: String, expectedStr: String) {
         val x = BigDecimal(xStr, mc)
         val cosResult = BigDecimal(cosResultStr, mc)
         val cscResult = BigDecimal(cscResultStr, mc)
@@ -68,7 +68,7 @@ class NegativeModulesTest {
 
         val result = module2(x, epsilon, mc)
 
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
+        assertEquals(expected, result)
     }
 
     @ParameterizedTest
@@ -76,7 +76,7 @@ class NegativeModulesTest {
         "0.0, 1.0, 0.0, 1.0",
         "-1.0, 2.0, 0.5, 1.5"
     )
-    fun testModule3(xStr: String, secResultStr: String, sinResultStr: String, expectedStr: String) {
+    fun `Проверка вычисления module3`(xStr: String, secResultStr: String, sinResultStr: String, expectedStr: String) {
         val x = BigDecimal(xStr, mc)
         val secResult = BigDecimal(secResultStr, mc)
         val sinResult = BigDecimal(sinResultStr, mc)
@@ -88,7 +88,7 @@ class NegativeModulesTest {
 
         val result = module3(x, epsilon, mc)
 
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
+        assertEquals(expected, result)
     }
 
     @ParameterizedTest
@@ -96,7 +96,7 @@ class NegativeModulesTest {
         "0.0, 8.0, 2.0, 1.0, 9.0",
         "-1.0, 0.125, 2.5, 1.5, 1.125"
     )
-    fun testModule4Numerator(xStr: String, module1ResultStr: String, module2ResultStr: String, module3ResultStr: String, expectedStr: String) {
+    fun `Проверка вычисления module4Numerator`(xStr: String, module1ResultStr: String, module2ResultStr: String, module3ResultStr: String, expectedStr: String) {
         val x = BigDecimal(xStr, mc)
         val module1Result = BigDecimal(module1ResultStr, mc)
         val module2Result = BigDecimal(module2ResultStr, mc)
@@ -110,7 +110,7 @@ class NegativeModulesTest {
 
         val result = module4Numerator(x, epsilon, mc)
 
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
+        assertEquals(expected, result)
     }
 
     @ParameterizedTest
@@ -118,7 +118,7 @@ class NegativeModulesTest {
         "0.0, 1.0, 2.0, 2.0, 0.25",
         "-1.0, 2.0, 3.0, 3.0, 0.6666666666666666"
     )
-    fun testModule4Denominator(xStr: String, cotResultStr: String, cscResultStr: String, secResultStr: String, expectedStr: String) {
+    fun `Проверка вычисления module4Denominator`(xStr: String, cotResultStr: String, cscResultStr: String, secResultStr: String, expectedStr: String) {
         val x = BigDecimal(xStr, mc)
         val cotResult = BigDecimal(cotResultStr, mc)
         val cscResult = BigDecimal(cscResultStr, mc)
@@ -132,7 +132,7 @@ class NegativeModulesTest {
 
         val result = module4Denominator(x, epsilon, mc)
 
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
+        assertEquals(expected, result)
     }
 
     @ParameterizedTest
@@ -140,7 +140,7 @@ class NegativeModulesTest {
         "0.0, 9.0, 0.25, 36.0",
         "-1.0, 1.125, 0.6666666666666666, 1.6875"
     )
-    fun testModule5(xStr: String, numeratorResultStr: String, denominatorResultStr: String, expectedStr: String) {
+    fun `Проверка вычисления module5`(xStr: String, numeratorResultStr: String, denominatorResultStr: String, expectedStr: String) {
         val x = BigDecimal(xStr, mc)
         val numeratorResult = BigDecimal(numeratorResultStr, mc)
         val denominatorResult = BigDecimal(denominatorResultStr, mc)
@@ -152,7 +152,10 @@ class NegativeModulesTest {
 
         val result = module5(x, epsilon, mc)
 
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
+        assertEquals(expected, result)
     }
-
+    
+    private fun assertEquals(expected: BigDecimal, actual: BigDecimal) {
+        assertTrue(expected.subtract(actual, mc).abs() <= testEpsilon, "Expected $expected, got $actual difference: ${expected.subtract(actual, mc)}")
+    }
 }

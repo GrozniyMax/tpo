@@ -1,4 +1,4 @@
-package expression
+package expression.mocked
 
 import io.mockk.every
 import io.mockk.mockkStatic
@@ -34,7 +34,7 @@ class PositiveModulesTest {
         "4.0, 2.0, 2.0, 4.0",
         "8.0, 2.0, 3.0, 9.0"
     )
-    fun testLog10Squared(xStr: String, baseStr: String, logResultStr: String, expectedStr: String) {
+    fun `Проверка вычисления log10Squared`(xStr: String, baseStr: String, logResultStr: String, expectedStr: String) {
         val x = BigDecimal(xStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         val logResult = BigDecimal(logResultStr, mc)
@@ -44,7 +44,7 @@ class PositiveModulesTest {
 
         val result = log10Squared(x, epsilon, mc)
 
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
+        assertEquals(expected, result)
     }
 
     @ParameterizedTest
@@ -57,7 +57,7 @@ class PositiveModulesTest {
         "4.0, 2.0, 2.0, 1.0, 2.0, 8.0, 8.0",
         "8.0, 2.0, 3.0, 1.0, 3.0, 27.0, 27.0"
     )
-    fun testMultiplyByLog2(xStr: String, base10Str: String, log10ResultStr: String, base2Str: String, log2ResultStr: String, expectedStr: String) {
+    fun `Проверка вычисления multiplyByLog2`(xStr: String, base10Str: String, log10ResultStr: String, base2Str: String, log2ResultStr: String, expectedStr: String) {
         val x = BigDecimal(xStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         val log10Result = BigDecimal(log10ResultStr, mc)
@@ -69,7 +69,7 @@ class PositiveModulesTest {
 
         val result = multiplyByLog2(x, epsilon, mc)
 
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
+        assertEquals(expected, result)
     }
 
     @ParameterizedTest
@@ -79,7 +79,7 @@ class PositiveModulesTest {
         "100.0, 10.0, 2.0, 2.0, 2.0, 3.0, 2.0, 10.0",
         "1000.0, 10.0, 3.0, 2.0, 3.0, 3.0, 3.0, 30.0"
     )
-    fun testAddLog3(xStr: String, base10Str: String, log10ResultStr: String, base2Str: String, log2ResultStr: String, base3Str: String, log3ResultStr: String, expectedStr: String) {
+    fun `Проверка вычисления addLog3`(xStr: String, base10Str: String, log10ResultStr: String, base2Str: String, log2ResultStr: String, base3Str: String, log3ResultStr: String, expectedStr: String) {
         val x = BigDecimal(xStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         val log10Result = BigDecimal(log10ResultStr, mc)
@@ -93,7 +93,7 @@ class PositiveModulesTest {
 
         val result = addLog3(x, epsilon, mc)
 
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
+        assertEquals(expected, result)
     }
 
     @ParameterizedTest
@@ -102,7 +102,7 @@ class PositiveModulesTest {
         "10.0, 10.0, 1.0, 2.0, 1.0, 3.0, 1.0, 5.0, 1.0, 3.0",
         "100.0, 10.0, 2.0, 2.0, 2.0, 3.0, 2.0, 5.0, 2.0, 12.0"
     )
-    fun testAddLog5(xStr: String, base10Str: String, log10ResultStr: String, base2Str: String, log2ResultStr: String, base3Str: String, log3ResultStr: String, base5Str: String, log5ResultStr: String, expectedStr: String) {
+    fun `Проверка вычисления addLog5`(xStr: String, base10Str: String, log10ResultStr: String, base2Str: String, log2ResultStr: String, base3Str: String, log3ResultStr: String, base5Str: String, log5ResultStr: String, expectedStr: String) {
         val x = BigDecimal(xStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         val log10Result = BigDecimal(log10ResultStr, mc)
@@ -118,7 +118,7 @@ class PositiveModulesTest {
 
         val result = addLog5(x, epsilon, mc)
 
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
+        assertEquals(expected, result)
     }
 
     @ParameterizedTest
@@ -128,7 +128,7 @@ class PositiveModulesTest {
         "7.38905609893065, 2.0, 8.0",
         "20.085536923187668, 3.0, 27.0"
     )
-    fun testLnCubed(xStr: String, lnResultStr: String, expectedStr: String) {
+    fun `Проверка вычисления lnCubed`(xStr: String, lnResultStr: String, expectedStr: String) {
         val x = BigDecimal(xStr, mc)
         val expected = BigDecimal(expectedStr, mc)
         val lnResult = BigDecimal(lnResultStr, mc)
@@ -138,7 +138,7 @@ class PositiveModulesTest {
 
         val result = lnCubed(x, epsilon, mc)
 
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
+        assertEquals(expected, result)
     }
 
     @ParameterizedTest
@@ -146,7 +146,7 @@ class PositiveModulesTest {
         "1.0, 10.0, 0.0, 2.0, 0.0, 3.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0",
         "10.0, 10.0, 1.0, 2.0, 1.0, 3.0, 1.0, 5.0, 1.0, 1.0, 1.0, 4.0"
     )
-    fun testPositiveExpression(
+    fun `Проверка вычисления positiveExpression`(
         xStr: String,
         base10Str: String, log10ResultStr: String,
         base2Str: String, log2ResultStr: String,
@@ -172,6 +172,10 @@ class PositiveModulesTest {
 
         val result = positiveExpression(x, epsilon, mc)
 
-        assertTrue(expected.subtract(result, mc).abs().compareTo(testEpsilon) <= 0, "Expected $expected, got $result")
+        assertEquals(expected, result)
+    }
+    
+    private fun assertEquals(expected: BigDecimal, actual: BigDecimal) {
+        assertTrue(expected.subtract(actual, mc).abs() <= testEpsilon, "Expected $expected, got $actual")
     }
 }
