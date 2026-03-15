@@ -66,9 +66,9 @@ private object NegativeModuleHandler : ModuleHandler {
             description = "Вычисляет дробь: (...)/[(cot(x) ^ 2) / (csc(x) + sec(x))]",
             function = ::module5
         ),
-        "module8Numerator" to ModuleInstance(
+        "module6Numerator" to ModuleInstance(
             description = "Вычисляет знаменатель всей большой дроби",
-            function = ::module8Numerator
+            function = ::module6Numerator
         ),
         "negativeExpression" to ModuleInstance(
             description = "Полное выражение для x <= 0",

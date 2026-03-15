@@ -77,7 +77,7 @@ fun module5(x: Double, epsilon: Double = 1e-10): Double {
 /**
  * Вычисляет знаменатель всей большой дроби
  */
-fun module8Numerator(x: Double, epsilon: Double = 1e-10): Double {
+fun module6Numerator(x: Double, epsilon: Double = 1e-10): Double {
     val mainFraction = module5(x, epsilon)
     val sinx = sin(x, epsilon)
     val sinSquared = sinx * sinx
@@ -92,7 +92,7 @@ fun module8Numerator(x: Double, epsilon: Double = 1e-10): Double {
 fun negativeExpression(x: Double, epsilon: Double = 1e-10): Double {
     require(x <= 0) { "x должен быть <= 0" }
 
-    val module8 = module8Numerator(x, epsilon)
+    val module8 = module6Numerator(x, epsilon)
     val cotx = cot(x, epsilon)
 
     return module8 / cotx
