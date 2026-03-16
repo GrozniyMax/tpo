@@ -14,9 +14,9 @@ private val DEFAULT_EPSILON = BigDecimal("1E-50", DEFAULT_MATH_CONTEXT)
  * - для x > 0: логарифмическое выражение
  */
 fun computeExpression(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
-    return if (x <= BigDecimal.ZERO) {
-        negativeExpression(x, epsilon, mc)
-    } else {
-        positiveExpression(x, epsilon, mc)
+    return when {
+        (x < BigDecimal.ZERO) -> negativeExpression(x, epsilon, mc)
+        (x > BigDecimal.ZERO) -> positiveExpression(x, epsilon, mc)
+        else -> throw ArithmeticException("function is undefined")
     }
 }
