@@ -1,8 +1,6 @@
-package expression.mocked
+package expression
 
 import basic.*
-import expression.negativeExpression
-import expression.positiveExpression
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
