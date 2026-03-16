@@ -75,9 +75,6 @@ fun main() {
     }
 }
 
-/**
- * Читает ввод пользователя с валидацией
- */
 fun readInputWithValidation(
     prompt: String,
     validator: (String) -> Boolean,
@@ -93,9 +90,6 @@ fun readInputWithValidation(
     }
 }
 
-/**
- * Читает BigDecimal значение с обработкой ошибок
- */
 fun readBigDecimalInput(prompt: String): BigDecimal {
     while (true) {
         print(prompt)
@@ -110,9 +104,6 @@ fun readBigDecimalInput(prompt: String): BigDecimal {
     }
 }
 
-/**
- * Читает int значение с обработкой ошибок
- */
 fun readIntInput(prompt: String): Int {
     while (true) {
         print(prompt)

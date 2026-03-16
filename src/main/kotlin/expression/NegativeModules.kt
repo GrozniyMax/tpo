@@ -93,7 +93,6 @@ fun module6Numerator(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: M
  * Полное выражение для x <= 0
  */
 fun negativeExpression(x: BigDecimal, epsilon: BigDecimal = DEFAULT_EPSILON, mc: MathContext = DEFAULT_MATH_CONTEXT): BigDecimal {
-    require(x <= BigDecimal.ZERO) { "x должен быть <= 0" }
 
     val module6 = module6Numerator(x, epsilon, mc)
     val cotx = cot(x, epsilon, mc)
