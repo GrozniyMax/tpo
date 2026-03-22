@@ -45,6 +45,15 @@ kover {
 }
 
 tasks.register("reports") {
+
+    // Task to run the data generation script
+    tasks.register<JavaExec>("runGenerateData") {
+        group = "application"
+        description = "Run GenerateData.kt to produce CSV files"
+        mainClass.set("GenerateDataKt")
+        classpath = sourceSets["main"].runtimeClasspath
+    }
+
     group = "reporting"
     description = "Открывает отчёты в браузере"
 

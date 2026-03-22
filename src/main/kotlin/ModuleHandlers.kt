@@ -1,4 +1,5 @@
-import expression.*
+import basic.*
+import tpo.maxim.expression.*
 import java.math.BigDecimal
 import java.math.MathContext
 
@@ -14,118 +15,64 @@ data class ModuleDescription(
 
 interface ModuleHandler {
     fun getModule(key: String): ModuleInstance?
-
     fun getModulesDescriptions(): List<ModuleDescription>
 }
 
-object MainModuleHandler {
-    fun getModule(prefix: String, key: String) = when (prefix) {
-        "negative" -> NegativeModuleHandler.getModule(key)
-        "positive" -> PositiveModuleHandler.getModule(key)
-        else -> null
-    }
-
-    fun getModulesDescriptions(prefix: String) = when (prefix) {
-        "negative" -> NegativeModuleHandler.getModulesDescriptions()
-        "positive" -> PositiveModuleHandler.getModulesDescriptions()
-        else -> emptyList()
-    }
-
-    fun getModuleDescription(): List<ModuleDescription> {
-        val negative = NegativeModuleHandler.getModulesDescriptions().map { it.copy(name = "negative: " + it.name) }
-        val positive = PositiveModuleHandler.getModulesDescriptions().map { it.copy(name = "positive: " + it.name) }
-        return negative + positive
-    }
-}
-
 /**
- * Handler for negative expression modules (x <= 0)
+ * Unified module handler that combines negative, positive and additional expression modules.
  */
-private object NegativeModuleHandler : ModuleHandler {
+object UnifiedModuleHandler : ModuleHandler {
     private val modules: Map<String, ModuleInstance> = mapOf(
-        "module1" to ModuleInstance(
-            description = "Вычисляет ((((csc(x) / csc(x)) / sec(x)) - sin(x)) + cot(x)) ^ 3",
-            function = { x, mc -> module1(x, BigDecimal("1E-50", mc), mc) }
+        // Basic functions
+        "ln" to ModuleInstance(
+            description = "Вычисляет натуральный логарифм ln(x)",
+            function = { x, mc -> ln(x, BigDecimal("1E-50", mc), mc) }
         ),
-        "module2" to ModuleInstance(
-            description = "Вычисляет cos(x) + csc(x)",
-            function = { x, mc -> module2(x, BigDecimal("1E-50", mc), mc) }
+        "log10" to ModuleInstance(
+            description = "Вычисляет логарифм base 10",
+            function = { x, mc -> log(x, BigDecimal(10), BigDecimal("1E-50", mc), mc) }
         ),
-        "module3" to ModuleInstance(
-            description = "Вычисляет sec(x) - sin(x)",
-            function = { x, mc -> module3(x, BigDecimal("1E-50", mc), mc) }
+        "log2" to ModuleInstance(
+            description = "Вычисляет логарифм base 2",
+            function = { x, mc -> log(x, BigDecimal(2), BigDecimal("1E-50", mc), mc) }
         ),
-        "module4Numerator" to ModuleInstance(
-            description = "Вычисляет ((...^3) + (cos(x) + csc(x))) - (sec(x) - sin(x))",
-            function = { x, mc -> module4Numerator(x, BigDecimal("1E-50", mc), mc) }
+        "log3" to ModuleInstance(
+            description = "Вычисляет логарифм base 3",
+            function = { x, mc -> log(x, BigDecimal(3), BigDecimal("1E-50", mc), mc) }
         ),
-        "module4Denominator" to ModuleInstance(
-            description = "Вычисляет знаменатель (cot(x) ^ 2) / (csc(x) + sec(x))",
-            function = { x, mc -> module4Denominator(x, BigDecimal("1E-50", mc), mc) }
+        "log5" to ModuleInstance(
+            description = "Вычисляет логарифм base 5",
+            function = { x, mc -> log(x, BigDecimal(5), BigDecimal("1E-50", mc), mc) }
         ),
-        "module5" to ModuleInstance(
-            description = "Вычисляет дробь: (...)/[(cot(x) ^ 2) / (csc(x) + sec(x))]",
-            function = { x, mc -> module5(x, BigDecimal("1E-50", mc), mc) }
+        "cos" to ModuleInstance(
+            description = "Вычисляет cos(x)",
+            function = { x, mc -> cos(x, BigDecimal("1E-50", mc), mc) }
         ),
-        "module6Numerator" to ModuleInstance(
-            description = "Вычисляет знаменатель всей большой дроби",
-            function = { x, mc -> module6Numerator(x, BigDecimal("1E-50", mc), mc) }
+        "sin" to ModuleInstance(
+            description = "Вычисляет sin(x)",
+            function = { x, mc -> sin(x, BigDecimal("1E-50", mc), mc) }
         ),
-        "negativeExpression" to ModuleInstance(
-            description = "Полное выражение для x <= 0",
-            function = { x, mc -> negativeExpression(x, BigDecimal("1E-50", mc), mc) }
+        "sec" to ModuleInstance(
+            description = "Вычисляет sec(x)",
+            function = { x, mc -> sec(x, BigDecimal("1E-50", mc), mc) }
+        ),
+        "csc" to ModuleInstance(
+            description = "Вычисляет csc(x)",
+            function = { x, mc -> csc(x, BigDecimal("1E-50", mc), mc) }
+        ),
+        "cot" to ModuleInstance(
+            description = "Вычисляет cot(x)",
+            function = { x, mc -> cot(x, BigDecimal("1E-50", mc), mc) }
+        ),
+        // Main combined expression
+        "main" to ModuleInstance(
+            description = "Вычисляет основное выражение (positive/negative)",
+            function = { x, mc -> computeExpression(x, BigDecimal("1E-50", mc), mc) }
         )
     )
 
-    override fun getModule(key: String): ModuleInstance? =
-        modules[key]
-
+    override fun getModule(key: String): ModuleInstance? = modules[key]
 
     override fun getModulesDescriptions(): List<ModuleDescription> =
-        modules.map { (name, instance) ->
-            ModuleDescription(name, instance.description)
-        }
-
-}
-
-/**
- * Handler for positive expression modules (x > 0)
- */
-private object PositiveModuleHandler: ModuleHandler {
-    private val modules: Map<String, ModuleInstance> = mapOf(
-        "log10Squared" to ModuleInstance(
-            description = "Вычисляет: log_10(x) * log_10(x)",
-            function = { x, mc -> log10Squared(x, BigDecimal("1E-50", mc), mc) }
-        ),
-        "multiplyByLog2" to ModuleInstance(
-            description = "Вычисляет: (log_10(x) * log_10(x)) * log_2(x)",
-            function = { x, mc -> multiplyByLog2(x, BigDecimal("1E-50", mc), mc) }
-        ),
-        "addLog3" to ModuleInstance(
-            description = "Вычисляет: ((log_10(x) * log_10(x)) * log_2(x)) + log_3(x)",
-            function = { x, mc -> addLog3(x, BigDecimal("1E-50", mc), mc) }
-        ),
-        "addLog5" to ModuleInstance(
-            description = "Вычисляет: (((log_10(x) * log_10(x)) * log_10(x)) + log_3(x)) + log_5(x)",
-            function = { x, mc -> addLog5(x, BigDecimal("1E-50", mc), mc) }
-        ),
-        "lnCubed" to ModuleInstance(
-            description = "Вычисляет: ln(x) ^ 3",
-            function = { x, mc -> lnCubed(x, BigDecimal("1E-50", mc), mc) }
-        ),
-        "positiveExpression" to ModuleInstance(
-            description = "Вычисляет полное выражение для x > 0",
-            function = { x, mc -> positiveExpression(x, BigDecimal("1E-50", mc), mc) }
-        )
-    )
-
-    override fun getModule(key: String): ModuleInstance? {
-        return modules[key]
-    }
-
-    override fun getModulesDescriptions(): List<ModuleDescription> {
-        return modules.map { (name, instance) ->
-            ModuleDescription(name, instance.description)
-        }
-    }
+        modules.map { (name, instance) -> ModuleDescription(name, instance.description) }
 }

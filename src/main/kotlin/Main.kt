@@ -8,32 +8,21 @@ import tpo.maxim.expression.*
 fun main() {
     println("=== Консольное приложение для вычисления модулей ===\n")
 
-    println("Доступные модули:")
-    val allDescriptions = MainModuleHandler.getModuleDescription()
+    println("Доступные модуля:")
+    val allDescriptions = UnifiedModuleHandler.getModulesDescriptions()
     allDescriptions.forEach { desc ->
         println("  ${desc.name} - ${desc.description}")
     }
     println()
 
-    val moduleType = readInputWithValidation(
-        prompt = "Введите тип модуля (negative или positive): ",
-        validator = { it in listOf("negative", "positive") },
-        errorMessage = "Ошибка: тип модуля должен быть 'negative' или 'positive'. Попробуйте снова."
-    )
-
-    val availableModules = MainModuleHandler.getModulesDescriptions(moduleType).toSet()
-    println("\nДоступные модули для типа '$moduleType':")
-    availableModules.forEach { desc ->
-        println("  ${desc.name} - ${desc.description}")
-    }
-
+    // Choose a module
     val moduleName = readInputWithValidation(
         prompt = "\nВведите название модуля: ",
-        validator = { name -> name in availableModules.map { it.name } },
+        validator = { name -> name in allDescriptions.map { it.name } },
         errorMessage = "Ошибка: неверное название модуля. Выберите из списка выше. Попробуйте снова."
     )
 
-    val module = MainModuleHandler.getModule(moduleType, moduleName)
+    val module = UnifiedModuleHandler.getModule(moduleName)
         ?: run {
             println("Ошибка: модуль '$moduleName' не найден.")
             return
