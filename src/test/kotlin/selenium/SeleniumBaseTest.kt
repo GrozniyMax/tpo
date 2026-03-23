@@ -40,7 +40,8 @@ open class SeleniumBaseTest(private val useHeadless: Boolean = false) {
 
         driver = ChromeDriver(options)
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10))
-        wait = WebDriverWait(driver, Duration.ofSeconds(10))
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30))
+        wait = WebDriverWait(driver, Duration.ofSeconds(3))
 
         // Подмена navigator.webdriver через CDP
         val cdpDriver = driver as org.openqa.selenium.chromium.ChromiumDriver
