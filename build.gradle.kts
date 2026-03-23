@@ -17,11 +17,20 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+
+    // Selenium WebDriver
+    implementation("org.seleniumhq.selenium:selenium-java:4.28.1")
+    implementation("org.seleniumhq.selenium:selenium-chrome-driver:4.28.1")
+
+    // WebDriverManager для автоматической загрузки драйверов
+    testImplementation("io.github.bonigarcia:webdrivermanager:5.9.2")
 }
 
 tasks.test {
     useJUnitPlatform()
+    systemProperty("webdriver.chrome.driver", System.getenv("CHROME_DRIVER_PATH") ?: "chromedriver")
 }
+
 kover {
     reports {
         filters {
