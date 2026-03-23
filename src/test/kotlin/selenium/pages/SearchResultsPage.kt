@@ -1,5 +1,6 @@
 package selenium.pages
 
+import org.junit.platform.commons.logging.LoggerFactory
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.WebDriverWait
@@ -55,6 +56,4 @@ class SearchResultsPage(private val driver: WebDriver, private val wait: WebDriv
         val regex = "\\d+".toRegex()
         return regex.find(text)?.value?.toInt() ?: 0
     }
-
-
 }

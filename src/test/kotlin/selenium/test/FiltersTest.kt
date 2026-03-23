@@ -1,10 +1,12 @@
 package selenium.test
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import selenium.SeleniumBaseTest
+import selenium.pages.BookingCookiePage
 import selenium.pages.BookingHomePage
 import selenium.pages.SearchResultsPage
 import java.time.Duration
@@ -19,8 +21,7 @@ class FiltersTest: SeleniumBaseTest(useHeadless = false) {
         driver.manage().deleteAllCookies()
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30))
 
-        val homePage = BookingHomePage(driver, wait)
-        homePage.load()
+        val homePage = BookingCookiePage(driver, wait).navigateToBooking()
 
         val start = LocalDate.now()
         val end = start.plusDays(5)

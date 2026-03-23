@@ -133,14 +133,14 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
      * @param checkOutDay день выезда (число месяца)
      */
     private fun fillDateRange(checkInDay: LocalDate, checkOutDay: LocalDate) {
-        // Открываем календарь
         openCalendar()
+        logger.info { "Календарь открыт" }
 
-        // Выбираем дату заезда
         selectDayFromCalendar(checkInDay)
+        logger.info { "Выбрана дата заезда: $checkInDay" }
 
-        // Выбираем дату выезда (календарь остаётся открытым после выбора заезда)
         selectDayFromCalendar(checkOutDay)
+        logger.info { "Выбрана дата выезда: $checkOutDay" }
 
     }
 

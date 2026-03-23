@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
 import selenium.SeleniumBaseTest
+import selenium.pages.BookingCookiePage
 import selenium.pages.BookingHomePage
 import java.time.Duration
 import java.time.LocalDate
@@ -22,21 +23,15 @@ class SearchInputTest : SeleniumBaseTest(useHeadless = false) {
     fun setUp() {
         driver.manage().deleteAllCookies()
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30))
-        homePage = BookingHomePage(driver, wait)
+
+        homePage = BookingCookiePage(driver, wait).navigateToBooking()
     }
 
-    @Test
-    @DisplayName("Проверка загрузки базовой страницы")
-    fun loadDoesNotThrowException() {
-        homePage.load()
-    }
 
     @Test
     @DisplayName("UC-GUEST-01: Поиск жилья без регистрации")
     fun testGuestSearchAccommodation() {
-        homePage.load()
-
-        val start = LocalDate.now()
+        val start = LocalDate.now().plusDays(1)
         val end = start.plusDays(5)
 
         val searchResult = homePage.searchAccommodation("Таллин", start, end, 2)
@@ -51,7 +46,6 @@ class SearchInputTest : SeleniumBaseTest(useHeadless = false) {
     @Test
     @DisplayName("Поиск без указания даты")
     fun testGuestSearchAccommodationWithoutDates() {
-        homePage.load()
 
         val searchResult = homePage.searchAccommodation("Таллин", 2)
 
@@ -66,8 +60,6 @@ class SearchInputTest : SeleniumBaseTest(useHeadless = false) {
     @DisplayName("Поиск без указания места")
     fun testGuestSearchAccommodationWithoutPlace() {
         val alertText = "Чтобы начать поиск, введите направление."
-
-        homePage.load()
 
         homePage.clickSearch()
 
