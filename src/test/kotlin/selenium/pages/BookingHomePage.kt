@@ -104,9 +104,10 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
     /**
      * Клик по кнопке поиска
      */
-    fun clickSearch() {
+    fun clickSearch(): SearchResultsPage {
         val searchButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(SUBMIT_BUTTON_XPATH)))
         searchButton.click()
+        return SearchResultsPage(driver, wait)
     }
 
     /**
@@ -208,7 +209,7 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
      * @param checkOutDay день выезда
      * @param adults количество взрослых
      */
-    fun searchAccommodation(place: String, checkInDay: LocalDate, checkOutDay: LocalDate, adults: Int = 2) {
+    fun searchAccommodation(place: String, checkInDay: LocalDate, checkOutDay: LocalDate, adults: Int = 2): SearchResultsPage {
         enterPlace(place)
         logger.info { "Введено направление: $place" }
         selectFirstSuggestion()
@@ -226,8 +227,9 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
         }
         logger.info { "Выбрано количество взрослых: $adults" }
 
-        clickSearch()
+        val page = clickSearch()
         logger.info { "Нажата кнопка поиска" }
+        return page
     }
 
 
@@ -238,7 +240,7 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
      * @param checkOutDay день выезда
      * @param adults количество взрослых
      */
-    fun searchAccommodation(place: String, adults: Int = 2) {
+    fun searchAccommodation(place: String, adults: Int = 2):SearchResultsPage {
         enterPlace(place)
         logger.info { "Введено направление: $place" }
         selectFirstSuggestion()
@@ -251,27 +253,9 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
         }
         logger.info { "Выбрано количество взрослых: $adults" }
 
-        clickSearch()
+        val page = clickSearch()
         logger.info { "Нажата кнопка поиска" }
-    }
-
-    fun getSuggestions(firstN: Int = 5): List<String> {
-        // XPath на первые N карточек
-        val cardsXPath = "(//div[@role=\"list\"]//div[@data-testid=\"property-card\"])[position() <= $firstN]"
-
-        // Находим карточки
-        val productCards = driver.findElements(By.xpath(cardsXPath))
-
-        return productCards.map { card ->
-            try {
-                // Пытаемся найти внутри карточки название
-                val titleElement = card.findElement(By.xpath(".//*[@data-testid='title']"))
-                titleElement.text.trim()
-            } catch (e: Exception) {
-                // Если название не найдено, возвращаем пустую строку
-                ""
-            }
-        }.filter { it.isNotEmpty() } // убираем пустые строки
+        return page
     }
 
 }

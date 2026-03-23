@@ -1,14 +1,15 @@
-package selenium
+package selenium.test
 
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
+import selenium.SeleniumBaseTest
 import selenium.pages.BookingHomePage
 import java.time.Duration
 import java.time.LocalDate
 
-class BookingGuestUseCaseTest : SeleniumBaseTest(useHeadless = false) {
+class SearchInputTest : SeleniumBaseTest(useHeadless = false) {
 
     lateinit var homePage: BookingHomePage
 
@@ -38,10 +39,12 @@ class BookingGuestUseCaseTest : SeleniumBaseTest(useHeadless = false) {
         val start = LocalDate.now()
         val end = start.plusDays(5)
 
-        homePage.searchAccommodation("Таллин", start, end, 2)
+        val searchResult = homePage.searchAccommodation("Таллин", start, end, 2)
 
-        val actualSuggestions = homePage.getSuggestions(firstN = 2)
+        val actualSuggestions = searchResult.getSuggestions(firstN = 2)
+        val totalSuggestionsCount = searchResult.getTotalSuggestionsCount()
 
+        assertEquals(318, totalSuggestionsCount)
         assertEquals(expectedSuggestions, actualSuggestions)
     }
 
@@ -50,10 +53,12 @@ class BookingGuestUseCaseTest : SeleniumBaseTest(useHeadless = false) {
     fun testGuestSearchAccommodationWithoutDates() {
         homePage.load()
 
-        homePage.searchAccommodation("Таллин", 2)
+        val searchResult = homePage.searchAccommodation("Таллин", 2)
 
-        val actualSuggestions = homePage.getSuggestions(firstN = 2)
+        val actualSuggestions = searchResult.getSuggestions(firstN = 2)
+        val totalSuggestionsCount = searchResult.getTotalSuggestionsCount()
 
+        assertEquals(318, totalSuggestionsCount)
         assertEquals(expectedSuggestions, actualSuggestions)
     }
 
@@ -70,7 +75,6 @@ class BookingGuestUseCaseTest : SeleniumBaseTest(useHeadless = false) {
 
         assertTrue(alert.isDisplayed)
         assertEquals(alertText, alert.text)
-
     }
 
 
