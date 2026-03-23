@@ -13,13 +13,6 @@ private val logger = LoggerFactory.getLogger(BookingHomePage::class.java)
 class BookingHomePage(private val driver: WebDriver, private val wait: WebDriverWait) {
 
     companion object {
-        // ==================== ФОРМА ПОИСКА ====================
-        // Основная форма поиска
-        private const val SEARCH_FORM_XPATH =
-            "//form[contains(@aria-label, 'Найти варианты размещения') or contains(@aria-label, 'Search for accommodation')]"
-
-        // ==================== ПОЛЕ НАПРАВЛЕНИЯ ====================
-        // Поле ввода направления (destination)
         private const val PLACE_INPUT_XPATH =
             "//input[@name='ss' and contains(@placeholder, 'Куда') or contains(@placeholder, 'Where')]"
 
@@ -30,44 +23,13 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
         private const val SUBMIT_BUTTON_XPATH =
             "/html/body/div[1]/div/div[2]/div/main/div[1]/div/div/div/div/div/div/div/div[2]/div/div/form/div/div[4]/button"
 
-        // Поле отображения даты заезда
-        private const val CHECKIN_DISPLAY_XPATH = "//span[@data-testid='date-display-field-start']"
-
-        // Поле отображения даты выезда
-        private const val CHECKOUT_DISPLAY_XPATH = "//span[@data-testid='date-display-field-end']"
-
-        // Календарь (контейнер)
-        private const val CALENDAR_XPATH = "//div[contains(@class, 'Calendar') or contains(@class, 'calendar')]"
-
-        // Дни в календаре
-        private const val CALENDAR_DAY_XPATH =
-            "//div[contains(@class, 'Calendar')]//button[contains(@class, 'CalendarDay')]"
-
-        // ==================== ГОСТИ ====================
-        // Селектор гостей (occupancy)
         private const val GUESTS_BUTTON_XPATH = "//button[@data-testid='occupancy-config']"
 
-        // Кнопки увеличения/уменьшения счётчика гостей
-        private const val GUEST_INCREMENT_XPATH =
-            "//button[contains(@aria-label, 'increase') or contains(@aria-label, 'add')]//span[text()='+']"
-        private const val GUEST_DECREMENT_XPATH =
-            "//button[contains(@aria-label, 'decrease') or contains(@aria-label, 'remove')]//span[text()='-']"
-
-        // ==================== КНОПКА ПОИСКА ====================
-        // Кнопка поиска (submit)
-        private const val SEARCH_BUTTON_XPATH =
-            "//button[@type='submit' and contains(@class, 'searchbox')] | //button[contains(@class, 'searchbox__submit')]"
-
-        // ==================== МОДАЛЬНЫЕ ОКНА ====================
-        // Кнопка входа (для закрытия)
         private const val LOG_IN_XPATH = "//button[contains(@aria-label, 'Войти') or contains(@aria-label, 'Sign in')]"
 
-        // Кнопка отказа от cookies
         private const val DECLINE_COOKIE_XPATH =
             "//button[contains(@class, 'reject') or contains(@class, 'deny') or .//span[contains(text(), 'Отклонить') or contains(text(), 'Reject') or contains(text(), 'Decline')]]"
 
-        // ==================== ПОДСКАЗКИ ====================
-        // Автокомплит направления
         private const val SUGGESTION_XPATH =
             "//div[contains(@class, 'autocomplete')]//li[contains(@class, 'result') or contains(@role, 'option')]"
     }
@@ -268,12 +230,48 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
         logger.info { "Нажата кнопка поиска" }
     }
 
+
     /**
-     * Быстрый поиск только по направлению (даты и гости остаются по умолчанию)
+     * Полный сценарий поиска жилья
+     * @param place направление (город, отель)
+     * @param checkInDay день заезда
+     * @param checkOutDay день выезда
+     * @param adults количество взрослых
      */
-    fun quickSearch(place: String) {
+    fun searchAccommodation(place: String, adults: Int = 2) {
         enterPlace(place)
+        logger.info { "Введено направление: $place" }
         selectFirstSuggestion()
+        logger.info { "Выбрана первая подсказка" }
+
+        if (adults > 0) {
+            openGuestsSelector()
+            setAdults(adults)
+            closeGuestsSelector()
+        }
+        logger.info { "Выбрано количество взрослых: $adults" }
+
         clickSearch()
+        logger.info { "Нажата кнопка поиска" }
     }
+
+    fun getSuggestions(firstN: Int = 5): List<String> {
+        // XPath на первые N карточек
+        val cardsXPath = "(//div[@role=\"list\"]//div[@data-testid=\"property-card\"])[position() <= $firstN]"
+
+        // Находим карточки
+        val productCards = driver.findElements(By.xpath(cardsXPath))
+
+        return productCards.map { card ->
+            try {
+                // Пытаемся найти внутри карточки название
+                val titleElement = card.findElement(By.xpath(".//*[@data-testid='title']"))
+                titleElement.text.trim()
+            } catch (e: Exception) {
+                // Если название не найдено, возвращаем пустую строку
+                ""
+            }
+        }.filter { it.isNotEmpty() } // убираем пустые строки
+    }
+
 }
