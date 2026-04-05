@@ -5,7 +5,7 @@ import org.junit.platform.commons.logging.LoggerFactory
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.WebDriverWait
-import selenium.pages.place.searchResults.SearchResultsPage
+import selenium.pages.place.searchResults.PlaceSearchResultsPage
 
 class PlacePage(
     private val driver: WebDriver,
@@ -26,10 +26,10 @@ class PlacePage(
     /**
      * Возвращает на предыдущую страницу (страницу результатов поиска)
      */
-    fun goBack(): SearchResultsPage {
+    fun goBack(): PlaceSearchResultsPage {
         driver.navigate().back()
         logger.info { "Вернулись на предыдущую страницу" }
-        return SearchResultsPage(driver, wait)
+        return PlaceSearchResultsPage(driver, wait)
     }
 
     fun getProperties(): List<String> {

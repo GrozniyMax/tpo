@@ -5,7 +5,7 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
-import selenium.pages.place.searchResults.SearchResultsPage
+import selenium.pages.place.searchResults.PlaceSearchResultsPage
 import java.time.LocalDate
 
 private val logger = LoggerFactory.getLogger(BookingHomePage::class.java)
@@ -51,10 +51,10 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
     /**
      * Клик по кнопке поиска
      */
-    fun clickSearch(): SearchResultsPage {
+    fun clickSearch(): PlaceSearchResultsPage {
         val searchButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(SUBMIT_BUTTON_XPATH)))
         searchButton.click()
-        return SearchResultsPage(driver, wait)
+        return PlaceSearchResultsPage(driver, wait)
     }
 
     /**
@@ -156,7 +156,7 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
      * @param checkOutDay день выезда
      * @param adults количество взрослых
      */
-    fun searchAccommodation(place: String, checkInDay: LocalDate, checkOutDay: LocalDate, adults: Int = 2): SearchResultsPage {
+    fun searchAccommodation(place: String, checkInDay: LocalDate, checkOutDay: LocalDate, adults: Int = 2): PlaceSearchResultsPage {
         enterPlace(place)
         logger.info { "Введено направление: $place" }
         selectFirstSuggestion()
@@ -187,7 +187,7 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
      * @param checkOutDay день выезда
      * @param adults количество взрослых
      */
-    fun searchAccommodation(place: String, adults: Int = 2): SearchResultsPage {
+    fun searchAccommodation(place: String, adults: Int = 2): PlaceSearchResultsPage {
         enterPlace(place)
         logger.info { "Введено направление: $place" }
         selectFirstSuggestion()

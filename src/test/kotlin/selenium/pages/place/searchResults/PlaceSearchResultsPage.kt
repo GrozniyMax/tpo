@@ -10,10 +10,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import selenium.pages.place.PlacePage
 
-class SearchResultsPage(
+class PlaceSearchResultsPage(
     private val driver: WebDriver,
     private val wait: WebDriverWait,
-    private val logger: Logger = LoggerFactory.getLogger(SearchResultsPage::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(PlaceSearchResultsPage::class.java)
 ) {
 
     private fun getProductCards(topN: Int = 5): List<WebElement> {

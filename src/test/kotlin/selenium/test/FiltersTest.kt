@@ -6,13 +6,13 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import selenium.SeleniumBaseTest
 import selenium.pages.BookingCookiePage
-import selenium.pages.place.searchResults.SearchResultsPage
+import selenium.pages.place.searchResults.PlaceSearchResultsPage
 import java.time.Duration
 import java.time.LocalDate
 
 class FiltersTest: SeleniumBaseTest(useHeadless = false) {
 
-    lateinit var searchResultsPage: SearchResultsPage
+    lateinit var placeSearchResultsPage: PlaceSearchResultsPage
 
     @BeforeEach
     fun setUp() {
@@ -24,7 +24,7 @@ class FiltersTest: SeleniumBaseTest(useHeadless = false) {
         val start = LocalDate.now()
         val end = start.plusDays(5)
 
-        searchResultsPage = homePage.searchAccommodation("Таллин", start, end, 2)
+        placeSearchResultsPage = homePage.searchAccommodation("Таллин", start, end, 2)
     }
 
     @Test
@@ -35,10 +35,10 @@ class FiltersTest: SeleniumBaseTest(useHeadless = false) {
             "Center Hotel"
         )
 
-        val expectedTotal = searchResultsPage.addFilter("Завтрак включен")
+        val expectedTotal = placeSearchResultsPage.addFilter("Завтрак включен")
 
-        val actualSuggestions = searchResultsPage.getSuggestions(topN = 2)
-        val totalSuggestionsCount = searchResultsPage.getTotalSuggestionsCount()
+        val actualSuggestions = placeSearchResultsPage.getSuggestions(topN = 2)
+        val totalSuggestionsCount = placeSearchResultsPage.getTotalSuggestionsCount()
 
         assertEquals(expectedSuggestions, actualSuggestions)
         assertEquals(expectedTotal, totalSuggestionsCount)
@@ -52,10 +52,10 @@ class FiltersTest: SeleniumBaseTest(useHeadless = false) {
             "Citybox Tallinn City Center"
         )
 
-        searchResultsPage.addFilter("Отели")
+        placeSearchResultsPage.addFilter("Отели")
 
-        val actualSuggestions = searchResultsPage.getSuggestions(topN = 2)
-        val totalSuggestionsCount = searchResultsPage.getTotalSuggestionsCount()
+        val actualSuggestions = placeSearchResultsPage.getSuggestions(topN = 2)
+        val totalSuggestionsCount = placeSearchResultsPage.getTotalSuggestionsCount()
 
         assertEquals(expectedSuggestions, actualSuggestions)
         assertEquals(72, totalSuggestionsCount)
