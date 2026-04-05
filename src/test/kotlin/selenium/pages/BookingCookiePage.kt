@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
+import selenium.pages.cars.CarBookingHomePage
 import selenium.pages.place.BookingHomePage
 import selenium.pages.plane.PlaneBookingHomePage
 
