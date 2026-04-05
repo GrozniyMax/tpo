@@ -6,7 +6,7 @@ import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
 import selenium.SeleniumBaseTest
 import selenium.pages.BookingCookiePage
-import selenium.pages.BookingHomePage
+import selenium.pages.place.BookingHomePage
 import java.time.Duration
 import java.time.LocalDate
 

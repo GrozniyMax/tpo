@@ -1,4 +1,4 @@
-package selenium.pages
+package selenium.pages.place
 
 import org.junit.platform.commons.logging.LoggerFactory
 import org.openqa.selenium.By
@@ -13,12 +13,9 @@ private val logger = LoggerFactory.getLogger(BookingHomePage::class.java)
 class BookingHomePage(private val driver: WebDriver, private val wait: WebDriverWait) {
 
     companion object {
-
         private const val PLACE_INPUT_XPATH =
             "//input[@name='ss' and contains(@placeholder, 'Куда') or contains(@placeholder, 'Where')]"
 
-        // ==================== ДАТЫ ====================
-        // Кнопка открытия календаря (контейнер с датами)
         private const val DATE_BUTTON_XPATH = "//button[@data-testid='searchbox-dates-container']"
 
         private const val SUBMIT_BUTTON_XPATH =
@@ -26,65 +23,14 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
 
         private const val GUESTS_BUTTON_XPATH = "//button[@data-testid='occupancy-config']"
 
-        private const val LOG_IN_XPATH = "//button[contains(@aria-label, 'Войти') or contains(@aria-label, 'Sign in')]"
-
-        private const val DECLINE_COOKIE_XPATH =
-            "//button[contains(@class, 'reject') or contains(@class, 'deny') or .//span[contains(text(), 'Отклонить') or contains(text(), 'Reject') or contains(text(), 'Decline')]]"
-
         private const val SUGGESTION_XPATH =
             "//div[contains(@class, 'autocomplete')]//li[contains(@class, 'result') or contains(@role, 'option')]"
     }
 
     /**
-     * Проверка загрузки страницы
-     */
-    fun isLoaded(): Boolean {
-        return try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(PLACE_INPUT_XPATH))).isDisplayed
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    /**
-     * Закрытие модального окна входа
-     */
-    private fun declineLogIn() {
-        try {
-            val declineButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(LOG_IN_XPATH)))
-            declineButton.click()
-        } catch (e: Exception) {
-            // Кнопка может отсутствовать
-        }
-    }
-
-    /**
-     * Отказ от cookies
-     */
-    private fun declineCookie() {
-        try {
-            val declineButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(DECLINE_COOKIE_XPATH)))
-            declineButton.click()
-        } catch (e: Exception) {
-            // Кнопка может отсутствовать
-        }
-    }
-
-    /**
-     * Загрузка страницы и обработка модальных окон
-     */
-    fun load() {
-        driver.get("https://www.booking.com")
-        isLoaded()
-        declineLogIn()
-        declineCookie()
-        logger.info { "Страница загружена" }
-    }
-
-    /**
      * Ввод направления
      */
-    fun enterPlace(place: String) {
+    private fun enterPlace(place: String) {
         val placeInput = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(PLACE_INPUT_XPATH)))
         placeInput.clear()
         placeInput.sendKeys(place)
@@ -93,7 +39,7 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
     /**
      * Выбор первой подсказки из автокомплита
      */
-    fun selectFirstSuggestion() {
+    private fun selectFirstSuggestion() {
         try {
             val suggestion = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(SUGGESTION_XPATH)))
             suggestion.click()
