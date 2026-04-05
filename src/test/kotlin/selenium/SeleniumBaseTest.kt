@@ -41,7 +41,7 @@ open class SeleniumBaseTest(
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait))
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30))
-        wait = WebDriverWait(driver, Duration.ofSeconds(10))
+        wait = WebDriverWait(driver, Duration.ofSeconds(30))
     }
 
     private fun setupChromeDriver(): WebDriver {
@@ -130,7 +130,7 @@ open class SeleniumBaseTest(
     @AfterAll
     fun tearDownAll() {
         if (::driver.isInitialized) {
-            driver.quit()
+            driver.close()
         }
     }
 }

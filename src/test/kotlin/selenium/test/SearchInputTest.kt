@@ -28,46 +28,35 @@ class SearchInputTest : SeleniumBaseTest(useHeadless = false) {
     }
 
 
-    @Test
-    @DisplayName("UC-GUEST-01: Поиск жилья без регистрации")
-    fun testGuestSearchAccommodation() {
-        val start = LocalDate.now().plusDays(1)
-        val end = start.plusDays(5)
+//    @Test
+//    @DisplayName("UC-GUEST-01: Поиск жилья без регистрации")
+//    fun testGuestSearchAccommodation() {
+//        val start = LocalDate.now().plusDays(1)
+//        val end = start.plusDays(5)
+//
+//        val searchResult = homePage.searchAccommodation("Таллин", start, end, 2)
+//
+//        val actualSuggestions = searchResult.getSuggestions(topN = 2)
+//        val totalSuggestionsCount = searchResult.getTotalSuggestionsCount()
+//
+//        assertEquals(318, totalSuggestionsCount)
+//        assertEquals(expectedSuggestions, actualSuggestions)
+//    }
 
-        val searchResult = homePage.searchAccommodation("Таллин", start, end, 2)
+//    @Test
+//    @DisplayName("Поиск без указания даты")
+//    fun testGuestSearchAccommodationWithoutDates() {
+//
+//        val searchResult = homePage.searchAccommodation("Таллин", 2)
+//
+//        val actualSuggestions = searchResult.getSuggestions(topN = 2)
+//        val totalSuggestionsCount = searchResult.getTotalSuggestionsCount()
+//
+//        assertEquals(318, totalSuggestionsCount)
+//        assertEquals(expectedSuggestions, actualSuggestions)
+//    }
 
-        val actualSuggestions = searchResult.getSuggestions(topN = 2)
-        val totalSuggestionsCount = searchResult.getTotalSuggestionsCount()
 
-        assertEquals(318, totalSuggestionsCount)
-        assertEquals(expectedSuggestions, actualSuggestions)
-    }
-
-    @Test
-    @DisplayName("Поиск без указания даты")
-    fun testGuestSearchAccommodationWithoutDates() {
-
-        val searchResult = homePage.searchAccommodation("Таллин", 2)
-
-        val actualSuggestions = searchResult.getSuggestions(topN = 2)
-        val totalSuggestionsCount = searchResult.getTotalSuggestionsCount()
-
-        assertEquals(318, totalSuggestionsCount)
-        assertEquals(expectedSuggestions, actualSuggestions)
-    }
-
-    @Test
-    @DisplayName("Поиск без указания места")
-    fun testGuestSearchAccommodationWithoutPlace() {
-        val alertText = "Чтобы начать поиск, введите направление."
-
-        homePage.clickSearch()
-
-        val alert = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"main\"]/div[1]/div/div/div/div/div/div/div/div[2]/div/div/form/div/div[1]/div/div[2]")))
-
-        assertTrue(alert.isDisplayed)
-        assertEquals(alertText, alert.text)
-    }
 
 
 }

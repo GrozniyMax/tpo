@@ -2,6 +2,7 @@ package selenium.pages.place.searchResults
 
 import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
+import kotlin.math.log
 
 data class PropertyCard(
     val title: String,
@@ -36,9 +37,9 @@ object PropertyCardParser {
     private fun parseRating(card: WebElement): String {
         return try {
             card.findElement(
-                By.xpath(".//div[@data-testid='review-score']//div[contains(@class, 'dff2e52086')]")
+                By.xpath(".//div[@data-testid='review-score']")
             ).text
-        } catch (e: NoSuchElementException) {
+        } catch (e: Exception) {
             ""
         }
     }

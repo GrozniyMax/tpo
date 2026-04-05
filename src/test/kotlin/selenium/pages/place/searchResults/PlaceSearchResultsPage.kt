@@ -8,13 +8,14 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
+import selenium.pages.BookingCookiePage
 import selenium.pages.place.PlacePage
 
 class PlaceSearchResultsPage(
     private val driver: WebDriver,
     private val wait: WebDriverWait,
     private val logger: Logger = LoggerFactory.getLogger(PlaceSearchResultsPage::class.java)
-) {
+): BookingCookiePage(driver, wait) {
 
     private fun getProductCards(topN: Int = 5): List<WebElement> {
         val cardsXPath = "(//div[@role=\"list\"]//div[@data-testid=\"property-card\"])[position() <= $topN]"
@@ -66,7 +67,7 @@ class PlaceSearchResultsPage(
         logger.info { "Нашли контейнер с сортировкой" }
 
         val sortOption = sortContainer.findElement(
-            By.xpath(".//div[contains(., '$sort')]")
+            By.xpath("//span[text()='$sort']")
         )
 
         logger.info { "Нашли опцию сортировки $sort" }
@@ -78,20 +79,25 @@ class PlaceSearchResultsPage(
     fun select(index: Int): PlacePage {
         val productCards = getProductCards(index + 1)
 
-        val card = productCards[index]
+        val link = productCards[index].findElement(By.xpath(".//a[@data-testid='title-link']"))
         logger.info { "Выбрали карточку с индексом $index" }
 
-        card.click()
+        val originalWindow = driver.windowHandle
+
+        link.click()
         logger.info { "Кликнули по карточке" }
 
-        waitForResultsToUpdate()
-        logger.info { "Дождались обновления результатов" }
+        wait.until { driver.windowHandles.size > 1 }
+        val newWindow = driver.windowHandles.first { it != originalWindow }
+        driver.switchTo().window(newWindow)
 
-        return PlacePage(driver, wait)
+        logger.info { "Переключились на новую вкладку" }
+
+        return PlacePage(driver, wait, originalWindow)
     }
 
-    fun clickFilter(filterGroup: String, filterName: String) {
-        val filtersContainerXPath = "//div[@data-testid='filters-group'][@data-filters-group='$filterGroup']"
+    fun clickPopularFilter(filterName: String) {
+        val filtersContainerXPath = "//div[@data-testid='filters-group'][@data-filters-group='popular']"
         val filterXPath = ".//label[contains(., '$filterName') and .//input[@type='checkbox']]"
 
         val container = wait.until(
@@ -99,13 +105,27 @@ class PlaceSearchResultsPage(
                 By.xpath(filtersContainerXPath)
             )
         )
-        logger.info { "Нашли группу фильтров $filterGroup" }
+        logger.info { "Нашли популярные фильтры" }
 
         val filterElement = wait.until(
             ExpectedConditions.elementToBeClickable(
                 container.findElement(By.xpath(filterXPath))
             )
         )
+        logger.info { "Нашли фильтр $filterName" }
+
+        filterElement.click()
+        logger.info { "Кликнули по фильтру $filterName" }
+
+        waitForResultsToUpdate()
+    }
+
+    fun clickOtherFilter(filterGroup: String, filterName: String) {
+        val filterXPath = "//div[@data-testid='filters-group-label-content'][text()='$filterName']"
+
+        val filterElement = wait.until { driver ->
+            driver.findElement(By.xpath(filterXPath))
+        }
         logger.info { "Нашли фильтр $filterName" }
 
         filterElement.click()

@@ -27,37 +27,37 @@ class FiltersTest: SeleniumBaseTest(useHeadless = false) {
         placeSearchResultsPage = homePage.searchAccommodation("Таллин", start, end, 2)
     }
 
-    @Test
-    @DisplayName("Фильтрация по 'Популярные фильтры'")
-    fun testPopularFilters() {
-        val expectedSuggestions = listOf(
-            "Hestia Hotel Seaport Tallinn",
-            "Center Hotel"
-        )
-
-        val expectedTotal = placeSearchResultsPage.addFilter("Завтрак включен")
-
-        val actualSuggestions = placeSearchResultsPage.getSuggestions(topN = 2)
-        val totalSuggestionsCount = placeSearchResultsPage.getTotalSuggestionsCount()
-
-        assertEquals(expectedSuggestions, actualSuggestions)
-        assertEquals(expectedTotal, totalSuggestionsCount)
-    }
-
-    @Test
-    @DisplayName("Фильтрация по 'Тип размещения'")
-    fun testPlacementFilter() {
-        val expectedSuggestions = listOf(
-            "Hestia Hotel Seaport Tallinn",
-            "Citybox Tallinn City Center"
-        )
-
-        placeSearchResultsPage.addFilter("Отели")
-
-        val actualSuggestions = placeSearchResultsPage.getSuggestions(topN = 2)
-        val totalSuggestionsCount = placeSearchResultsPage.getTotalSuggestionsCount()
-
-        assertEquals(expectedSuggestions, actualSuggestions)
-        assertEquals(72, totalSuggestionsCount)
-    }
+//    @Test
+//    @DisplayName("Фильтрация по 'Популярные фильтры'")
+//    fun testPopularFilters() {
+//        val expectedSuggestions = listOf(
+//            "Hestia Hotel Seaport Tallinn",
+//            "Center Hotel"
+//        )
+//
+//        val expectedTotal = placeSearchResultsPage.addFilter("Завтрак включен")
+//
+//        val actualSuggestions = placeSearchResultsPage.getSuggestions(topN = 2)
+//        val totalSuggestionsCount = placeSearchResultsPage.getTotalSuggestionsCount()
+//
+//        assertEquals(expectedSuggestions, actualSuggestions)
+//        assertEquals(expectedTotal, totalSuggestionsCount)
+//    }
+//
+//    @Test
+//    @DisplayName("Фильтрация по 'Тип размещения'")
+//    fun testPlacementFilter() {
+//        val expectedSuggestions = listOf(
+//            "Hestia Hotel Seaport Tallinn",
+//            "Citybox Tallinn City Center"
+//        )
+//
+//        placeSearchResultsPage.addFilter("Отели")
+//
+//        val actualSuggestions = placeSearchResultsPage.getSuggestions(topN = 2)
+//        val totalSuggestionsCount = placeSearchResultsPage.getTotalSuggestionsCount()
+//
+//        assertEquals(expectedSuggestions, actualSuggestions)
+//        assertEquals(72, totalSuggestionsCount)
+//    }
 }

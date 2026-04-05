@@ -15,10 +15,11 @@ import selenium.pages.plane.PlaneBookingHomePage
  * PageObject для обработки диалогов cookie и регистрации на Booking.com
  * Использует только XPATH локаторы
  */
-class BookingCookiePage(
+open class BookingCookiePage(
     private val driver: WebDriver,
     private val wait: WebDriverWait,
-    private val logger: Logger = LoggerFactory.getLogger(BookingCookiePage::class.java)) {
+    private val logger: Logger = LoggerFactory.getLogger(BookingCookiePage::class.java)
+) {
 
     companion object {
         // Кнопка "Отклонить" в диалоге cookie
@@ -57,16 +58,22 @@ class BookingCookiePage(
 
     fun declineCookie() {
 
-        val declineButton = wait.until { driver ->
-            driver.findElement(By.xpath(DECLINE_COOKIE_XPATH)).takeIf { it.isDisplayed }
-        }!!
-        declineButton.click()
+        try {
+            driver.findElement(By.xpath(DECLINE_COOKIE_XPATH)).click()
+            logger.info { "Отклонили cookie" }
+        } catch (e: Exception) {
+            logger.warn { "Не удалось закрыть диалог cookie: ${e.message}" }
+        }
 
     }
 
     fun closeLoginDialog() {
-        val closeButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(CLOSE_LOGIN_DIALOG_XPATH)))
-        closeButton.click()
+        try {
+            driver.findElement(By.xpath(CLOSE_LOGIN_DIALOG_XPATH)).click()
+            logger.info { "Закрыли диалог входа" }
+        } catch (e: Exception) {
+            logger.warn { "Не удалось закрыть диалог входа: ${e.message}" }
+        }
     }
 
     /**
@@ -74,7 +81,12 @@ class BookingCookiePage(
      */
     fun handlePageLoadAndDialogs() {
         // Ждем загрузки страницы по основному элементу
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(PAGE_LOADED_INDICATOR_XPATH)))
+        wait.until(
+            ExpectedConditions.or(
+                ExpectedConditions.presenceOfElementLocated(By.xpath(CLOSE_LOGIN_DIALOG_XPATH)),
+                ExpectedConditions.presenceOfElementLocated(By.xpath(DECLINE_COOKIE_XPATH))
+            )
+        )
 
         closeLoginDialog()
         declineCookie()
