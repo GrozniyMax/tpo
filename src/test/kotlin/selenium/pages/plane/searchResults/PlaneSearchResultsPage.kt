@@ -3,189 +3,93 @@ package selenium.pages.plane.searchResults
 import org.junit.platform.commons.logging.Logger
 import org.junit.platform.commons.logging.LoggerFactory
 import org.openqa.selenium.By
-import org.openqa.selenium.NoSuchElementException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
-import selenium.pages.plane.PlaneFlightPage
+import selenium.pages.BookingCookiePage
 
 class PlaneSearchResultsPage(
     private val driver: WebDriver,
     private val wait: WebDriverWait,
     private val logger: Logger = LoggerFactory.getLogger(PlaneSearchResultsPage::class.java)
-) {
+) : BookingCookiePage(driver, wait) {
+
+    companion object {
+        // Упрощенные XPath выражения
+        private const val FLIGHT_CARD_XPATH = "//div[@data-testid='searchresults_card']"
+        private const val NO_RESULTS_XPATH =
+            "//*[contains(., 'нет рейсов') or contains(., 'No flights') or contains(., 'No results')]"
+    }
 
     private fun getFlightCards(topN: Int = 5): List<WebElement> {
-        val cardsXPath = "(//div[contains(@data-testid, 'card') or contains(@class, 'flight-card')])[position() <= $topN]"
+        val xPath = "//div[@data-testid='searchresults_card'][position() <= $topN]"
 
-        wait.until(
-            ExpectedConditions.presenceOfElementLocated(
-                By.xpath("//div[contains(@data-testid, 'card') or contains(@class, 'flight-card')]")
-            )
-        )
-        logger.info { "Дождались появления карточек рейсов" }
-
-        val flightCards = driver.findElements(By.xpath(cardsXPath))
-        logger.info { "Нашли ${flightCards.size} карточек рейсов" }
-
-        return flightCards
-    }
-
-    /**
-     * Проверка, что результатов нет
-     */
-    fun hasNoResults(): Boolean {
-        try {
-            driver.findElement(By.xpath("//div[contains(@data-testid, 'empty-state') or contains(@class, 'no-results')]"))
-            return true
-        } catch (e: NoSuchElementException) {
-            return false
+        val elements = wait.until {
+            driver.findElements(By.xpath(xPath))
         }
+        logger.info { "Дождались появления карточек рейсов" }
+        logger.info { "Найдено ${elements.size} карточек рейсов" }
+        return elements.toList().subList(0, topN)
     }
 
-    /**
-     * Получение списка рейсов
-     */
+    fun selectOneway() {
+        val oneway = wait.until {
+            driver.findElement(By.xpath("//div[@data-ui-name='search_type_oneway']"))
+        }
+        logger.info { "Нашли кнопку 'В одну сторону'" }
+
+        oneway.click()
+
+        logger.info { "Нажали на кнопку 'В одну сторону'" }
+    }
+
+    fun selectBothWay() {
+        val bothWay = wait.until {
+            driver.findElement(By.xpath("//input[@data-ui-name='input_search_type_roundtrip']"))
+        }
+        logger.info { "Нашли кнопку 'В обе стороны'" }
+        bothWay.click()
+        logger.info { "Нажали на кнопку 'В обе стороны'" }
+    }
+
+
     fun getFlights(topN: Int = 5): List<FlightCard> {
         val flightCards = getFlightCards(topN)
 
-        val cards = flightCards.map { card -> FlightCardParser.parse(card) }
-        logger.info { "Распарсили карточки рейсов" }
+        if (flightCards.isEmpty()) {
+            logger.info { "Нет карточек для парсинга" }
+            return emptyList()
+        }
+
+        val cards = flightCards.mapNotNull { card ->
+            try {
+                PlaneCardParser.parse(card)
+            } catch (e: Exception) {
+                logger.info { "Ошибка парсинга карточки: ${e.message}" }
+                null
+            }
+        }
+        logger.info { "Распарсили ${cards.size} карточек рейсов" }
 
         return cards
     }
 
-    /**
-     * Применение сортировки
-     */
-    fun applySort(sort: String) {
-        val sortButton = wait.until(
-            ExpectedConditions.elementToBeClickable(
-                By.xpath("//button[contains(@data-testid, 'sort') or contains(@aria-label, 'sort')]")
-            )
-        )
-        sortButton.click()
-        logger.info { "Кликнули по кнопке сортировки" }
+    fun search() {
+        val xpath = "//button[@data-ui-name='button_search_submit']"
 
-        val sortContainer = wait.until(
-            ExpectedConditions.presenceOfElementLocated(
-                By.xpath("//div[contains(@data-testid, 'sorters-dropdown') or contains(@class, 'sort-dropdown')]")
-            )
-        )
+        val searchButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)))
 
-        logger.info { "Нашли контейнер с сортировкой" }
+        searchButton.click()
+        logger.info { "Нашли кнопку поиска" }
 
-        val sortOption = sortContainer.findElement(
-            By.xpath(".//div[contains(., '$sort')]")
-        )
-
-        logger.info { "Нашли опцию сортировки $sort" }
-
-        sortOption.click()
-        logger.info { "Кликнули по опции сортировки $sort" }
+        waitForPageToOpen()
     }
 
-    /**
-     * Выбор рейса по индексу
-     */
-    fun select(index: Int): PlaneFlightPage {
-        val flightCards = getFlightCards(index + 1)
-
-        val card = flightCards[index]
-        logger.info { "Выбрали карточку рейса с индексом $index" }
-
-        card.click()
-        logger.info { "Кликнули по карточке рейса" }
-
-        waitForResultsToUpdate()
-        logger.info { "Дождались обновления результатов" }
-
-        return PlaneFlightPage(driver, wait)
+    fun waitForPageToOpen() {
+        wait.until {
+            driver.findElement(By.xpath(FLIGHT_CARD_XPATH))
+        }
     }
 
-    /**
-     * Применение фильтра
-     */
-    fun clickFilter(filterGroup: String, filterName: String) {
-        val filtersContainerXPath = "//div[contains(@data-testid, 'filters-group') or contains(@data-filters-group, '$filterGroup')]"
-        val filterXPath = ".//label[contains(., '$filterName') and .//input[@type='checkbox']]"
-
-        val container = wait.until(
-            ExpectedConditions.presenceOfElementLocated(
-                By.xpath(filtersContainerXPath)
-            )
-        )
-        logger.info { "Нашли группу фильтров $filterGroup" }
-
-        val filterElement = wait.until(
-            ExpectedConditions.elementToBeClickable(
-                container.findElement(By.xpath(filterXPath))
-            )
-        )
-        logger.info { "Нашли фильтр $filterName" }
-
-        filterElement.click()
-        logger.info { "Кликнули по фильтру $filterName" }
-
-        waitForResultsToUpdate()
-    }
-
-    /**
-     * Ожидает обновления результатов после применения фильтра
-     */
-    private fun waitForResultsToUpdate() {
-        wait.until(
-            ExpectedConditions.presenceOfElementLocated(
-                By.xpath("//div[contains(@data-testid, 'card') or contains(@class, 'flight-card')]")
-            )
-        )
-        logger.info { "Результаты обновились" }
-    }
-}
-
-/**
- * Модель карточки рейса
- */
-data class FlightCard(
-    val airline: String?,
-    val departureTime: String?,
-    val arrivalTime: String?,
-    val duration: String?,
-    val price: String?
-)
-
-/**
- * Парсер карточек рейсов
- */
-object FlightCardParser {
-    fun parse(card: WebElement): FlightCard {
-        return FlightCard(
-            airline = try {
-                card.findElement(By.xpath(".//span[contains(@class, 'airline') or contains(@class, 'carrier')]")).text
-            } catch (e: Exception) {
-                null
-            },
-            departureTime = try {
-                card.findElement(By.xpath(".//span[contains(@class, 'departure-time')]")).text
-            } catch (e: Exception) {
-                null
-            },
-            arrivalTime = try {
-                card.findElement(By.xpath(".//span[contains(@class, 'arrival-time')]")).text
-            } catch (e: Exception) {
-                null
-            },
-            duration = try {
-                card.findElement(By.xpath(".//span[contains(@class, 'duration')]")).text
-            } catch (e: Exception) {
-                null
-            },
-            price = try {
-                card.findElement(By.xpath(".//span[contains(@class, 'price')]")).text
-            } catch (e: Exception) {
-                null
-            }
-        )
-    }
 }
