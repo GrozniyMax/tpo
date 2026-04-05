@@ -7,7 +7,6 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
-import selenium.pages.cars.CarBookingHomePage
 import selenium.pages.place.BookingHomePage
 import selenium.pages.plane.PlaneBookingHomePage
 
@@ -111,18 +110,6 @@ open class BookingCookiePage(
         element.click()
 
         return PlaneBookingHomePage(driver, wait)
-    }
-
-    fun navigateToCarsPage(): CarBookingHomePage {
-        val navContainer = getNavContainer()
-
-        val element = navContainer.findElement(By.id("cars"))
-
-        logger.info { "Получаем элемент с id cars" }
-
-        element.click()
-
-        return CarBookingHomePage(driver, wait)
     }
 
     private fun getNavContainer(): WebElement {
