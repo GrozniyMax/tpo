@@ -36,7 +36,7 @@ class SearchInputTest : SeleniumBaseTest(useHeadless = false) {
 
         val searchResult = homePage.searchAccommodation("Таллин", start, end, 2)
 
-        val actualSuggestions = searchResult.getSuggestions(firstN = 2)
+        val actualSuggestions = searchResult.getSuggestions(topN = 2)
         val totalSuggestionsCount = searchResult.getTotalSuggestionsCount()
 
         assertEquals(318, totalSuggestionsCount)
@@ -49,7 +49,7 @@ class SearchInputTest : SeleniumBaseTest(useHeadless = false) {
 
         val searchResult = homePage.searchAccommodation("Таллин", 2)
 
-        val actualSuggestions = searchResult.getSuggestions(firstN = 2)
+        val actualSuggestions = searchResult.getSuggestions(topN = 2)
         val totalSuggestionsCount = searchResult.getTotalSuggestionsCount()
 
         assertEquals(318, totalSuggestionsCount)

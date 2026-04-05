@@ -1,14 +1,12 @@
 package selenium.test
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import selenium.SeleniumBaseTest
 import selenium.pages.BookingCookiePage
-import selenium.pages.BookingHomePage
-import selenium.pages.SearchResultsPage
+import selenium.pages.searchResults.SearchResultsPage
 import java.time.Duration
 import java.time.LocalDate
 
@@ -39,7 +37,7 @@ class FiltersTest: SeleniumBaseTest(useHeadless = false) {
 
         val expectedTotal = searchResultsPage.addFilter("Завтрак включен")
 
-        val actualSuggestions = searchResultsPage.getSuggestions(firstN = 2)
+        val actualSuggestions = searchResultsPage.getSuggestions(topN = 2)
         val totalSuggestionsCount = searchResultsPage.getTotalSuggestionsCount()
 
         assertEquals(expectedSuggestions, actualSuggestions)
@@ -56,7 +54,7 @@ class FiltersTest: SeleniumBaseTest(useHeadless = false) {
 
         searchResultsPage.addFilter("Отели")
 
-        val actualSuggestions = searchResultsPage.getSuggestions(firstN = 2)
+        val actualSuggestions = searchResultsPage.getSuggestions(topN = 2)
         val totalSuggestionsCount = searchResultsPage.getTotalSuggestionsCount()
 
         assertEquals(expectedSuggestions, actualSuggestions)

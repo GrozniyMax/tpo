@@ -5,7 +5,7 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
-import java.sql.Date
+import selenium.pages.searchResults.SearchResultsPage
 import java.time.LocalDate
 
 private val logger = LoggerFactory.getLogger(BookingHomePage::class.java)
@@ -240,7 +240,7 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
      * @param checkOutDay день выезда
      * @param adults количество взрослых
      */
-    fun searchAccommodation(place: String, adults: Int = 2):SearchResultsPage {
+    fun searchAccommodation(place: String, adults: Int = 2): SearchResultsPage {
         enterPlace(place)
         logger.info { "Введено направление: $place" }
         selectFirstSuggestion()
