@@ -1,7 +1,6 @@
 plugins {
     kotlin("jvm") version "2.1.21"
     jacoco
-    id("org.jetbrains.kotlinx.kover") version "0.8.3"
 }
 
 group = "tpo.maxim"
@@ -21,52 +20,22 @@ dependencies {
     // Selenium WebDriver
     implementation("org.seleniumhq.selenium:selenium-java:4.28.1")
     implementation("org.seleniumhq.selenium:selenium-chrome-driver:4.28.1")
+    implementation("org.seleniumhq.selenium:selenium-firefox-driver:4.28.1")
 
     // WebDriverManager для автоматической загрузки драйверов
     testImplementation("io.github.bonigarcia:webdrivermanager:5.9.2")
 }
 
 tasks.test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+    }
+    systemProperty("junit.jupiter.execution.parallel.enabled", "true")
+    systemProperty("junit.jupiter.execution.parallel.mode.default", "concurrent")
+    systemProperty("junit.jupiter.execution.parallel.mode.classes.default", "concurrent")
+    systemProperty("junit.jupiter.execution.parallel.config.strategy", "fixed")
+    systemProperty("junit.jupiter.execution.parallel.config.fixed.parallelism", "2")
     systemProperty("webdriver.chrome.driver", System.getenv("CHROME_DRIVER_PATH") ?: "chromedriver")
 }
-
-kover {
-    reports {
-        filters {
-            excludes {
-                classes(
-                    "*\$\$inlined\$*",
-                    "*\$lambda\$*",
-                )
-                annotatedBy(
-                    "*Generated*",
-                )
-            }
-        }
-
-        verify {
-            rule {
-                minBound(25)
-            }
-        }
-    }
-}
-
-tasks.register("reports") {
-    group = "reporting"
-    description = "Открывает отчёты в браузере"
-
-    dependsOn(tasks.test, tasks.named("koverHtmlReport"))
-
-    doLast {
-        exec { commandLine("open", "build/reports/tests/test/index.html") }
-        exec { commandLine("open", "build/reports/kover/html/index.html") }
-    }
-}
-
-
-
 
 kotlin {
     jvmToolchain(21)

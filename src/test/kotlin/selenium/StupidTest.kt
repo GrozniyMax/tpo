@@ -3,11 +3,15 @@ package selenium
 import org.junit.jupiter.api.*
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
+import selenium.SeleniumBaseTest
+import selenium.Mode
 
 /**
  * Глупый тест, который проверяет тестовый функционал
  */
-class StupidTest : SeleniumBaseTest(useHeadless = false) {
+class StupidTest : SeleniumBaseTest(
+    useHeadless = false,
+) {
 
     @Test
     fun testLogoExists() {
@@ -20,7 +24,9 @@ class StupidTest : SeleniumBaseTest(useHeadless = false) {
             )
         )
 
-        Assertions.assertTrue(logo.isDisplayed, "Логотип должен быть виден")
+        Assertions.assertTrue(logo.isDisplayed) {
+            "Логотип должен быть виден"
+        }
     }
 
 }
