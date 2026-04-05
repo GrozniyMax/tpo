@@ -4,7 +4,10 @@ import org.junit.platform.commons.logging.Logger
 import org.junit.platform.commons.logging.LoggerFactory
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.WebElement
+import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
+import selenium.pages.PlacePage
 
 class SearchResultsPage(
     private val driver: WebDriver,
@@ -12,31 +15,79 @@ class SearchResultsPage(
     private val logger: Logger = LoggerFactory.getLogger(SearchResultsPage::class.java)
 ) {
 
-    fun getSuggestions(topN: Int = 5): List<PropertyCard> {
-
+    private fun getProductCards(topN: Int = 5): List<WebElement> {
         val cardsXPath = "(//div[@role=\"list\"]//div[@data-testid=\"property-card\"])[position() <= $topN]"
 
+        wait.until(
+            ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//div[@data-testid='property-card']")
+            )
+        )
+        logger.info { "Дождались появления карточек" }
+
         val productCards = driver.findElements(By.xpath(cardsXPath))
-        logger.info { "Нашли карточки" }
+        logger.info { "Нашли ${productCards.size} карточек" }
+
+        return productCards
+    }
+
+    fun getSuggestions(topN: Int = 5): List<PropertyCard> {
+        val productCards = getProductCards(topN)
 
         val cards = productCards.map { card -> PropertyCardParser.parse(card) }
-        logger.info { "Парсили карточки" }
+        logger.info { "Распарсили карточки" }
 
         return cards
     }
 
-    fun clickFilter(filterGroup: String, filterName: String) {
-        val filtersContainer = "//div[@data-testid='filters-group'][@data-filters-group='$filterGroup']"
-        val filter = ".//label[contains(., '$filterName') and .//input[@type='checkbox']]"
+    fun select(index: Int): PlacePage {
+        val productCards = getProductCards(index + 1)
 
-        val container = driver.findElement(By.xpath(filtersContainer))
+        val card = productCards[index]
+        logger.info { "Выбрали карточку с индексом $index" }
+
+        card.click()
+        logger.info { "Кликнули по карточке" }
+
+        waitForResultsToUpdate()
+        logger.info { "Дождались обновления результатов" }
+
+        return PlacePage(driver, wait)
+    }
+
+    fun clickFilter(filterGroup: String, filterName: String) {
+        val filtersContainerXPath = "//div[@data-testid='filters-group'][@data-filters-group='$filterGroup']"
+        val filterXPath = ".//label[contains(., '$filterName') and .//input[@type='checkbox']]"
+
+        val container = wait.until(
+            ExpectedConditions.presenceOfElementLocated(
+                By.xpath(filtersContainerXPath)
+            )
+        )
         logger.info { "Нашли группу фильтров $filterGroup" }
 
-        val filterElement = container.findElement(By.xpath(filter))
+        val filterElement = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                container.findElement(By.xpath(filterXPath))
+            )
+        )
         logger.info { "Нашли фильтр $filterName" }
 
         filterElement.click()
         logger.info { "Кликнули по фильтру $filterName" }
+
+        waitForResultsToUpdate()
     }
 
+    /**
+     * Ожидает обновления результатов после применения фильтра
+     */
+    private fun waitForResultsToUpdate() {
+        wait.until(
+            ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//div[@data-testid='property-card']")
+            )
+        )
+        logger.info { "Результаты обновились" }
+    }
 }
