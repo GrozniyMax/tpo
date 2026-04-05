@@ -1,4 +1,4 @@
-package selenium.pages
+package selenium.pages.place
 
 import org.junit.platform.commons.logging.Logger
 import org.junit.platform.commons.logging.LoggerFactory

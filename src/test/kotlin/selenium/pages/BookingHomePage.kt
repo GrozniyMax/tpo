@@ -5,7 +5,7 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
-import selenium.pages.searchResults.SearchResultsPage
+import selenium.pages.place.searchResults.SearchResultsPage
 import java.time.LocalDate
 
 private val logger = LoggerFactory.getLogger(BookingHomePage::class.java)
@@ -13,6 +13,7 @@ private val logger = LoggerFactory.getLogger(BookingHomePage::class.java)
 class BookingHomePage(private val driver: WebDriver, private val wait: WebDriverWait) {
 
     companion object {
+
         private const val PLACE_INPUT_XPATH =
             "//input[@name='ss' and contains(@placeholder, 'Куда') or contains(@placeholder, 'Where')]"
 

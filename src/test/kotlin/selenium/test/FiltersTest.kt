@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import selenium.SeleniumBaseTest
 import selenium.pages.BookingCookiePage
-import selenium.pages.searchResults.SearchResultsPage
+import selenium.pages.place.searchResults.SearchResultsPage
 import java.time.Duration
 import java.time.LocalDate
 

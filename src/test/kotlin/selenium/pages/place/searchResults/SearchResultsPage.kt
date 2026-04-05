@@ -1,4 +1,4 @@
-package selenium.pages.searchResults
+package selenium.pages.place.searchResults
 
 import org.junit.platform.commons.logging.Logger
 import org.junit.platform.commons.logging.LoggerFactory
@@ -7,7 +7,7 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
-import selenium.pages.PlacePage
+import selenium.pages.place.PlacePage
 
 class SearchResultsPage(
     private val driver: WebDriver,

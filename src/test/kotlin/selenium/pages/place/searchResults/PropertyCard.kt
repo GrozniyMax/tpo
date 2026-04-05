@@ -1,4 +1,4 @@
-package selenium.pages.searchResults
+package selenium.pages.place.searchResults
 
 import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
