@@ -3,6 +3,7 @@ package selenium.pages.place.searchResults
 import org.junit.platform.commons.logging.Logger
 import org.junit.platform.commons.logging.LoggerFactory
 import org.openqa.selenium.By
+import org.openqa.selenium.NoSuchElementException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
@@ -29,6 +30,15 @@ class SearchResultsPage(
         logger.info { "Нашли ${productCards.size} карточек" }
 
         return productCards
+    }
+
+    fun hasNoResults(): Boolean {
+        try {
+            driver.findElement(By.xpath("//div[@data-testid='properties-list-empty-state']"))
+            return true
+        } catch (e: NoSuchElementException) {
+            return false
+        }
     }
 
     fun getSuggestions(topN: Int = 5): List<PropertyCard> {
