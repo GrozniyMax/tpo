@@ -111,6 +111,4 @@ class BookingCookiePage(private val driver: WebDriver, private val wait: WebDriv
     fun loadPage() {
         driver.get("https://www.booking.com")
     }
-
-
 }

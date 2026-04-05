@@ -40,6 +40,31 @@ class SearchResultsPage(
         return cards
     }
 
+    fun applySort(sort: String) {
+        val sortButton = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                By.xpath("//button[@data-testid='sorters-dropdown-trigger']")
+            )
+        )
+        sortButton.click()
+        logger.info { "Кликнули по кнопке сортировки" }
+
+        val sortContainer = driver.findElement(
+            By.xpath("//div[@data-testid='sorters-dropdown']")
+        )
+
+        logger.info { "Нашли контейнер с сортировкой" }
+
+        val sortOption = sortContainer.findElement(
+            By.xpath(".//div[contains(., '$sort')]")
+        )
+
+        logger.info { "Нашли опцию сортировки $sort" }
+
+        sortOption.click()
+        logger.info { "Кликнули по опции сортировки $sort" }
+    }
+
     fun select(index: Int): PlacePage {
         val productCards = getProductCards(index + 1)
 
