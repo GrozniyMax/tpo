@@ -1,55 +1,34 @@
 package selenium.pages
 
+import org.junit.platform.commons.logging.Logger
+import org.junit.platform.commons.logging.LoggerFactory
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import selenium.pages.place.BookingHomePage
+import selenium.pages.plane.PlaneBookingHomePage
 
 /**
  * PageObject для обработки диалогов cookie и регистрации на Booking.com
  * Использует только XPATH локаторы
  */
-class BookingCookiePage(private val driver: WebDriver, private val wait: WebDriverWait) {
+class BookingCookiePage(
+    private val driver: WebDriver,
+    private val wait: WebDriverWait,
+    private val logger: Logger = LoggerFactory.getLogger(BookingCookiePage::class.java)) {
 
     companion object {
         // Кнопка "Отклонить" в диалоге cookie
         private const val DECLINE_COOKIE_XPATH =
             "//button[contains(@class, 'bui-btn') and .//span[normalize-space(text())='Отклонить']] | //button[contains(text(), 'Отклонить')]"
 
-        // Кнопка "Принять" в диалоге cookie
-        private const val ACCEPT_COOKIE_XPATH =
-            "//button[contains(@class, 'bui-btn') and .//span[normalize-space(text())='Принять']]"
-
-        // Кнопка "Изменить настройки" в диалоге cookie
-        private const val SETTINGS_COOKIE_XPATH =
-            "//button[contains(@class, 'bui-btn') and .//span[normalize-space(text())='Изменить настройки']]"
-
-        // Контейнер диалога cookie (регион с фокусом)
-        private const val COOKIE_DIALOG_XPATH =
-            "//div[contains(@role, 'dialog') or contains(@aria-labelledby)] | //region[contains(@role, 'region') and contains(., 'cookie')]"
-
-        // ==================== REGISTRATION DIALOG ====================
-        // Кнопка закрытия диалога регистрации/входа
         private const val CLOSE_LOGIN_DIALOG_XPATH =
             "//button[@aria-label='Скрыть меню входа в аккаунт.']"
 
-        // Кнопка входа в хедере
-        private const val HEADER_LOGIN_BUTTON_XPATH =
-            "//a[contains(@href, 'login') or contains(@href, 'auth')]//span[contains(text(), 'Войти') or contains(text(), 'Зарегистрироваться')]"
-
-        // ==================== PAGE LOAD INDICATORS ====================
-        // Основной элемент для проверки загрузки страницы
         private const val PAGE_LOADED_INDICATOR_XPATH =
             "//main"
-
-        // Заголовок страницы
-        private const val PAGE_TITLE_XPATH =
-            "//h1[contains(text(), 'Найдите жилье') or contains(text(), 'Find')]"
-
-        // Логотип Booking.com
-        private const val LOGO_XPATH =
-            "//a[contains(@href, 'booking.com') and contains(@aria-label, 'Booking') or @class*='logo']"
     }
 
     /**
@@ -109,7 +88,45 @@ class BookingCookiePage(private val driver: WebDriver, private val wait: WebDriv
         return BookingHomePage(driver, wait)
     }
 
+    fun navigateToPlanesPage(): PlaneBookingHomePage {
+        val navContainer = getNavContainer()
+
+        val element = navContainer.findElement(By.id("flights"))
+
+        logger.info { "Получаем элемент с id flights" }
+
+        element.click()
+
+        return PlaneBookingHomePage(driver, wait)
+    }
+
+    fun navigateToCarsPage(): CarBookingHomePage {
+        val navContainer = getNavContainer()
+
+        val element = navContainer.findElement(By.id("cars"))
+
+        logger.info { "Получаем элемент с id cars" }
+
+        element.click()
+
+        return CarBookingHomePage(driver, wait)
+    }
+
+    private fun getNavContainer(): WebElement {
+        driver.get("https://www.booking.com/planes")
+        handlePageLoadAndDialogs()
+
+        val navContainerXPath = "//nav[@data-testid='header-xpb']"
+
+        val navContainer = wait.until { driver ->
+            driver.findElement(By.xpath(navContainerXPath))
+        }
+        logger.info { "Получаем контейнер с навигацией" }
+        return navContainer
+    }
+
     fun loadPage() {
         driver.get("https://www.booking.com")
     }
+
 }
