@@ -1,6 +1,7 @@
 package selenium.pages.place.searchResults
 
 import org.openqa.selenium.By
+import org.openqa.selenium.StaleElementReferenceException
 import org.openqa.selenium.WebElement
 import kotlin.math.log
 
@@ -23,15 +24,23 @@ object PropertyCardParser {
     }
 
     private fun parseTitle(card: WebElement): String {
-        return card.findElement(
-            By.xpath(".//div[@data-testid='title']")
-        ).text
+        return try {
+            card.findElement(
+                By.xpath(".//div[@data-testid='title']")
+            ).text
+        } catch (e: StaleElementReferenceException) {
+            ""
+        }
     }
 
     private fun parsePrice(card: WebElement): String {
-        return card.findElement(
-            By.xpath(".//span[@data-testid='price-and-discounted-price']")
-        ).text
+        return try {
+            card.findElement(
+                By.xpath(".//span[@data-testid='price-and-discounted-price']")
+            ).text
+        } catch (e: StaleElementReferenceException) {
+            ""
+        }
     }
 
     private fun parseRating(card: WebElement): String {
@@ -48,11 +57,18 @@ object PropertyCardParser {
      * Собирает все span элементы с текстом внутри карточки
      */
     private fun parseAttributes(card: WebElement): List<String> {
-        val spans = card.findElements(By.xpath(".//span"))
-
-        return spans
-            .map { it.text.trim() }
-            .filter { it.isNotEmpty() }
-            .distinct()
+        return try {
+            card.findElements(By.xpath(".//span"))
+                .mapNotNull { span ->
+                    try {
+                        span.text.trim().takeIf { it.isNotEmpty() }
+                    } catch (e: StaleElementReferenceException) {
+                        null
+                    }
+                }
+                .distinct()
+        } catch (e: StaleElementReferenceException) {
+            emptyList()
+        }
     }
 }
