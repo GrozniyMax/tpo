@@ -4,22 +4,9 @@ import org.openqa.selenium.By
 import org.openqa.selenium.NoSuchElementException
 import org.openqa.selenium.WebElement
 
-data class FlightCard(
-    val airCompany: String,
-    val flights: List<Flight>
-)
-
-data class Flight(
-    val departure: Airport,
-    val arrival: Airport,
-    val duration: String
-)
-
-data class Airport(
-    val code: String,
-    val time: String,
-    val day: String
-)
+data class FlightCard(val airCompany: String, val flights: List<Flight>)
+data class Flight(val departure: Airport, val arrival: Airport, val duration: String)
+data class Airport(val code: String, val time: String, val day: String)
 
 object PlaneCardParser {
 
@@ -28,74 +15,32 @@ object PlaneCardParser {
             By.xpath(".//*[@data-testid='flight_card_carriers']")
         )?.text ?: ""
 
-        val flights = parseFlights(card)
-
-        return FlightCard(
-            airCompany = airCompany,
-            flights = flights
-        )
+        return FlightCard(airCompany = airCompany, flights = parseFlights(card))
     }
 
     private fun parseFlights(card: WebElement): List<Flight> {
-        // Находим все элементы времени вылета и определяем количество сегментов
         val departureTimeElements = card.findElements(
             By.xpath(".//*[starts-with(@data-testid, 'flight_card_segment_departure_time_')]")
         )
-
-        return departureTimeElements.mapIndexed { index, _ ->
-            parseSegment(card, index)
-        }
+        return departureTimeElements.mapIndexed { index, _ -> parseSegment(card, index) }
     }
 
     private fun parseSegment(card: WebElement, segmentIndex: Int): Flight {
-        val departureTime = card.findElementOrNull(
-            By.xpath(".//*[@data-testid='flight_card_segment_departure_time_$segmentIndex']//div")
-        )?.text ?: ""
-
-        val departureAirport = card.findElementOrNull(
-            By.xpath(".//*[@data-testid='flight_card_segment_departure_airport_$segmentIndex']")
-        )?.text ?: ""
-
-        val departureDate = card.findElementOrNull(
-            By.xpath(".//*[@data-testid='flight_card_segment_departure_date_$segmentIndex']")
-        )?.text ?: ""
-
-        val arrivalTime = card.findElementOrNull(
-            By.xpath(".//*[@data-testid='flight_card_segment_destination_time_$segmentIndex']//div")
-        )?.text ?: ""
-
-        val arrivalAirport = card.findElementOrNull(
-            By.xpath(".//*[@data-testid='flight_card_segment_destination_airport_$segmentIndex']")
-        )?.text ?: ""
-
-        val arrivalDate = card.findElementOrNull(
-            By.xpath(".//*[@data-testid='flight_card_segment_destination_date_$segmentIndex']")
-        )?.text ?: ""
-
-        val duration = card.findElementOrNull(
-            By.xpath(".//*[@data-testid='flight_card_segment_duration_$segmentIndex']")
-        )?.text ?: ""
-
         return Flight(
             departure = Airport(
-                code = departureAirport,
-                time = departureTime,
-                day = departureDate
+                code = card.findElementOrNull(By.xpath(".//*[@data-testid='flight_card_segment_departure_airport_$segmentIndex']"))?.text ?: "",
+                time = card.findElementOrNull(By.xpath(".//*[@data-testid='flight_card_segment_departure_time_$segmentIndex']//div"))?.text ?: "",
+                day = card.findElementOrNull(By.xpath(".//*[@data-testid='flight_card_segment_departure_date_$segmentIndex']"))?.text ?: ""
             ),
             arrival = Airport(
-                code = arrivalAirport,
-                time = arrivalTime,
-                day = arrivalDate
+                code = card.findElementOrNull(By.xpath(".//*[@data-testid='flight_card_segment_destination_airport_$segmentIndex']"))?.text ?: "",
+                time = card.findElementOrNull(By.xpath(".//*[@data-testid='flight_card_segment_destination_time_$segmentIndex']//div"))?.text ?: "",
+                day = card.findElementOrNull(By.xpath(".//*[@data-testid='flight_card_segment_destination_date_$segmentIndex']"))?.text ?: ""
             ),
-            duration = duration
+            duration = card.findElementOrNull(By.xpath(".//*[@data-testid='flight_card_segment_duration_$segmentIndex']"))?.text ?: ""
         )
     }
 
-    private fun WebElement.findElementOrNull(by: By): WebElement? {
-        return try {
-            findElement(by)
-        } catch (e: NoSuchElementException) {
-            null
-        }
-    }
+    private fun WebElement.findElementOrNull(by: By): WebElement? =
+        try { findElement(by) } catch (e: NoSuchElementException) { null }
 }

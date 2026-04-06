@@ -1,7 +1,5 @@
 package selenium.pages.plane.searchResults
 
-import org.junit.platform.commons.logging.Logger
-import org.junit.platform.commons.logging.LoggerFactory
 import org.openqa.selenium.By
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.WebDriver
@@ -12,127 +10,64 @@ import selenium.pages.BookingCookiePage
 
 class PlaneSearchResultsPage(
     private val driver: WebDriver,
-    private val wait: WebDriverWait,
-    private val logger: Logger = LoggerFactory.getLogger(PlaneSearchResultsPage::class.java)
+    private val wait: WebDriverWait
 ) : BookingCookiePage(driver, wait) {
 
     companion object {
-        // Упрощенные XPath выражения
         private const val FLIGHT_CARD_XPATH = "//div[@data-testid='searchresults_card']"
-        private const val NO_RESULTS_XPATH =
-            "//*[contains(., 'нет рейсов') or contains(., 'No flights') or contains(., 'No results')]"
+        private const val NO_RESULTS_XPATH = "//*[contains(., 'нет рейсов') or contains(., 'No flights')]"
     }
 
-    /**
-     * Скроллит элемент в видимую область
-     */
-    private fun scrollIntoView(element: WebElement) {
+    private fun clickElement(element: WebElement) {
         try {
-            (driver as? JavascriptExecutor)?.executeScript(
-                "arguments[0].scrollIntoView(true);", element
-            )
-        } catch (e: Exception) {
-            logger.warn { "Не удалось проскроллить к элементу: ${e.message}" }
-        }
-    }
-
-    /**
-     * Кликает по элементу с fallback на JavaScript
-     */
-    private fun clickElement(element: WebElement, description: String = "элемент") {
-        try {
-            scrollIntoView(element)
             element.click()
-            logger.info { "Кликнули по $description (обычный клик)" }
-        } catch (e: org.openqa.selenium.ElementClickInterceptedException) {
-            logger.warn { "Не удалось кликнуть по $description обычным способом, используем JavaScript: ${e.message}" }
-            (driver as? JavascriptExecutor)?.executeScript(
-                "arguments[0].click();", element
-            )
-        } catch (e: org.openqa.selenium.ElementNotInteractableException) {
-            logger.warn { "$description не интерактивен, используем JavaScript: ${e.message}" }
-            (driver as? JavascriptExecutor)?.executeScript(
-                "arguments[0].click();", element
-            )
+        } catch (e: Exception) {
+            (driver as? JavascriptExecutor)?.executeScript("arguments[0].click();", element)
         }
     }
 
     private fun getFlightCards(topN: Int = 5): List<WebElement> {
-        val xPath = "//div[@data-testid='searchresults_card']"
-
-        val elements = wait.until {
-            driver.findElements(By.xpath(xPath))
-        }
-        return elements.take(topN)
+        return wait.until { driver.findElements(By.xpath(FLIGHT_CARD_XPATH)) }.take(topN)
     }
 
     fun selectOneway() {
         val oneway = wait.until {
             driver.findElement(By.xpath("//div[@data-ui-name='search_type_oneway']"))
         }
-        logger.info { "Нашли кнопку 'В одну сторону'" }
-
-        clickElement(oneway, "кнопку 'В одну сторону'")
+        clickElement(oneway)
     }
 
     fun selectBothWay() {
         val bothWay = wait.until {
             driver.findElement(By.xpath("//input[@data-ui-name='input_search_type_roundtrip']"))
         }
-        logger.info { "Нашли кнопку 'В обе стороны'" }
-        clickElement(bothWay, "кнопку 'В обе стороны'")
+        clickElement(bothWay)
     }
 
-
     fun getFlights(topN: Int = 5): List<FlightCard> {
-        val flightCards = getFlightCards(topN)
-
-        if (flightCards.isEmpty()) {
-            logger.info { "Нет карточек для парсинга" }
-            return emptyList()
-        }
-
-        val cards = flightCards.mapNotNull { card ->
+        return getFlightCards(topN).mapNotNull { card ->
             try {
                 PlaneCardParser.parse(card)
             } catch (e: Exception) {
-                logger.info { "Ошибка парсинга карточки: ${e.message}" }
                 null
             }
         }
-        logger.info { "Распарсили ${cards.size} карточек рейсов" }
-
-        return cards
     }
 
     fun search() {
-        val xpath = "//button[@data-ui-name='button_search_submit']"
-
-        val searchButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)))
-
-        clickElement(searchButton, "кнопку поиска")
-
+        val searchButton = wait.until(ExpectedConditions.elementToBeClickable(
+            By.xpath("//button[@data-ui-name='button_search_submit']")
+        ))
+        clickElement(searchButton)
         waitForPageToOpen()
     }
 
     fun waitForPageToOpen() {
-        // Ждём появления карточек рейсов или сообщения об отсутствии результатов
-        val flightCardLocator = By.xpath(FLIGHT_CARD_XPATH)
-        val noResultsLocator = By.xpath(NO_RESULTS_XPATH)
-        val searchPreviewLocator = By.xpath("//*[contains(text(), 'Ищите варианты с гибким тарифом')]")
-
         wait.until(
-            ExpectedConditions.and(
-                ExpectedConditions.or(
-                    ExpectedConditions.visibilityOfElementLocated(flightCardLocator),
-                    ExpectedConditions.visibilityOfElementLocated(noResultsLocator)
-                ),
-                ExpectedConditions.not(
-                    ExpectedConditions.visibilityOfElementLocated(searchPreviewLocator)
-                )
+            ExpectedConditions.or(
+                ExpectedConditions.visibilityOfElementLocated(By.xpath(FLIGHT_CARD_XPATH)),
+                ExpectedConditions.visibilityOfElementLocated(By.xpath(NO_RESULTS_XPATH))
             )
         )
-
     }
-
 }
