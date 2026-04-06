@@ -40,7 +40,7 @@ class AttractionsSearchResultsTest: SeleniumBaseTest() {
     fun categoryFilterTest() {
         page.clickFilter("Бесплатная отмена")
 
-        val attractions = page.getAttractions()
+        val attractions = page.getAttractions(3)
 
         // Если нет экскурсий, тест проходит (возможно фильтру нечего фильтровать)
         if (attractions.isEmpty()) {
@@ -67,7 +67,7 @@ class AttractionsSearchResultsTest: SeleniumBaseTest() {
         // Если цены пустые или все нули, пропускаем проверку (сайт может не возвращать цены)
         val prices = attractions.map { extractPriceValue(it.price) }
         val nonZeroPrices = prices.filter { it > 0 }
-        
+
         if (nonZeroPrices.size < 2) {
             // Недостаточно данных для проверки сортировки
             return

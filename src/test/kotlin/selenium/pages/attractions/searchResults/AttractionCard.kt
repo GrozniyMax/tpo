@@ -19,57 +19,25 @@ object AttractionCardParser {
     fun parse(card: WebElement): AttractionCard {
         return AttractionCard(
             title = tryParse("") {
-                // Пробуем разные варианты для заголовка
-                try {
-                    card.findElement(By.xpath(".//h3//a")).text
-                } catch (e: Exception) {
-                    card.findElement(By.xpath(".//h3")).text
-                }
+                card.findElement(By.xpath(".//h3")).text
             },
 
             price = tryParse("") {
                 // Пробуем разные варианты для цены
-                val priceXpaths = listOf(
-                    ".//div[@data-testid='price']//div//div[2]",
-                    ".//div[@data-testid='price']",
-                    ".//*[contains(@class, 'price')]",
-                    ".//span[contains(text(), '€') or contains(text(), 'RUB')]"
-                )
-                
-                for (xpath in priceXpaths) {
-                    try {
-                        val priceElement = card.findElement(By.xpath(xpath))
-                        val text = priceElement.text.trim()
-                        if (text.isNotEmpty()) {
-                            return@tryParse text
-                        }
-                    } catch (e: Exception) {
-                        // Пробуем следующий селектор
-                    }
+                val priceXpath = ".//div[@data-testid='price']"
+                val priceElement = card.findElement(By.xpath(priceXpath))
+                val text = priceElement.text.trim()
+                if (text.isNotEmpty()) {
+                    return@tryParse text
+                } else {
+                    return@tryParse ""
                 }
-                ""
             },
 
             freeCancelAvailable = tryParse(false) {
-                // Пробуем разные варианты для проверки бесплатной отмены
-                val cancelXpaths = listOf(
-                    ".//*[contains(text(), 'Бесплатная отмена')]",
-                    ".//*[contains(text(), 'free cancellation')]",
-                    ".//*[contains(@class, 'free-cancel')]",
-                    ".//*[contains(@data-testid, 'free-cancellation')]"
-                )
-                
-                for (xpath in cancelXpaths) {
-                    try {
-                        val elements = card.findElements(By.xpath(xpath))
-                        if (elements.isNotEmpty()) {
-                            return@tryParse true
-                        }
-                    } catch (e: Exception) {
-                        // Пробуем следующий селектор
-                    }
-                }
-                false
+                val xpath = ".//*[contains(text(), 'бесплатная отмена')]"
+                val elements = card.findElement(By.xpath(xpath))
+                return@tryParse true
             }
         )
     }

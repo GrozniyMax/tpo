@@ -14,7 +14,7 @@ class AttractionSearchResultsPage(
     private val driver: WebDriver,
     private val wait: WebDriverWait,
     private val logger: Logger = LoggerFactory.getLogger(AttractionSearchResultsPage::class.java)
-): BookingCookiePage(driver, wait) {
+) : BookingCookiePage(driver, wait) {
 
     /**
      * Скроллит элемент в видимую область
@@ -89,32 +89,13 @@ class AttractionSearchResultsPage(
      * Применение сортировки
      */
     fun applySort(sort: String) {
-        // Пробуем разные варианты селекторов для сортировки
-        val sortXpaths = listOf(
-            "//button[contains(., '$sort')]",
-            "//span[contains(., '$sort')]",
-            "//label[contains(., '$sort')]"
-        )
+        val sortXpaths = "//span[contains(., '$sort')]"
 
-        var sortOption: WebElement? = null
-        for (xpath in sortXpaths) {
-            try {
-                val shortWait = WebDriverWait(driver, java.time.Duration.ofSeconds(5))
-                sortOption = shortWait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)))
-                logger.info { "Нашли опцию сортировки с селектором: $xpath" }
-                break
-            } catch (e: Exception) {
-                // Пробуем следующий селектор
-            }
-        }
+        val sortOption = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(sortXpaths)))
 
-        if (sortOption != null) {
-            clickElement(sortOption, "опцию сортировки")
-            logger.info { "Кликнули по опции сортировки $sort" }
-            waitForResultsToUpdate()
-        } else {
-            logger.warn { "Не удалось найти опцию сортировки: $sort" }
-        }
+        clickElement(sortOption, "опцию сортировки")
+        logger.info { "Кликнули по опции сортировки $sort" }
+        waitForResultsToUpdate()
     }
 
     /**
@@ -122,31 +103,15 @@ class AttractionSearchResultsPage(
      */
     fun clickFilter(filterName: String) {
         // Пробуем разные варианты селекторов для фильтра
-        val filterXpaths = listOf(
-            "//label[contains(., '$filterName')]",
-            "//span[contains(., '$filterName')]",
-            "//div[contains(., '$filterName')]"
-        )
+        val filterXpaths =
+            "//span[contains(., '$filterName')]"
 
-        var filterElement: WebElement? = null
-        for (xpath in filterXpaths) {
-            try {
-                val shortWait = WebDriverWait(driver, java.time.Duration.ofSeconds(5))
-                filterElement = shortWait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)))
-                logger.info { "Нашли фильтр с селектором: $xpath" }
-                break
-            } catch (e: Exception) {
-                // Пробуем следующий селектор
-            }
-        }
+        val filterElement = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(filterXpaths)))
 
-        if (filterElement != null) {
-            clickElement(filterElement, "фильтр")
-            logger.info { "Кликнули по фильтру $filterName" }
-            waitForResultsToUpdate()
-        } else {
-            logger.warn { "Не удалось найти фильтр: $filterName" }
-        }
+
+        clickElement(filterElement, "фильтр")
+        logger.info { "Кликнули по фильтру $filterName" }
+        waitForResultsToUpdate()
     }
 
     /**
@@ -159,7 +124,7 @@ class AttractionSearchResultsPage(
         } catch (e: Exception) {
             // Игнорируем
         }
-        
+
         // Ждём пока карточки станут видимыми
         try {
             wait.until(
