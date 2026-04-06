@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
+import selenium.Mode
 import selenium.SeleniumBaseTest
 import selenium.pages.BookingCookiePage
 import selenium.pages.place.BookingHomePage

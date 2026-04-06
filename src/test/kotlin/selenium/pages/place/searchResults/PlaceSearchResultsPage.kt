@@ -57,23 +57,62 @@ class PlaceSearchResultsPage(
                 By.xpath("//button[@data-testid='sorters-dropdown-trigger']")
             )
         )
-        sortButton.click()
+        
+        // Скроллим к кнопке сортировки
+        scrollIntoView(sortButton)
+        
+        // Пробуем обычный клик, если не получается - используем JavaScript
+        try {
+            sortButton.click()
+        } catch (e: org.openqa.selenium.ElementClickInterceptedException) {
+            logger.warn { "Не удалось кликнуть по кнопке сортировки обычным способом, используем JavaScript: ${e.message}" }
+            (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
+                "arguments[0].click();", sortButton
+            )
+        }
+        
         logger.info { "Кликнули по кнопке сортировки" }
 
-        val sortContainer = driver.findElement(
-            By.xpath("//div[@data-testid='sorters-dropdown']")
+        // Ждём появления контейнера с опциями сортировки
+        val sortContainer = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//div[@data-testid='sorters-dropdown']")
+            )
         )
 
         logger.info { "Нашли контейнер с сортировкой" }
 
-        val sortOption = sortContainer.findElement(
-            By.xpath("//span[text()='$sort']")
+        // Ждём пока опция станет видимой и кликабельной
+        val sortOption = wait.until(
+            ExpectedConditions.elementToBeClickable(
+                By.xpath("//span[text()='$sort']")
+            )
         )
 
         logger.info { "Нашли опцию сортировки $sort" }
 
-        sortOption.click()
+        // Скроллим к опции сортировки
+        scrollIntoView(sortOption)
+
+        // Пробуем обычный клик, если не получается - используем JavaScript
+        try {
+            sortOption.click()
+        } catch (e: org.openqa.selenium.ElementNotInteractableException) {
+            logger.warn { "Опция сортировки не интерактивна, используем JavaScript: ${e.message}" }
+            (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
+                "arguments[0].click();", sortOption
+            )
+        } catch (e: org.openqa.selenium.ElementClickInterceptedException) {
+            logger.warn { "Не удалось кликнуть по опции сортировки обычным способом, используем JavaScript: ${e.message}" }
+            (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
+                "arguments[0].click();", sortOption
+            )
+        }
+
         logger.info { "Кликнули по опции сортировки $sort" }
+        
+        // Ждём обновления результатов
+        waitForResultsToUpdate()
     }
 
     fun select(index: Int): PlacePage {
@@ -82,9 +121,21 @@ class PlaceSearchResultsPage(
         val link = productCards[index].findElement(By.xpath(".//a[@data-testid='title-link']"))
         logger.info { "Выбрали карточку с индексом $index" }
 
+        // Скроллим к элементу перед кликом (важно для Firefox)
+        scrollIntoView(link)
+
         val originalWindow = driver.windowHandle
 
-        link.click()
+        // Пробуем обычный клик, если не получается - используем JavaScript
+        try {
+            link.click()
+        } catch (e: org.openqa.selenium.ElementClickInterceptedException) {
+            logger.warn { "Не удалось кликнуть обычным способом, используем JavaScript: ${e.message}" }
+            (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
+                "arguments[0].click();", link
+            )
+        }
+
         logger.info { "Кликнули по карточке" }
 
         wait.until { driver.windowHandles.size > 1 }
@@ -100,6 +151,9 @@ class PlaceSearchResultsPage(
         val filtersContainerXPath = "//div[@data-testid='filters-group'][@data-filters-group='popular']"
         val filterXPath = ".//label[contains(., '$filterName')]"
 
+        // Сначала пробуем закрыть cookie баннер если он есть
+        handlePageLoadAndDialogs()
+
         val container = wait.until(
             ExpectedConditions.presenceOfElementLocated(
                 By.xpath(filtersContainerXPath)
@@ -113,6 +167,9 @@ class PlaceSearchResultsPage(
             )
         )
         logger.info { "Нашли фильтр $filterName" }
+
+        // Скроллим к элементу перед кликом (важно для Firefox)
+        scrollIntoView(filterElement)
 
         filterElement.click()
         logger.info { "Кликнули по фильтру $filterName" }
@@ -128,10 +185,51 @@ class PlaceSearchResultsPage(
         )
         logger.info { "Нашли фильтр $filterName" }
 
-        filterElement.click()
-        logger.info { "Кликнули по фильтру $filterName" }
+        // Скроллим к элементу перед кликом (важно для Firefox)
+        scrollIntoView(filterElement)
+
+        // Проверяем и закрываем cookie баннер прямо перед кликом
+        tryCloseCookieBanner()
+
+        // Повторно находим элемент после закрытия баннера
+        val filterElementFinal = wait.until (
+            ExpectedConditions.elementToBeClickable(By.xpath(filterXPath))
+        )
+
+        // Пробуем обычный клик, если не получается - используем JavaScript
+        try {
+            filterElementFinal.click()
+            logger.info { "Кликнули по фильтру $filterName (обычный клик)" }
+        } catch (e: org.openqa.selenium.ElementClickInterceptedException) {
+            logger.warn { "Не удалось кликнуть по фильтру обычным способом, используем JavaScript: ${e.message}" }
+            // Используем JavaScript для клика по input внутри label если есть
+            try {
+                val inputElement = filterElementFinal.findElement(By.xpath(".//preceding::input[1]"))
+                (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
+                    "arguments[0].click();", inputElement
+                )
+            } catch (e2: Exception) {
+                (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
+                    "arguments[0].click();", filterElementFinal
+                )
+            }
+            logger.info { "Кликнули по фильтру $filterName (JavaScript)" }
+        }
 
         waitForResultsToUpdate()
+    }
+
+    /**
+     * Скроллит элемент в видимую область
+     */
+    private fun scrollIntoView(element: WebElement) {
+        try {
+            (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
+                "arguments[0].scrollIntoView(true);", element
+            )
+        } catch (e: Exception) {
+            logger.warn { "Не удалось проскроллить к элементу: ${e.message}" }
+        }
     }
 
     /**
