@@ -14,13 +14,13 @@ class AttractionBookingHomePage(private val driver: WebDriver, private val wait:
 
     companion object {
         private const val DESTINATION_INPUT_XPATH =
-            "//input[@name='destination' or contains(@placeholder, 'Направление') or contains(@placeholder, 'Destination')]"
+            "//input[@data-testid='search-input-field']"
 
         private const val DATE_BUTTON_XPATH =
-            "//button[contains(., 'Выберите даты') or contains(., 'Select dates')]"
+            "//button[contains(@data-testid, 'date') or contains(., 'Выберите даты')]"
 
         private const val SEARCH_BUTTON_XPATH =
-            "//button[contains(., 'Проверить цены') or contains(., 'Check availability')]"
+            "//button[@data-testid='search-button']"
 
         private const val DESTINATION_SUGGESTION_XPATH =
             "//div[contains(@role, 'listbox')]//li[contains(@role, 'option')]"
@@ -118,14 +118,4 @@ class AttractionBookingHomePage(private val driver: WebDriver, private val wait:
         return clickSearch()
     }
 
-    /**
-     * Поиск только по направлению (без даты)
-     */
-    fun searchAttractionsByDestination(destination: String): AttractionSearchResultsPage {
-        enterDestination(destination)
-        selectFirstSuggestion()
-        logger.info { "Введено направление: $destination" }
-
-        return clickSearch()
-    }
 }

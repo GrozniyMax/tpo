@@ -7,12 +7,9 @@ import org.openqa.selenium.WebElement
  * Модель карточки экскурсии
  */
 data class AttractionCard(
-    val title: String?,
-    val duration: String?,
-    val rating: String?,
-    val reviewCount: String?,
-    val price: String?,
-    val category: String?
+    val title: String,
+    val price: String,
+    val freeCancelAvailable: Boolean,
 )
 
 /**
@@ -21,36 +18,25 @@ data class AttractionCard(
 object AttractionCardParser {
     fun parse(card: WebElement): AttractionCard {
         return AttractionCard(
-            title = try {
-                card.findElement(By.xpath(".//h3[contains(@class, 'title') or contains(@data-testid, 'title')] | .//span[contains(@class, 'title')]")).text
-            } catch (e: Exception) {
-                null
+            title = tryParse("") {
+                card.findElement(By.xpath(".//h3//a")).text
             },
-            duration = try {
-                card.findElement(By.xpath(".//span[contains(@class, 'duration')]")).text
-            } catch (e: Exception) {
-                null
+
+            price = tryParse("") {
+                card.findElement(By.xpath(".//div[@data-testid='price']//div//div[2]")).text
             },
-            rating = try {
-                card.findElement(By.xpath(".//span[contains(@class, 'rating') or contains(@data-testid, 'rating')]")).text
-            } catch (e: Exception) {
-                null
-            },
-            reviewCount = try {
-                card.findElement(By.xpath(".//span[contains(@class, 'reviews') or contains(@data-testid, 'reviews')]")).text
-            } catch (e: Exception) {
-                null
-            },
-            price = try {
-                card.findElement(By.xpath(".//span[contains(@class, 'price')]")).text
-            } catch (e: Exception) {
-                null
-            },
-            category = try {
-                card.findElement(By.xpath(".//span[contains(@class, 'category') or contains(@data-testid, 'category')]")).text
-            } catch (e: Exception) {
-                null
+
+            freeCancelAvailable = tryParse(false) {
+                card.findElements(By.xpath(".//*[contains(text(), 'Бесплатная отмена')]")).isNotEmpty()
             }
         )
+    }
+
+    private fun <T> tryParse(default: T, action: () -> T): T {
+        return try {
+            action()
+        } catch (e: Exception) {
+            default
+        }
     }
 }
