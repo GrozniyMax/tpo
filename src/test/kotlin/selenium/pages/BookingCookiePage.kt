@@ -28,32 +28,8 @@ open class BookingCookiePage(
         private const val CLOSE_LOGIN_DIALOG_XPATH =
             "//button[@aria-label='Скрыть меню входа в аккаунт.']"
 
-        private const val PAGE_LOADED_INDICATOR_XPATH =
-            "//main"
     }
 
-    /**
-     * Проверка загрузки основной страницы
-     */
-    fun isPageLoaded(): Boolean {
-        return try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(PAGE_LOADED_INDICATOR_XPATH))).isDisplayed
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    /**
-     * Проверка наличия диалога cookie
-     */
-    fun isCookieDialogPresent(): Boolean {
-        return try {
-            val cookieDialog = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(DECLINE_COOKIE_XPATH)))
-            cookieDialog.isDisplayed
-        } catch (e: Exception) {
-            false
-        }
-    }
 
     fun declineCookie() {
 
@@ -79,13 +55,6 @@ open class BookingCookiePage(
      * Полная обработка страницы: ожидание загрузки, отказ от cookie и закрытие диалога регистрации
      */
     fun handlePageLoadAndDialogs() {
-        // Ждем загрузки страницы по основному элементу
-        wait.until(
-            ExpectedConditions.or(
-                ExpectedConditions.presenceOfElementLocated(By.xpath(CLOSE_LOGIN_DIALOG_XPATH)),
-                ExpectedConditions.presenceOfElementLocated(By.xpath(DECLINE_COOKIE_XPATH))
-            )
-        )
 
         closeLoginDialog()
         declineCookie()
@@ -98,35 +67,6 @@ open class BookingCookiePage(
         driver.get("https://www.booking.com")
         handlePageLoadAndDialogs()
         return BookingHomePage(driver, wait)
-    }
-
-    fun navigateToPlanesPage(): PlaneBookingHomePage {
-        val navContainer = getNavContainer()
-
-        val element = navContainer.findElement(By.id("flights"))
-
-        logger.info { "Получаем элемент с id flights" }
-
-        element.click()
-
-        return PlaneBookingHomePage(driver, wait)
-    }
-
-    private fun getNavContainer(): WebElement {
-        driver.get("https://www.booking.com/planes")
-        handlePageLoadAndDialogs()
-
-        val navContainerXPath = "//nav[@data-testid='header-xpb']"
-
-        val navContainer = wait.until { driver ->
-            driver.findElement(By.xpath(navContainerXPath))
-        }
-        logger.info { "Получаем контейнер с навигацией" }
-        return navContainer
-    }
-
-    fun loadPage() {
-        driver.get("https://www.booking.com")
     }
 
 }

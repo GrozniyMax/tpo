@@ -26,7 +26,7 @@ open class SeleniumBaseTest(
     protected lateinit var driver: WebDriver
     protected lateinit var wait: WebDriverWait
 
-    @BeforeAll
+    @BeforeEach
     fun setUpAll() {
         driver = when(mode) {
             Mode.CHROME -> setupChromeDriver()
@@ -130,7 +130,7 @@ open class SeleniumBaseTest(
     @AfterAll
     fun tearDownAll() {
         if (::driver.isInitialized) {
-            driver.close()
+            driver.quit()
         }
     }
 }

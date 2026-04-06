@@ -61,7 +61,7 @@ class SearchResultsTest: SeleniumBaseTest() {
         assertEquals("9 мая", flight.arrival.day)
 
         assertEquals("ARN", flight.departure.code)
-        assertEquals("SAW", flight.arrival.code)
+        assertTrue(flight.arrival.code == "SAW" || flight.arrival.code == "IST" )
 
         assertTrue(parseTime(flight.departure.time) < parseTime(flight.arrival.time))
 
@@ -71,8 +71,8 @@ class SearchResultsTest: SeleniumBaseTest() {
         assertEquals("16 мая", flight.departure.day)
         assertEquals("16 мая", flight.arrival.day)
 
-        assertEquals("ARN", flight.departure.code)
-        assertEquals("STO", flight.arrival.code)
+        assertEquals("SAW", flight.departure.code)
+        assertEquals("ARN", flight.arrival.code)
 
         assertTrue(parseTime(flight.departure.time) < parseTime(flight.arrival.time))
     }

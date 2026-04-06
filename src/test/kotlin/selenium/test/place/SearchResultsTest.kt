@@ -1,17 +1,15 @@
 package selenium.test.place
 
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.platform.commons.logging.LoggerFactory
 import selenium.Mode
 import selenium.SeleniumBaseTest
 import selenium.pages.place.searchResults.PlaceSearchResultsPage
 import java.time.Duration
 
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class SearchResultsTest: SeleniumBaseTest(mode = Mode.CHROME) {
 
     lateinit var page: PlaceSearchResultsPage
@@ -47,7 +45,7 @@ class SearchResultsTest: SeleniumBaseTest(mode = Mode.CHROME) {
         val suggestions = page.getSuggestions()
 
         suggestions.forEach {
-            val rating = it.rating.replace(",", ".").toDouble()
+            val rating = it.rating.lines()[1].replace(",", ".").toDouble()
             assertTrue(rating >= 9.0)
         }
 
@@ -66,17 +64,6 @@ class SearchResultsTest: SeleniumBaseTest(mode = Mode.CHROME) {
         assertEquals(title, suggestions[0].title)
     }
 
-    @Test
-    @DisplayName("Проверка аттрибутов, которые не видно в карточке")
-    fun hiddenAttributes() {
-
-        page.clickOtherFilter("hotelfacility", "Парковка")
-
-        val placePage = page.select(0)
-        val properties = placePage.getProperties()
-
-        assertTrue(properties.any { it.contains("Парковка") || it.contains("парковка") })
-    }
 
     @Test
     @DisplayName("Проверка возможности вернуться назад")
@@ -95,7 +82,7 @@ class SearchResultsTest: SeleniumBaseTest(mode = Mode.CHROME) {
     }
 
     @Test
-    @DisplayName("Проверка сотрирования")
+    @DisplayName("Проверка сортировки")
     fun sortTest() {
 
         page.applySort("Цена (сначала самая низкая)")

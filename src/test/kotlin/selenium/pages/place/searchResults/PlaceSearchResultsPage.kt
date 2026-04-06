@@ -98,7 +98,7 @@ class PlaceSearchResultsPage(
 
     fun clickPopularFilter(filterName: String) {
         val filtersContainerXPath = "//div[@data-testid='filters-group'][@data-filters-group='popular']"
-        val filterXPath = ".//label[contains(., '$filterName') and .//input[@type='checkbox']]"
+        val filterXPath = ".//label[contains(., '$filterName')]"
 
         val container = wait.until(
             ExpectedConditions.presenceOfElementLocated(
@@ -123,9 +123,9 @@ class PlaceSearchResultsPage(
     fun clickOtherFilter(filterGroup: String, filterName: String) {
         val filterXPath = "//div[@data-testid='filters-group-label-content'][text()='$filterName']"
 
-        val filterElement = wait.until { driver ->
-            driver.findElement(By.xpath(filterXPath))
-        }
+        val filterElement = wait.until (
+            ExpectedConditions.elementToBeClickable(By.xpath(filterXPath))
+        )
         logger.info { "Нашли фильтр $filterName" }
 
         filterElement.click()

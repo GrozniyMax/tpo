@@ -30,7 +30,7 @@ class PlaneSearchResultsPage(
         }
         logger.info { "Дождались появления карточек рейсов" }
         logger.info { "Найдено ${elements.size} карточек рейсов" }
-        return elements.toList().subList(0, topN)
+        return elements.toList().take(topN)
     }
 
     fun selectOneway() {
