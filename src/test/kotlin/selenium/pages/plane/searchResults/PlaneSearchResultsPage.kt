@@ -58,7 +58,7 @@ class PlaneSearchResultsPage(
     }
 
     private fun getFlightCards(topN: Int = 5): List<WebElement> {
-        val xPath = "//div[@data-testid='searchresults_card'][position() <= $topN]"
+        val xPath = "//div[@data-testid='searchresults_card']"
         
         // Пробуем разные селекторы для карточек рейсов
         val cardLocators = listOf(
@@ -67,7 +67,7 @@ class PlaneSearchResultsPage(
             By.xpath("//article[contains(@class, 'flight')]"),
             By.xpath("//div[contains(@class, 'flight-card')]")
         )
-        
+
         var elements: List<WebElement> = emptyList()
         for (locator in cardLocators) {
             try {
@@ -82,7 +82,7 @@ class PlaneSearchResultsPage(
                 // Пробуем следующий локатор
             }
         }
-        
+
         logger.info { "Дождались появления карточек рейсов" }
         logger.info { "Найдено ${elements.size} карточек рейсов" }
         return elements.take(topN)
@@ -141,43 +141,20 @@ class PlaneSearchResultsPage(
         // Ждём появления карточек рейсов или сообщения об отсутствии результатов
         val flightCardLocator = By.xpath(FLIGHT_CARD_XPATH)
         val noResultsLocator = By.xpath(NO_RESULTS_XPATH)
-        
-        // Дополнительные локаторы для разных вариантов загрузки
-        val additionalCardLocators = listOf(
-            By.xpath("//div[contains(@data-testid, 'searchresults')]"),
-            By.xpath("//article[contains(@class, 'flight')]"),
-            By.xpath("//div[contains(@class, 'flight-card')]"),
-            By.xpath("//div[contains(@class, 'results')]")
+        val searchPreviewLocator = By.xpath("//*[contains(text(), 'Ищите варианты с гибким тарифом')]")
+
+        wait.until(
+            ExpectedConditions.and(
+                ExpectedConditions.or(
+                    ExpectedConditions.visibilityOfElementLocated(flightCardLocator),
+                    ExpectedConditions.visibilityOfElementLocated(noResultsLocator)
+                ),
+                ExpectedConditions.not(
+                    ExpectedConditions.visibilityOfElementLocated(searchPreviewLocator)
+                )
+            )
         )
 
-        // Сначала ждём основные карточки
-        try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(flightCardLocator))
-            logger.info { "Карточки рейсов загружены" }
-            return
-        } catch (e: Exception) {
-            logger.warn { "Основные карточки не найдены, пробуем альтернативные селекторы" }
-        }
-        
-        // Пробуем альтернативные селекторы
-        for (locator in additionalCardLocators) {
-            try {
-                val tempWait = WebDriverWait(driver, java.time.Duration.ofSeconds(5))
-                tempWait.until(ExpectedConditions.presenceOfElementLocated(locator))
-                logger.info { "Карточки рейсов найдены с селектором: $locator" }
-                return
-            } catch (e: Exception) {
-                // Пробуем следующий локатор
-            }
-        }
-
-        // Проверяем сообщение об отсутствии результатов
-        try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(noResultsLocator))
-            logger.info { "Получено сообщение об отсутствии рейсов" }
-        } catch (e2: Exception) {
-            logger.warn { "Не удалось дождаться загрузки страницы результатов" }
-        }
     }
 
 }

@@ -75,6 +75,8 @@ class PlaneBookingHomePage(
 
     fun declineRandom() {
         try {
+            declineCookie()
+
             val xpath = "//button[@data-ui-name='input_location_from_segment_0']"
             val button = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)))
             clickElement(button, "кнопку 'Откуда'")

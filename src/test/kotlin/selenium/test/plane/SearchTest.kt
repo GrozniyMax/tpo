@@ -37,6 +37,7 @@ class SearchTest: SeleniumBaseTest() {
     @Test
     @DisplayName("Проверка поиска рейсов для РФ")
     fun testForRussia() {
+        homePage
         homePage.declineRandom()
 
         val searchResultsPage = homePage.searchFlights("Москва", "Санкт-Петербург")
