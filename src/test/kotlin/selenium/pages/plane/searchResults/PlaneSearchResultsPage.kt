@@ -59,32 +59,10 @@ class PlaneSearchResultsPage(
 
     private fun getFlightCards(topN: Int = 5): List<WebElement> {
         val xPath = "//div[@data-testid='searchresults_card']"
-        
-        // Пробуем разные селекторы для карточек рейсов
-        val cardLocators = listOf(
-            By.xpath(xPath),
-            By.xpath("//div[contains(@data-testid, 'searchresults')]"),
-            By.xpath("//article[contains(@class, 'flight')]"),
-            By.xpath("//div[contains(@class, 'flight-card')]")
-        )
 
-        var elements: List<WebElement> = emptyList()
-        for (locator in cardLocators) {
-            try {
-                elements = wait.until {
-                    driver.findElements(locator)
-                }
-                if (elements.isNotEmpty()) {
-                    logger.info { "Нашли карточки рейсов с селектором: $locator" }
-                    break
-                }
-            } catch (e: Exception) {
-                // Пробуем следующий локатор
-            }
+        val elements = wait.until {
+            driver.findElements(By.xpath(xPath))
         }
-
-        logger.info { "Дождались появления карточек рейсов" }
-        logger.info { "Найдено ${elements.size} карточек рейсов" }
         return elements.take(topN)
     }
 
