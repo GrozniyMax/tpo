@@ -25,6 +25,18 @@ open class BookingCookiePage(
         private const val DECLINE_COOKIE_XPATH =
             "//button[contains(@class, 'bui-btn') and .//span[normalize-space(text())='Отклонить']] | //button[contains(text(), 'Отклонить')]"
 
+        // OneTrust cookie banner (используется на Booking.com)
+        private const val ONETRUST_REJECT_XPATH =
+            "//button[contains(@id, 'onetrust-reject') or contains(@class, 'ot-sdk-btn') and contains(text(), 'Отклонить') or contains(text(), 'Reject')]"
+
+        // Альтернативные селекторы для cookie баннера
+        private const val COOKIE_BANNER_ALTERNATIVES_XPATH =
+            "//button[contains(text(), 'Отклонить все') or contains(text(), 'Reject all') or contains(@aria-label, 'cookie') or contains(@aria-label, 'cookies')]"
+
+        // OneTrust banner container
+        private const val ONETRUST_BANNER_XPATH =
+            "//div[contains(@id, 'onetrust-banner-sdk')]"
+
         private const val CLOSE_LOGIN_DIALOG_XPATH =
             "//button[@aria-label='Скрыть меню входа в аккаунт.']"
 
@@ -32,14 +44,44 @@ open class BookingCookiePage(
 
 
     fun declineCookie() {
+        // Пробуем разные варианты закрытия cookie баннера
+        val xpathVariants = listOf(
+            DECLINE_COOKIE_XPATH,
+            ONETRUST_REJECT_XPATH,
+            COOKIE_BANNER_ALTERNATIVES_XPATH
+        )
 
-        try {
-            driver.findElement(By.xpath(DECLINE_COOKIE_XPATH)).click()
-            logger.info { "Отклонили cookie" }
-        } catch (e: Exception) {
-            logger.warn { "Не удалось закрыть диалог cookie: ${e.message}" }
+        for (xpath in xpathVariants) {
+            try {
+                val element = driver.findElement(By.xpath(xpath))
+                if (element.isDisplayed) {
+                    element.click()
+                    logger.info { "Отклонили cookie (использован селектор: $xpath)" }
+                    return
+                }
+            } catch (e: Exception) {
+                // Пробуем следующий вариант
+            }
         }
 
+        logger.warn { "Не удалось закрыть диалог cookie: ни один из селекторов не сработал" }
+    }
+
+    /**
+     * Проверяет наличие cookie баннера и закрывает его если есть
+     */
+    fun tryCloseCookieBanner(): Boolean {
+        try {
+            // Проверяем наличие OneTrust баннера
+            val banner = driver.findElement(By.xpath(ONETRUST_BANNER_XPATH))
+            if (banner.isDisplayed) {
+                declineCookie()
+                return true
+            }
+        } catch (e: Exception) {
+            // Баннера нет
+        }
+        return false
     }
 
     fun closeLoginDialog() {
