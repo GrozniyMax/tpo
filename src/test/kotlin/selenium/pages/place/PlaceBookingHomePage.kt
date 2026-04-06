@@ -113,13 +113,6 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
     }
 
     /**
-     * Установка количества детей
-     */
-    fun setChildren(count: Int) {
-        adjustGuestCount(count, "child")
-    }
-
-    /**
      * Регулировка счётчика гостей
      */
     private fun adjustGuestCount(targetCount: Int, type: String) {
@@ -179,31 +172,4 @@ class BookingHomePage(private val driver: WebDriver, private val wait: WebDriver
         logger.info { "Нажата кнопка поиска" }
         return page
     }
-
-
-    /**
-     * Полный сценарий поиска жилья
-     * @param place направление (город, отель)
-     * @param checkInDay день заезда
-     * @param checkOutDay день выезда
-     * @param adults количество взрослых
-     */
-    fun searchAccommodation(place: String, adults: Int = 2): PlaceSearchResultsPage {
-        enterPlace(place)
-        logger.info { "Введено направление: $place" }
-        selectFirstSuggestion()
-        logger.info { "Выбрана первая подсказка" }
-
-        if (adults > 0) {
-            openGuestsSelector()
-            setAdults(adults)
-            closeGuestsSelector()
-        }
-        logger.info { "Выбрано количество взрослых: $adults" }
-
-        val page = clickSearch()
-        logger.info { "Нажата кнопка поиска" }
-        return page
-    }
-
 }

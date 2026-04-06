@@ -2,10 +2,7 @@ package selenium.pages.place.searchResults
 
 import org.junit.platform.commons.logging.Logger
 import org.junit.platform.commons.logging.LoggerFactory
-import org.openqa.selenium.By
-import org.openqa.selenium.NoSuchElementException
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.WebElement
+import org.openqa.selenium.*
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import selenium.pages.BookingCookiePage
@@ -18,7 +15,7 @@ class PlaceSearchResultsPage(
 ): BookingCookiePage(driver, wait) {
 
     private fun getProductCards(topN: Int = 5): List<WebElement> {
-        val cardsXPath = "(//div[@role=\"list\"]//div[@data-testid=\"property-card\"])[position() <= $topN]"
+        val cardsXPath = "(//div[@role='list']//div[@data-testid='property-card'])[position() <= $topN]"
 
         wait.until(
             ExpectedConditions.presenceOfElementLocated(
@@ -31,15 +28,6 @@ class PlaceSearchResultsPage(
         logger.info { "Нашли ${productCards.size} карточек" }
 
         return productCards
-    }
-
-    fun hasNoResults(): Boolean {
-        try {
-            driver.findElement(By.xpath("//div[@data-testid='properties-list-empty-state']"))
-            return true
-        } catch (e: NoSuchElementException) {
-            return false
-        }
     }
 
     fun getSuggestions(topN: Int = 5): List<PropertyCard> {
@@ -60,17 +48,9 @@ class PlaceSearchResultsPage(
         
         // Скроллим к кнопке сортировки
         scrollIntoView(sortButton)
-        
-        // Пробуем обычный клик, если не получается - используем JavaScript
-        try {
-            sortButton.click()
-        } catch (e: org.openqa.selenium.ElementClickInterceptedException) {
-            logger.warn { "Не удалось кликнуть по кнопке сортировки обычным способом, используем JavaScript: ${e.message}" }
-            (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
-                "arguments[0].click();", sortButton
-            )
-        }
-        
+
+        clickElement(sortButton)
+
         logger.info { "Кликнули по кнопке сортировки" }
 
         // Ждём появления контейнера с опциями сортировки
@@ -93,21 +73,7 @@ class PlaceSearchResultsPage(
 
         // Скроллим к опции сортировки
         scrollIntoView(sortOption)
-
-        // Пробуем обычный клик, если не получается - используем JavaScript
-        try {
-            sortOption.click()
-        } catch (e: org.openqa.selenium.ElementNotInteractableException) {
-            logger.warn { "Опция сортировки не интерактивна, используем JavaScript: ${e.message}" }
-            (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
-                "arguments[0].click();", sortOption
-            )
-        } catch (e: org.openqa.selenium.ElementClickInterceptedException) {
-            logger.warn { "Не удалось кликнуть по опции сортировки обычным способом, используем JavaScript: ${e.message}" }
-            (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
-                "arguments[0].click();", sortOption
-            )
-        }
+        clickElement(sortOption)
 
         logger.info { "Кликнули по опции сортировки $sort" }
         
@@ -126,15 +92,7 @@ class PlaceSearchResultsPage(
 
         val originalWindow = driver.windowHandle
 
-        // Пробуем обычный клик, если не получается - используем JavaScript
-        try {
-            link.click()
-        } catch (e: org.openqa.selenium.ElementClickInterceptedException) {
-            logger.warn { "Не удалось кликнуть обычным способом, используем JavaScript: ${e.message}" }
-            (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
-                "arguments[0].click();", link
-            )
-        }
+        clickElement(link)
 
         logger.info { "Кликнули по карточке" }
 
@@ -170,8 +128,8 @@ class PlaceSearchResultsPage(
 
         // Скроллим к элементу перед кликом (важно для Firefox)
         scrollIntoView(filterElement)
-
         filterElement.click()
+
         logger.info { "Кликнули по фильтру $filterName" }
 
         waitForResultsToUpdate()
@@ -200,16 +158,16 @@ class PlaceSearchResultsPage(
         try {
             filterElementFinal.click()
             logger.info { "Кликнули по фильтру $filterName (обычный клик)" }
-        } catch (e: org.openqa.selenium.ElementClickInterceptedException) {
+        } catch (e: ElementClickInterceptedException) {
             logger.warn { "Не удалось кликнуть по фильтру обычным способом, используем JavaScript: ${e.message}" }
             // Используем JavaScript для клика по input внутри label если есть
             try {
                 val inputElement = filterElementFinal.findElement(By.xpath(".//preceding::input[1]"))
-                (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
+                (driver as? JavascriptExecutor)?.executeScript(
                     "arguments[0].click();", inputElement
                 )
             } catch (e2: Exception) {
-                (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
+                (driver as? JavascriptExecutor)?.executeScript(
                     "arguments[0].click();", filterElementFinal
                 )
             }
@@ -224,7 +182,7 @@ class PlaceSearchResultsPage(
      */
     private fun scrollIntoView(element: WebElement) {
         try {
-            (driver as? org.openqa.selenium.JavascriptExecutor)?.executeScript(
+            (driver as? JavascriptExecutor)?.executeScript(
                 "arguments[0].scrollIntoView(true);", element
             )
         } catch (e: Exception) {
@@ -242,5 +200,26 @@ class PlaceSearchResultsPage(
             )
         )
         logger.info { "Результаты обновились" }
+    }
+
+    /**
+     * Кликает по элементу с fallback на JavaScript
+     */
+    private fun clickElement(element: WebElement, description: String = "элемент") {
+        try {
+            scrollIntoView(element)
+            element.click()
+            logger.info { "Кликнули по $description (обычный клик)" }
+        } catch (e: ElementClickInterceptedException) {
+            logger.warn { "Не удалось кликнуть по $description обычным способом, используем JavaScript: ${e.message}" }
+            (driver as? JavascriptExecutor)?.executeScript(
+                "arguments[0].click();", element
+            )
+        } catch (e: ElementNotInteractableException) {
+            logger.warn { "$description не интерактивен, используем JavaScript: ${e.message}" }
+            (driver as? JavascriptExecutor)?.executeScript(
+                "arguments[0].click();", element
+            )
+        }
     }
 }
