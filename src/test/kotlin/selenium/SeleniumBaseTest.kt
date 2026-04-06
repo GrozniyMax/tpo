@@ -20,7 +20,7 @@ enum class Mode {
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 open class SeleniumBaseTest(
     private val useHeadless: Boolean = false,
-    private val mode: Mode = Mode.CHROME
+    private val mode: Mode = Mode.FIREFOX
 ) {
 
     protected lateinit var driver: WebDriver

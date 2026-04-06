@@ -31,7 +31,7 @@ class AttractionsSearchResultsTest: SeleniumBaseTest() {
         }
         
         // Переходим на страницу результатов
-        driver.get("https://www.booking.com/attractions/searchresults.ru.html?dest_id=-2625660&dest_type=city")
+        driver.get("https://www.booking.com/attractions/searchresults.ru.html?aid=304142&label=mkt123sc-224e3ee6-da99-4a84-9eef-d2eaf88500df&start_date=2026-05-20&end_date=2026-05-24&source=search_box&dest_id=-2625660")
         page = AttractionSearchResultsPage(driver, wait)
     }
 

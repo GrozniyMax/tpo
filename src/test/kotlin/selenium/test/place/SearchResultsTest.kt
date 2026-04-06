@@ -89,10 +89,11 @@ class SearchResultsTest: SeleniumBaseTest() {
 
         val suggestions = page.getSuggestions()
 
-        // Сортируем по возрастанию (сначала самая низкая цена)
-        val sorted = suggestions.sortedBy { extractPriceValue(it.price) }
+        val prices = suggestions.map { extractPriceValue(it.price) }
 
-        assertEquals(suggestions, sorted)
+        val sorted = prices.sorted()
+
+        assertEquals(sorted, prices)
     }
 
     /**
