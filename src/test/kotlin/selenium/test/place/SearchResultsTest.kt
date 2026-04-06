@@ -10,7 +10,7 @@ import java.time.Duration
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class SearchResultsTest: SeleniumBaseTest(mode = Mode.CHROME) {
+class SearchResultsTest: SeleniumBaseTest() {
 
     lateinit var page: PlaceSearchResultsPage
 
@@ -89,9 +89,17 @@ class SearchResultsTest: SeleniumBaseTest(mode = Mode.CHROME) {
 
         val suggestions = page.getSuggestions()
 
-        val sorted = suggestions.sortedByDescending { it.price }
+        // Сортируем по возрастанию (сначала самая низкая цена)
+        val sorted = suggestions.sortedBy { extractPriceValue(it.price) }
 
         assertEquals(suggestions, sorted)
+    }
+
+    /**
+     * Извлекает числовое значение из строки цены (например, "€ 108" -> 108.0)
+     */
+    private fun extractPriceValue(priceStr: String): Double {
+        return priceStr.replace(Regex("[^0-9.]"), "").toDoubleOrNull() ?: 0.0
     }
 
 }
