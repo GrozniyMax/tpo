@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.platform.commons.logging.LoggerFactory
+import selenium.Mode
 import selenium.SeleniumBaseTest
 import selenium.pages.plane.searchResults.Flight
 import selenium.pages.plane.searchResults.PlaneSearchResultsPage

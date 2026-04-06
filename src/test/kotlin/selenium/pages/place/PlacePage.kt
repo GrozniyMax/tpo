@@ -54,25 +54,59 @@ class PlacePage(
     }
 
     private fun getSpansContent(containerXpath: String): List<String> {
-        try {
-            return driver.findElements(By.xpath("$containerXpath//span"))
-                .mapNotNull {
-                    it.text.trim().takeIf { text -> text.isNotEmpty() }
+        val maxRetries = 3
+        for (attempt in 1..maxRetries) {
+            try {
+                return driver.findElements(By.xpath("$containerXpath//span"))
+                    .mapNotNull { element ->
+                        try {
+                            element.text.trim().takeIf { text -> text.isNotEmpty() }
+                        } catch (e: StaleElementReferenceException) {
+                            logger.warn { "Stale элемент на попытке $attempt: ${e.message}" }
+                            null
+                        }
+                    }
+            } catch (e: StaleElementReferenceException) {
+                logger.warn { "StaleException на попытке $attempt при поиске span: ${e.message}" }
+                if (attempt == maxRetries) return emptyList()
+                try {
+                    Thread.sleep(500)
+                } catch (ie: InterruptedException) {
+                    // Игнорируем
                 }
-        } catch (_: Exception) {
-            return emptyList()
+            } catch (_: Exception) {
+                return emptyList()
+            }
         }
+        return emptyList()
     }
 
     private fun getDivContent(containerXpath: String): List<String> {
-        try {
-            return driver.findElements(By.xpath("$containerXpath//div"))
-                .mapNotNull {
-                    it.text.trim().takeIf { text -> text.isNotEmpty() }
+        val maxRetries = 3
+        for (attempt in 1..maxRetries) {
+            try {
+                return driver.findElements(By.xpath("$containerXpath//div"))
+                    .mapNotNull { element ->
+                        try {
+                            element.text.trim().takeIf { text -> text.isNotEmpty() }
+                        } catch (e: StaleElementReferenceException) {
+                            logger.warn { "Stale элемент на попытке $attempt: ${e.message}" }
+                            null
+                        }
+                    }
+            } catch (e: StaleElementReferenceException) {
+                logger.warn { "StaleException на попытке $attempt при поиске div: ${e.message}" }
+                if (attempt == maxRetries) return emptyList()
+                try {
+                    Thread.sleep(500)
+                } catch (ie: InterruptedException) {
+                    // Игнорируем
                 }
-        } catch (_: Exception) {
-            return emptyList()
+            } catch (_: Exception) {
+                return emptyList()
+            }
         }
+        return emptyList()
     }
 
 

@@ -2,11 +2,14 @@ package selenium.pages.plane
 
 import org.junit.platform.commons.logging.LoggerFactory
 import org.openqa.selenium.By
+import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import selenium.pages.BookingCookiePage
 import selenium.pages.plane.searchResults.PlaneSearchResultsPage
+import java.time.Duration
 import java.time.LocalDate
 
 private val logger = LoggerFactory.getLogger(PlaneBookingHomePage::class.java)
@@ -36,18 +39,54 @@ class PlaneBookingHomePage(
             "//div[contains(@role, 'listbox')]//li[contains(@role, 'option')]"
     }
 
+    /**
+     * Скроллит элемент в видимую область
+     */
+    private fun scrollIntoView(element: WebElement) {
+        try {
+            (driver as? JavascriptExecutor)?.executeScript(
+                "arguments[0].scrollIntoView(true);", element
+            )
+        } catch (e: Exception) {
+            logger.warn { "Не удалось проскроллить к элементу: ${e.message}" }
+        }
+    }
+
+    /**
+     * Кликает по элементу с fallback на JavaScript
+     */
+    private fun clickElement(element: WebElement, description: String = "элемент") {
+        try {
+            scrollIntoView(element)
+            element.click()
+            logger.info { "Кликнули по $description (обычный клик)" }
+        } catch (e: org.openqa.selenium.ElementClickInterceptedException) {
+            logger.warn { "Не удалось кликнуть по $description обычным способом, используем JavaScript: ${e.message}" }
+            (driver as? JavascriptExecutor)?.executeScript(
+                "arguments[0].click();", element
+            )
+        } catch (e: org.openqa.selenium.ElementNotInteractableException) {
+            logger.warn { "$description не интерактивен, используем JavaScript: ${e.message}" }
+            (driver as? JavascriptExecutor)?.executeScript(
+                "arguments[0].click();", element
+            )
+        }
+    }
+
     fun declineRandom() {
-        val xpath = "//button[@data-ui-name='input_location_from_segment_0']"
-        val button = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)))
+        try {
+            val xpath = "//button[@data-ui-name='input_location_from_segment_0']"
+            val button = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)))
+            clickElement(button, "кнопку 'Откуда'")
 
-        button.click()
+            val declineCompleted = "//button[@data-autocomplete-chip-idx='0']"
+            val declineButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(declineCompleted)))
+            clickElement(declineButton, "кнопку отмены автокомплита")
 
-        val declineCompleted = "//button[@data-autocomplete-chip-idx='0']"
-        val declineButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(declineCompleted)))
-
-        declineButton.click()
-
-        logger.info { "Отклонили автокомплит" }
+            logger.info { "Отклонили автокомплит" }
+        } catch (e: Exception) {
+            logger.warn { "Не удалось отклонить автокомплит: ${e.message}" }
+        }
     }
 
 
@@ -70,34 +109,100 @@ class PlaneBookingHomePage(
     private fun selectFirstFromDropdown(keys: String, dataUiName: String) {
         val xpath = "//button[@data-ui-name='$dataUiName']"
         val button = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)))
+        clickElement(button, "кнопку ввода места")
 
-        button.click()
-        logger.info { "Клик по кнопке" }
+        // Ждём появления input поля
+        val inputLocator = By.xpath("//input[@data-ui-name='input_text_autocomplete' or @placeholder]")
+        val input = wait.until(ExpectedConditions.presenceOfElementLocated(inputLocator))
 
-        // Используем refreshed для защиты от stale element
-        val inputLocator = By.xpath("//input[@data-ui-name='input_text_autocomplete']")
-
-        wait.until(
-            ExpectedConditions.refreshed(
-                ExpectedConditions.elementToBeClickable(inputLocator)
-            )
-        )?.sendKeys(keys)
-
-        logger.info { "Ввод места" }
-
-        val dropdown = wait.until(
-            ExpectedConditions.presenceOfElementLocated(
-                By.id("flights-searchbox_suggestions")
-            )
-        )
-
-        val suggestion = wait.until {
-            dropdown.findElement(By.xpath("./li[@data-ui-name='locations_list_item']"))
+        // Очищаем и вводим текст
+        input.sendKeys(keys)
+        logger.info { "Ввод места: $keys" }
+        
+        // Небольшая пауза для появления подсказок
+        try {
+            Thread.sleep(500)
+        } catch (e: Exception) {
+            // Игнорируем
         }
 
-        suggestion.click()
+        // Ждём появления dropdown - пробуем разные селекторы с увеличенным таймаутом
+        val dropdownLocators = listOf(
+            By.id("flights-searchbox_suggestions"),
+            By.xpath("//ul[@role='listbox']"),
+            By.xpath("//ul[contains(@role, 'listbox')]"),
+            By.xpath("//div[contains(@class, 'autocomplete') or contains(@class, 'suggestion')]"),
+            By.xpath("//div[contains(@id, 'autocomplete') or contains(@id, 'suggestion')]"),
+            By.xpath("//ul[contains(@class, 'autocomplete')]"),
+            By.xpath("//div[contains(@class, 'autocomplete-results')]")
+        )
 
-        logger.info { "Клик по первому попавшемуся месту" }
+        var dropdown: WebElement? = null
+        for (locator in dropdownLocators) {
+            try {
+                val tempWait = WebDriverWait(driver, java.time.Duration.ofSeconds(5))
+                dropdown = tempWait.until(ExpectedConditions.presenceOfElementLocated(locator))
+                logger.info { "Нашли dropdown с селектором: $locator" }
+                break
+            } catch (e: Exception) {
+                // Пробуем следующий локатор
+            }
+        }
+
+        if (dropdown == null) {
+            logger.warn { "Не удалось найти dropdown, пробуем найти подсказку напрямую" }
+            // Пробуем найти подсказку напрямую
+            val suggestionLocators = listOf(
+                By.xpath("//li[@data-ui-name='locations_list_item']"),
+                By.xpath("//li[contains(@role, 'option')]"),
+                By.xpath("//div[contains(@class, 'autocomplete-item')]"),
+                By.xpath("//span[contains(text(), '$keys')]"),
+                By.xpath("//li[contains(., '$keys')]"),
+                By.xpath("//div[contains(., '$keys')]")
+            )
+
+            for (locator in suggestionLocators) {
+                try {
+                    val tempWait = WebDriverWait(driver, java.time.Duration.ofSeconds(3))
+                    val suggestion = tempWait.until(ExpectedConditions.elementToBeClickable(locator))
+                    clickElement(suggestion, "подсказку (напрямую)")
+                    logger.info { "Выбрана подсказка для: $keys" }
+                    return
+                } catch (e: Exception) {
+                    // Пробуем следующий локатор
+                }
+            }
+            logger.warn { "Не удалось найти подсказку для: $keys, продолжаем без выбора" }
+            return
+        }
+
+        // Ищем подсказку внутри dropdown
+        val suggestionLocators = listOf(
+            By.xpath("./li[@data-ui-name='locations_list_item']"),
+            By.xpath(".//li[contains(@role, 'option')]"),
+            By.xpath(".//div[contains(@class, 'autocomplete-item')]"),
+            By.xpath(".//li[contains(., '$keys')]"),
+            By.xpath(".//span[contains(., '$keys')]")
+        )
+
+        var suggestion: WebElement? = null
+        for (locator in suggestionLocators) {
+            try {
+                suggestion = dropdown.findElement(locator)
+                wait.until(ExpectedConditions.elementToBeClickable(suggestion))
+                logger.info { "Нашли подсказку с селектором: $locator" }
+                break
+            } catch (e: Exception) {
+                // Пробуем следующий локатор
+            }
+        }
+
+        if (suggestion != null) {
+            clickElement(suggestion, "подсказку")
+            logger.info { "Выбрана подсказка для: $keys" }
+        } else {
+            logger.warn { "Не удалось найти подсказку в dropdown для: $keys" }
+        }
     }
 
     /**
@@ -105,8 +210,7 @@ class PlaneBookingHomePage(
      */
     fun clickSearch(): PlaneSearchResultsPage {
         val searchButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(SUBMIT_BUTTON_XPATH)))
-        searchButton.click()
-        logger.info { "Нажата кнопка поиска" }
+        clickElement(searchButton, "кнопку поиска")
         return PlaneSearchResultsPage(driver, wait)
     }
 

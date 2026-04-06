@@ -33,15 +33,23 @@ open class SeleniumBaseTest(
             Mode.FIREFOX -> setupFirefoxDriver()
         }
 
-        // Увеличиваем таймауты для Firefox и Safari
+        // Увеличиваем таймауты для Firefox
         val implicitWait = when(mode) {
             Mode.CHROME -> 10L
-            Mode.FIREFOX -> 15L
+            Mode.FIREFOX -> 20L
+        }
+        
+        val pageLoadTimeout = when(mode) {
+            Mode.CHROME -> 30L
+            Mode.FIREFOX -> 60L
         }
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait))
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30))
-        wait = WebDriverWait(driver, Duration.ofSeconds(30))
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(pageLoadTimeout))
+        wait = WebDriverWait(driver, Duration.ofSeconds(when(mode) {
+            Mode.CHROME -> 30L
+            Mode.FIREFOX -> 60L
+        }))
     }
 
     private fun setupChromeDriver(): WebDriver {

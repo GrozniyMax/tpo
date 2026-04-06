@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import selenium.Mode
 import selenium.SeleniumBaseTest
 import selenium.pages.plane.PlaneBookingHomePage
 import selenium.pages.plane.searchResults.Flight
@@ -24,6 +25,13 @@ class SearchTest: SeleniumBaseTest() {
         driver.get("https://www.booking.com/flights/index.ru.html")
         homePage = PlaneBookingHomePage(driver, wait)
         homePage.handlePageLoadAndDialogs()
+        
+        // Дополнительная проверка и закрытие cookie баннера
+        try {
+            homePage.tryCloseCookieBanner()
+        } catch (e: Exception) {
+            // Игнорируем ошибки
+        }
     }
 
     @Test
