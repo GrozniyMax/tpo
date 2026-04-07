@@ -11,10 +11,11 @@ import selenium.Mode
 import selenium.SeleniumBaseTest
 import selenium.pages.BookingCookiePage
 import selenium.pages.place.BookingHomePage
+import selenium.test.firefox.FirefoxBaseTest
 import java.time.Duration
 import java.time.LocalDate
 
-class SearchTest: SeleniumBaseTest() {
+class SearchTest: FirefoxBaseTest() {
 
     lateinit var homePage: BookingHomePage
 

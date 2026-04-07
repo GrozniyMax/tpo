@@ -9,11 +9,12 @@ import selenium.Mode
 import selenium.SeleniumBaseTest
 import selenium.pages.plane.PlaneBookingHomePage
 import selenium.pages.plane.searchResults.Flight
+import selenium.test.firefox.FirefoxBaseTest
 import java.time.Duration
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class SearchTest: SeleniumBaseTest() {
+class SearchTest: FirefoxBaseTest() {
 
     lateinit var homePage: PlaneBookingHomePage
 

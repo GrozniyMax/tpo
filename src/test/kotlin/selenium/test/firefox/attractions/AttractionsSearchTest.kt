@@ -10,10 +10,11 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 import selenium.Mode
 import selenium.SeleniumBaseTest
 import selenium.pages.attractions.AttractionBookingHomePage
+import selenium.test.firefox.FirefoxBaseTest
 import java.time.Duration
 import java.time.LocalDate
 
-class AttractionsSearchTest: SeleniumBaseTest() {
+class AttractionsSearchTest: FirefoxBaseTest() {
 
     lateinit var homePage: AttractionBookingHomePage
 

@@ -6,9 +6,10 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import selenium.SeleniumBaseTest
 import selenium.pages.place.searchResults.PlaceSearchResultsPage
+import selenium.test.firefox.FirefoxBaseTest
 import java.time.Duration
 
-class DetailsPageTest: SeleniumBaseTest() {
+class DetailsPageTest: FirefoxBaseTest() {
 
     lateinit var page: PlaceSearchResultsPage
 

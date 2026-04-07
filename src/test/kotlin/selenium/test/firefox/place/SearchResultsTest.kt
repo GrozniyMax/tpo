@@ -6,11 +6,12 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import selenium.Mode
 import selenium.SeleniumBaseTest
 import selenium.pages.place.searchResults.PlaceSearchResultsPage
+import selenium.test.firefox.FirefoxBaseTest
 import java.time.Duration
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class SearchResultsTest: SeleniumBaseTest() {
+class SearchResultsTest: FirefoxBaseTest() {
 
     lateinit var page: PlaceSearchResultsPage
 
