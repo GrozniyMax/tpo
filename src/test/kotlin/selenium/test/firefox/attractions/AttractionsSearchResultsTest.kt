@@ -4,13 +4,13 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.openqa.selenium.By
-import selenium.SeleniumBaseTest
 import selenium.pages.attractions.searchResults.AttractionSearchResultsPage
+import selenium.test.firefox.FirefoxBaseTest
 import java.time.Duration
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class AttractionsSearchResultsTest: SeleniumBaseTest() {
+class AttractionsSearchResultsTest: FirefoxBaseTest() {
 
     lateinit var page: AttractionSearchResultsPage
 

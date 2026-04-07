@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import selenium.SeleniumBaseTest
 import selenium.pages.place.searchResults.PlaceSearchResultsPage
+import selenium.test.chrome.ChromeBaseTest
 import java.time.Duration
 
-class DetailsPageTest: SeleniumBaseTest() {
+class DetailsPageTest: ChromeBaseTest() {
 
     lateinit var page: PlaceSearchResultsPage
 

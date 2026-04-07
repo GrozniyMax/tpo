@@ -7,13 +7,13 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
-import selenium.SeleniumBaseTest
 import selenium.pages.BookingCookiePage
 import selenium.pages.place.BookingHomePage
+import selenium.test.chrome.ChromeBaseTest
 import java.time.Duration
 import java.time.LocalDate
 
-class SearchTest: SeleniumBaseTest() {
+class SearchTest: ChromeBaseTest() {
 
     lateinit var homePage: BookingHomePage
 

@@ -3,13 +3,13 @@ package selenium.test.chrome.place
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import selenium.SeleniumBaseTest
 import selenium.pages.place.searchResults.PlaceSearchResultsPage
+import selenium.test.chrome.ChromeBaseTest
 import java.time.Duration
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class SearchResultsTest: SeleniumBaseTest() {
+class SearchResultsTest: ChromeBaseTest() {
 
     lateinit var page: PlaceSearchResultsPage
 

@@ -5,14 +5,14 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import selenium.SeleniumBaseTest
 import selenium.pages.plane.PlaneBookingHomePage
 import selenium.pages.plane.searchResults.Flight
+import selenium.test.chrome.ChromeBaseTest
 import java.time.Duration
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class SearchTest: SeleniumBaseTest() {
+class SearchTest: ChromeBaseTest() {
 
     lateinit var homePage: PlaneBookingHomePage
 

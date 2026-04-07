@@ -5,18 +5,14 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.platform.commons.logging.LoggerFactory
 import selenium.pages.plane.searchResults.Flight
 import selenium.pages.plane.searchResults.PlaneSearchResultsPage
-import selenium.test.firefox.FirefoxBaseTest
+import selenium.test.chrome.ChromeBaseTest
 import java.time.Duration
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-
-private val logger = LoggerFactory.getLogger(PlaneSearchResultsPage::class.java)
-
-class SearchResultsTest: FirefoxBaseTest() {
+class SearchResultsTest: ChromeBaseTest() {
 
     lateinit var page: PlaneSearchResultsPage
 
