@@ -1,4 +1,4 @@
-package selenium.test.plane
+package selenium.test.firefox.plane
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -10,6 +10,7 @@ import selenium.Mode
 import selenium.SeleniumBaseTest
 import selenium.pages.plane.searchResults.Flight
 import selenium.pages.plane.searchResults.PlaneSearchResultsPage
+import selenium.test.firefox.FirefoxBaseTest
 import java.time.Duration
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -17,7 +18,7 @@ import java.time.format.DateTimeFormatter
 
 private val logger = LoggerFactory.getLogger(PlaneSearchResultsPage::class.java)
 
-class SearchResultsTest: SeleniumBaseTest() {
+class SearchResultsTest: FirefoxBaseTest() {
 
     lateinit var page: PlaneSearchResultsPage
 

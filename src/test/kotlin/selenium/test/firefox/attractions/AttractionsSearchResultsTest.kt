@@ -1,4 +1,4 @@
-package selenium.test.attractions
+package selenium.test.firefox.attractions
 
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals

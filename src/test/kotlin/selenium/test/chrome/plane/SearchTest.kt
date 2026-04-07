@@ -1,11 +1,10 @@
-package selenium.test.plane
+package selenium.test.chrome.plane
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import selenium.Mode
 import selenium.SeleniumBaseTest
 import selenium.pages.plane.PlaneBookingHomePage
 import selenium.pages.plane.searchResults.Flight

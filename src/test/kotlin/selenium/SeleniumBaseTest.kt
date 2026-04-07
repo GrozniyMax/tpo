@@ -18,7 +18,7 @@ enum class Mode {
 }
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-open class SeleniumBaseTest(
+abstract class SeleniumBaseTest(
     private val useHeadless: Boolean = false,
     private val mode: Mode = Mode.CHROME
 ) {

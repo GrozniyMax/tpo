@@ -1,4 +1,4 @@
-package selenium.test.place
+package selenium.test.chrome.place
 
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach

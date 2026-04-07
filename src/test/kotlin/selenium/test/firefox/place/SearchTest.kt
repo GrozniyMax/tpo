@@ -1,4 +1,4 @@
-package selenium.test.place
+package selenium.test.firefox.place
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
