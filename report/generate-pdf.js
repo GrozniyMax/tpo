@@ -133,7 +133,16 @@ async function generatePDF() {
             background-color: #f9f9f9;
             font-size: 11pt;
         }
-        hr { border: none; border-top: 1px solid #ccc; margin: 16px 0; }
+        hr { 
+            border: none; 
+            border-top: 1px solid #ccc; 
+            margin: 16px 0; 
+            page-break-before: always; 
+        }
+        /* Hide first hr if it's at the beginning of the document */
+        hr:first-child {
+            display: none;
+        }
         a { color: #0066cc; text-decoration: none; }
     </style>
     ${htmlContent}
