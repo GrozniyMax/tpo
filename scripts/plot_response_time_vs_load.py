@@ -369,10 +369,6 @@ def main():
         threshold_ms=args.threshold
     )
     
-    # Also create success rate plot
-    success_rate_path = output_path.parent / f"success_rate_config_{args.config}.png"
-    plot_success_rate_vs_load(agg_df, success_rate_path, args.config)
-    
     print("\nDone!")
 
 
