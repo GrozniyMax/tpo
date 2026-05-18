@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 # Load data
 data = []
-for i in ['1', '1.3', '1.4', '1.5', '2', '4', '5', '6', '7', '8', '9']:
+for i in ['1', '1.3', '1.4', '1.5', '2', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']:
     try:
         df = pd.read_csv(f'stress/{i}/table.csv')
         df = df[df['threadName'].str.contains('Config 3:')]
@@ -24,8 +24,14 @@ agg = df.groupby('load').agg(
 ).reset_index().sort_values('load')
 
 # Colors
-colors = ['#27ae60' if (r['success'] == 100 and r['avg_rt'] <= 640) else '#e74c3c' 
-          for _, r in agg.iterrows()]
+colors = []
+for _, r in agg.iterrows():
+    if r['load'] == 410:
+        colors.append('#f1c40f')  # Yellow for 410
+    elif r['success'] == 100 and r['avg_rt'] <= 640:
+        colors.append('#27ae60')  # Green - meets SLA
+    else:
+        colors.append('#e74c3c')  # Red - doesn't meet SLA
 
 # Plot
 fig, ax = plt.subplots(figsize=(12, 6))
