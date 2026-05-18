@@ -1,128 +1,128 @@
-2026-05-05 12:06:13,755 INFO o.a.j.u.JMeterUtils: Setting Locale to ru_RU
-2026-05-05 12:06:13,773 ERROR o.a.j.u.JMeterUtils: Could not find resources for 'ru_RU'
-2026-05-05 12:06:13,774 INFO o.a.j.JMeter: Loading user properties from: /home/maxim/Загрузки/apache-jmeter-5.6.3/bin/user.properties
-2026-05-05 12:06:13,774 INFO o.a.j.JMeter: Loading system properties from: /home/maxim/Загрузки/apache-jmeter-5.6.3/bin/system.properties
-2026-05-05 12:06:13,779 INFO o.a.j.JMeter: Copyright (c) 1998-2024 The Apache Software Foundation
-2026-05-05 12:06:13,779 INFO o.a.j.JMeter: Version 5.6.3
-2026-05-05 12:06:13,779 INFO o.a.j.JMeter: java.version=22.0.1
-2026-05-05 12:06:13,779 INFO o.a.j.JMeter: java.vm.name=OpenJDK 64-Bit Server VM
-2026-05-05 12:06:13,779 INFO o.a.j.JMeter: os.name=Linux
-2026-05-05 12:06:13,780 INFO o.a.j.JMeter: os.arch=amd64
-2026-05-05 12:06:13,780 INFO o.a.j.JMeter: os.version=6.17.0-22-generic
-2026-05-05 12:06:13,780 INFO o.a.j.JMeter: file.encoding=UTF-8
-2026-05-05 12:06:13,780 INFO o.a.j.JMeter: java.awt.headless=null
-2026-05-05 12:06:13,780 INFO o.a.j.JMeter: Max memory     =4120903680
-2026-05-05 12:06:13,780 INFO o.a.j.JMeter: Available Processors =20
-2026-05-05 12:06:13,788 INFO o.a.j.JMeter: Default Locale=русский (Россия)
-2026-05-05 12:06:13,789 INFO o.a.j.JMeter: JMeter  Locale=русский (Россия)
-2026-05-05 12:06:13,789 INFO o.a.j.JMeter: JMeterHome=/home/maxim/Загрузки/apache-jmeter-5.6.3
-2026-05-05 12:06:13,789 INFO o.a.j.JMeter: user.dir  =/home/maxim/tpo4
-2026-05-05 12:06:13,789 INFO o.a.j.JMeter: PWD       =/home/maxim/tpo4
-2026-05-05 12:06:13,789 INFO o.a.j.JMeter: IP: 127.0.1.1 Name: maxim-RLEF-XX FullName: maxim-RLEF-XX
-2026-05-05 12:06:13,801 INFO o.a.j.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties
-2026-05-05 12:06:14,075 INFO o.a.j.JMeterGuiLauncher: Setting LAF to: com.github.weisj.darklaf.DarkLaf:com.github.weisj.darklaf.theme.DarculaTheme
-2026-05-05 12:06:38,292 INFO o.a.j.s.FileServer: Default base='/home/maxim/tpo4'
-2026-05-05 12:06:38,298 INFO o.a.j.g.a.Load: Loading file: /home/maxim/tpo4/LoadTests.jmx
-2026-05-05 12:06:38,298 INFO o.a.j.s.FileServer: Set new base='/home/maxim/tpo4'
-2026-05-05 12:06:38,487 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
-2026-05-05 12:06:38,514 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
-2026-05-05 12:06:38,517 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
-2026-05-05 12:06:38,518 INFO o.a.j.s.SaveService: Loading file: /home/maxim/tpo4/LoadTests.jmx
-2026-05-05 12:06:38,542 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
-2026-05-05 12:06:38,542 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
-2026-05-05 12:06:38,542 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
-2026-05-05 12:06:38,542 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
-2026-05-05 12:06:38,542 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
-2026-05-05 12:06:38,542 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
-2026-05-05 12:06:38,721 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
-2026-05-05 12:06:38,721 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to UTF-8
-2026-05-05 12:06:38,721 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
-2026-05-05 12:06:38,722 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
-2026-05-05 12:06:39,282 INFO o.a.j.s.FileServer: Set new base='/home/maxim/tpo4'
-2026-05-05 12:07:12,485 INFO o.a.j.e.StandardJMeterEngine: Running the test!
-2026-05-05 12:07:12,488 INFO o.a.j.s.SampleEvent: List of sample_variables: []
-2026-05-05 12:07:12,488 INFO o.a.j.s.SampleEvent: List of sample_variables: []
-2026-05-05 12:07:12,490 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
-2026-05-05 12:07:12,490 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
-2026-05-05 12:07:12,550 INFO o.a.j.g.u.JMeterMenuBar: setRunning(true, *local*)
-2026-05-05 12:07:12,628 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : Config 1
-2026-05-05 12:07:12,629 INFO o.a.j.e.StandardJMeterEngine: Starting 5 threads for group Config 1.
-2026-05-05 12:07:12,629 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
-2026-05-05 12:07:12,629 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=5 ramp-up=60 delayedStart=false
-2026-05-05 12:07:12,636 INFO o.a.j.t.JMeterThread: Thread started: Config 1 1-1
-2026-05-05 12:07:12,638 INFO o.a.j.t.ThreadGroup: Started thread group number 1
-2026-05-05 12:07:12,638 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 2 : Config 2
-2026-05-05 12:07:12,638 INFO o.a.j.e.StandardJMeterEngine: Starting 5 threads for group Config 2.
-2026-05-05 12:07:12,639 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
-2026-05-05 12:07:12,639 INFO o.a.j.t.ThreadGroup: Starting thread group... number=2 threads=5 ramp-up=60 delayedStart=false
-2026-05-05 12:07:12,640 INFO o.a.j.t.JMeterThread: Thread started: Config 2 2-1
-2026-05-05 12:07:12,642 INFO o.a.j.t.ThreadGroup: Started thread group number 2
-2026-05-05 12:07:12,642 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 3 : Config 3
-2026-05-05 12:07:12,642 INFO o.a.j.e.StandardJMeterEngine: Starting 5 threads for group Config 3.
-2026-05-05 12:07:12,643 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
-2026-05-05 12:07:12,643 INFO o.a.j.t.ThreadGroup: Starting thread group... number=3 threads=5 ramp-up=60 delayedStart=false
-2026-05-05 12:07:12,644 INFO o.a.j.t.JMeterThread: Thread started: Config 3 3-1
-2026-05-05 12:07:12,647 INFO o.a.j.t.ThreadGroup: Started thread group number 3
-2026-05-05 12:07:12,648 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
-2026-05-05 12:07:12,662 INFO o.a.j.p.h.s.HTTPHCAbstractImpl: Local host = maxim-RLEF-XX
-2026-05-05 12:07:12,673 INFO o.a.j.p.h.s.HTTPHC4Impl: HTTP request retry count = 0
-2026-05-05 12:07:24,632 INFO o.a.j.t.JMeterThread: Thread started: Config 1 1-2
-2026-05-05 12:07:24,640 INFO o.a.j.t.JMeterThread: Thread started: Config 2 2-2
-2026-05-05 12:07:24,644 INFO o.a.j.t.JMeterThread: Thread started: Config 3 3-2
-2026-05-05 12:07:36,631 INFO o.a.j.t.JMeterThread: Thread started: Config 1 1-3
-2026-05-05 12:07:36,642 INFO o.a.j.t.JMeterThread: Thread started: Config 2 2-3
-2026-05-05 12:07:36,645 INFO o.a.j.t.JMeterThread: Thread started: Config 3 3-3
-2026-05-05 12:07:48,631 INFO o.a.j.t.JMeterThread: Thread started: Config 1 1-4
-2026-05-05 12:07:48,640 INFO o.a.j.t.JMeterThread: Thread started: Config 2 2-4
-2026-05-05 12:07:48,645 INFO o.a.j.t.JMeterThread: Thread started: Config 3 3-4
-2026-05-05 12:08:00,632 INFO o.a.j.t.JMeterThread: Thread started: Config 1 1-5
-2026-05-05 12:08:00,639 INFO o.a.j.t.JMeterThread: Thread started: Config 2 2-5
-2026-05-05 12:08:00,646 INFO o.a.j.t.JMeterThread: Thread started: Config 3 3-5
-2026-05-05 12:11:30,256 INFO o.a.j.g.a.Start: Stopping test
-2026-05-05 12:11:30,266 INFO o.a.j.t.JMeterThread: Stopping: Config 1 1-1
-2026-05-05 12:11:30,267 WARN o.a.j.t.JMeterThread: Interrupting: Config 1 1-1 sampler: Config 1
-2026-05-05 12:11:30,268 INFO o.a.j.t.JMeterThread: Stopping: Config 1 1-2
-2026-05-05 12:11:30,268 WARN o.a.j.t.JMeterThread: Interrupting: Config 1 1-2 sampler: Config 1
-2026-05-05 12:11:30,268 INFO o.a.j.t.JMeterThread: Stopping: Config 1 1-4
-2026-05-05 12:11:30,268 WARN o.a.j.t.JMeterThread: Interrupting: Config 1 1-4 sampler: Config 1
-2026-05-05 12:11:30,268 INFO o.a.j.t.JMeterThread: Stopping: Config 1 1-3
-2026-05-05 12:11:30,268 WARN o.a.j.t.JMeterThread: Interrupting: Config 1 1-3 sampler: Config 1
-2026-05-05 12:11:30,269 INFO o.a.j.t.JMeterThread: Stopping: Config 1 1-5
-2026-05-05 12:11:30,269 WARN o.a.j.t.JMeterThread: Interrupting: Config 1 1-5 sampler: Config 1
-2026-05-05 12:11:30,269 INFO o.a.j.t.JMeterThread: Stopping: Config 2 2-4
-2026-05-05 12:11:30,269 WARN o.a.j.t.JMeterThread: Interrupting: Config 2 2-4 sampler: Config 2
-2026-05-05 12:11:30,269 INFO o.a.j.t.JMeterThread: Stopping: Config 2 2-1
-2026-05-05 12:11:30,269 WARN o.a.j.t.JMeterThread: Interrupting: Config 2 2-1 sampler: Config 2
-2026-05-05 12:11:30,269 INFO o.a.j.t.JMeterThread: Stopping: Config 2 2-2
-2026-05-05 12:11:30,269 WARN o.a.j.t.JMeterThread: Interrupting: Config 2 2-2 sampler: Config 2
-2026-05-05 12:11:30,270 INFO o.a.j.t.JMeterThread: Stopping: Config 2 2-3
-2026-05-05 12:11:30,270 WARN o.a.j.t.JMeterThread: Interrupting: Config 2 2-3 sampler: Config 2
-2026-05-05 12:11:30,270 INFO o.a.j.t.JMeterThread: Stopping: Config 2 2-5
-2026-05-05 12:11:30,270 WARN o.a.j.t.JMeterThread: Interrupting: Config 2 2-5 sampler: Config 2
-2026-05-05 12:11:30,270 INFO o.a.j.t.JMeterThread: Stopping: Config 3 3-4
-2026-05-05 12:11:30,270 INFO o.a.j.t.JMeterThread: Thread finished: Config 1 1-4
-2026-05-05 12:11:30,270 INFO o.a.j.t.JMeterThread: Thread finished: Config 1 1-3
-2026-05-05 12:11:30,270 INFO o.a.j.t.JMeterThread: Thread finished: Config 2 2-2
-2026-05-05 12:11:30,270 INFO o.a.j.t.JMeterThread: Thread finished: Config 1 1-2
-2026-05-05 12:11:30,270 INFO o.a.j.t.JMeterThread: Thread finished: Config 1 1-5
-2026-05-05 12:11:30,270 INFO o.a.j.t.JMeterThread: Thread finished: Config 2 2-4
-2026-05-05 12:11:30,270 INFO o.a.j.t.JMeterThread: Thread finished: Config 1 1-1
-2026-05-05 12:11:30,270 WARN o.a.j.t.JMeterThread: Interrupting: Config 3 3-4 sampler: Config 3
-2026-05-05 12:11:30,270 INFO o.a.j.t.JMeterThread: Thread finished: Config 2 2-1
-2026-05-05 12:11:30,271 INFO o.a.j.t.JMeterThread: Stopping: Config 3 3-1
-2026-05-05 12:11:30,271 WARN o.a.j.t.JMeterThread: Interrupting: Config 3 3-1 sampler: Config 3
-2026-05-05 12:11:30,271 INFO o.a.j.t.JMeterThread: Stopping: Config 3 3-3
-2026-05-05 12:11:30,271 INFO o.a.j.t.JMeterThread: Thread finished: Config 2 2-3
-2026-05-05 12:11:30,271 INFO o.a.j.t.JMeterThread: Thread finished: Config 2 2-5
-2026-05-05 12:11:30,271 WARN o.a.j.t.JMeterThread: Interrupting: Config 3 3-3 sampler: Config 3
-2026-05-05 12:11:30,272 INFO o.a.j.t.JMeterThread: Stopping: Config 3 3-2
-2026-05-05 12:11:30,272 WARN o.a.j.t.JMeterThread: Interrupting: Config 3 3-2 sampler: Config 3
-2026-05-05 12:11:30,272 INFO o.a.j.t.JMeterThread: Stopping: Config 3 3-5
-2026-05-05 12:11:30,272 INFO o.a.j.t.JMeterThread: Thread finished: Config 3 3-4
-2026-05-05 12:11:30,272 WARN o.a.j.t.JMeterThread: Interrupting: Config 3 3-5 sampler: Config 3
-2026-05-05 12:11:30,272 INFO o.a.j.t.JMeterThread: Thread finished: Config 3 3-1
-2026-05-05 12:11:30,272 INFO o.a.j.t.JMeterThread: Thread finished: Config 3 3-3
-2026-05-05 12:11:30,273 INFO o.a.j.t.JMeterThread: Thread finished: Config 3 3-2
-2026-05-05 12:11:30,273 INFO o.a.j.t.JMeterThread: Thread finished: Config 3 3-5
-2026-05-05 12:11:30,273 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
-2026-05-05 12:11:30,274 INFO o.a.j.g.u.JMeterMenuBar: setRunning(false, *local*)
+2026-05-18 21:28:11,109 INFO o.a.j.u.JMeterUtils: Setting Locale to ru_RU
+2026-05-18 21:28:11,131 ERROR o.a.j.u.JMeterUtils: Could not find resources for 'ru_RU'
+2026-05-18 21:28:11,131 INFO o.a.j.JMeter: Loading user properties from: /home/maxim/Загрузки/apache-jmeter-5.6.3/bin/user.properties
+2026-05-18 21:28:11,132 INFO o.a.j.JMeter: Loading system properties from: /home/maxim/Загрузки/apache-jmeter-5.6.3/bin/system.properties
+2026-05-18 21:28:11,138 INFO o.a.j.JMeter: Copyright (c) 1998-2024 The Apache Software Foundation
+2026-05-18 21:28:11,138 INFO o.a.j.JMeter: Version 5.6.3
+2026-05-18 21:28:11,138 INFO o.a.j.JMeter: java.version=22.0.1
+2026-05-18 21:28:11,138 INFO o.a.j.JMeter: java.vm.name=OpenJDK 64-Bit Server VM
+2026-05-18 21:28:11,138 INFO o.a.j.JMeter: os.name=Linux
+2026-05-18 21:28:11,138 INFO o.a.j.JMeter: os.arch=amd64
+2026-05-18 21:28:11,138 INFO o.a.j.JMeter: os.version=6.17.0-22-generic
+2026-05-18 21:28:11,138 INFO o.a.j.JMeter: file.encoding=UTF-8
+2026-05-18 21:28:11,138 INFO o.a.j.JMeter: java.awt.headless=null
+2026-05-18 21:28:11,139 INFO o.a.j.JMeter: Max memory     =4120903680
+2026-05-18 21:28:11,139 INFO o.a.j.JMeter: Available Processors =20
+2026-05-18 21:28:11,149 INFO o.a.j.JMeter: Default Locale=русский (Россия)
+2026-05-18 21:28:11,149 INFO o.a.j.JMeter: JMeter  Locale=русский (Россия)
+2026-05-18 21:28:11,149 INFO o.a.j.JMeter: JMeterHome=/home/maxim/Загрузки/apache-jmeter-5.6.3
+2026-05-18 21:28:11,149 INFO o.a.j.JMeter: user.dir  =/home/maxim/tpo4
+2026-05-18 21:28:11,149 INFO o.a.j.JMeter: PWD       =/home/maxim/tpo4
+2026-05-18 21:28:11,150 INFO o.a.j.JMeter: IP: 127.0.1.1 Name: maxim-RLEF-XX FullName: maxim-RLEF-XX
+2026-05-18 21:28:11,167 INFO o.a.j.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties
+2026-05-18 21:28:11,496 INFO o.a.j.JMeterGuiLauncher: Setting LAF to: com.github.weisj.darklaf.DarkLaf:com.github.weisj.darklaf.theme.DarculaTheme
+2026-05-18 21:29:08,585 INFO o.a.j.s.FileServer: Default base='/home/maxim/tpo4'
+2026-05-18 21:29:08,590 INFO o.a.j.g.a.Load: Loading file: /home/maxim/tpo4/scripts/LoadTests.jmx
+2026-05-18 21:29:08,591 INFO o.a.j.s.FileServer: Set new base='/home/maxim/tpo4/scripts'
+2026-05-18 21:29:08,799 INFO o.a.j.s.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2
+2026-05-18 21:29:08,807 INFO o.a.j.s.SaveService: Using SaveService properties version 5.0
+2026-05-18 21:29:08,808 INFO o.a.j.s.SaveService: Using SaveService properties file encoding UTF-8
+2026-05-18 21:29:08,810 INFO o.a.j.s.SaveService: Loading file: /home/maxim/tpo4/scripts/LoadTests.jmx
+2026-05-18 21:29:08,835 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-05-18 21:29:08,836 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-05-18 21:29:08,836 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-05-18 21:29:08,836 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2026-05-18 21:29:08,836 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2026-05-18 21:29:08,836 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2026-05-18 21:29:09,011 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2026-05-18 21:29:09,011 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to UTF-8
+2026-05-18 21:29:09,011 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2026-05-18 21:29:09,012 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
+2026-05-18 21:29:09,594 INFO o.a.j.s.FileServer: Set new base='/home/maxim/tpo4/scripts'
+2026-05-18 21:30:05,032 INFO o.a.j.e.StandardJMeterEngine: Running the test!
+2026-05-18 21:30:05,033 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2026-05-18 21:30:05,033 INFO o.a.j.s.SampleEvent: List of sample_variables: []
+2026-05-18 21:30:05,035 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2026-05-18 21:30:05,036 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2026-05-18 21:30:05,092 INFO o.a.j.g.u.JMeterMenuBar: setRunning(true, *local*)
+2026-05-18 21:30:05,187 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 1 : Config 1
+2026-05-18 21:30:05,188 INFO o.a.j.e.StandardJMeterEngine: Starting 5 threads for group Config 1.
+2026-05-18 21:30:05,188 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2026-05-18 21:30:05,188 INFO o.a.j.t.ThreadGroup: Starting thread group... number=1 threads=5 ramp-up=60 delayedStart=false
+2026-05-18 21:30:05,194 INFO o.a.j.t.JMeterThread: Thread started: Config 1 1-1
+2026-05-18 21:30:05,195 INFO o.a.j.t.ThreadGroup: Started thread group number 1
+2026-05-18 21:30:05,195 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 2 : Config 2
+2026-05-18 21:30:05,195 INFO o.a.j.e.StandardJMeterEngine: Starting 5 threads for group Config 2.
+2026-05-18 21:30:05,195 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2026-05-18 21:30:05,195 INFO o.a.j.t.ThreadGroup: Starting thread group... number=2 threads=5 ramp-up=60 delayedStart=false
+2026-05-18 21:30:05,197 INFO o.a.j.t.JMeterThread: Thread started: Config 2 2-1
+2026-05-18 21:30:05,198 INFO o.a.j.t.ThreadGroup: Started thread group number 2
+2026-05-18 21:30:05,198 INFO o.a.j.e.StandardJMeterEngine: Starting ThreadGroup: 3 : Config 3
+2026-05-18 21:30:05,199 INFO o.a.j.e.StandardJMeterEngine: Starting 5 threads for group Config 3.
+2026-05-18 21:30:05,199 INFO o.a.j.e.StandardJMeterEngine: Thread will continue on error
+2026-05-18 21:30:05,199 INFO o.a.j.t.ThreadGroup: Starting thread group... number=3 threads=5 ramp-up=60 delayedStart=false
+2026-05-18 21:30:05,200 INFO o.a.j.t.JMeterThread: Thread started: Config 3 3-1
+2026-05-18 21:30:05,201 INFO o.a.j.t.ThreadGroup: Started thread group number 3
+2026-05-18 21:30:05,201 INFO o.a.j.e.StandardJMeterEngine: All thread groups have been started
+2026-05-18 21:30:05,224 INFO o.a.j.p.h.s.HTTPHCAbstractImpl: Local host = maxim-RLEF-XX
+2026-05-18 21:30:05,236 INFO o.a.j.p.h.s.HTTPHC4Impl: HTTP request retry count = 0
+2026-05-18 21:30:17,189 INFO o.a.j.t.JMeterThread: Thread started: Config 1 1-2
+2026-05-18 21:30:17,198 INFO o.a.j.t.JMeterThread: Thread started: Config 2 2-2
+2026-05-18 21:30:17,201 INFO o.a.j.t.JMeterThread: Thread started: Config 3 3-2
+2026-05-18 21:30:29,189 INFO o.a.j.t.JMeterThread: Thread started: Config 1 1-3
+2026-05-18 21:30:29,197 INFO o.a.j.t.JMeterThread: Thread started: Config 2 2-3
+2026-05-18 21:30:29,200 INFO o.a.j.t.JMeterThread: Thread started: Config 3 3-3
+2026-05-18 21:30:41,189 INFO o.a.j.t.JMeterThread: Thread started: Config 1 1-4
+2026-05-18 21:30:41,197 INFO o.a.j.t.JMeterThread: Thread started: Config 2 2-4
+2026-05-18 21:30:41,200 INFO o.a.j.t.JMeterThread: Thread started: Config 3 3-4
+2026-05-18 21:30:53,190 INFO o.a.j.t.JMeterThread: Thread started: Config 1 1-5
+2026-05-18 21:30:53,198 INFO o.a.j.t.JMeterThread: Thread started: Config 2 2-5
+2026-05-18 21:30:53,200 INFO o.a.j.t.JMeterThread: Thread started: Config 3 3-5
+2026-05-18 21:35:06,117 INFO o.a.j.g.a.Start: Stopping test
+2026-05-18 21:35:06,127 INFO o.a.j.t.JMeterThread: Stopping: Config 1 1-1
+2026-05-18 21:35:06,128 WARN o.a.j.t.JMeterThread: Interrupting: Config 1 1-1 sampler: Config 1
+2026-05-18 21:35:06,128 INFO o.a.j.t.JMeterThread: Stopping: Config 1 1-5
+2026-05-18 21:35:06,129 WARN o.a.j.t.JMeterThread: Interrupting: Config 1 1-5 sampler: Config 1
+2026-05-18 21:35:06,129 INFO o.a.j.t.JMeterThread: Stopping: Config 1 1-2
+2026-05-18 21:35:06,129 WARN o.a.j.t.JMeterThread: Interrupting: Config 1 1-2 sampler: Config 1
+2026-05-18 21:35:06,129 INFO o.a.j.t.JMeterThread: Stopping: Config 1 1-3
+2026-05-18 21:35:06,129 WARN o.a.j.t.JMeterThread: Interrupting: Config 1 1-3 sampler: Config 1
+2026-05-18 21:35:06,129 INFO o.a.j.t.JMeterThread: Stopping: Config 1 1-4
+2026-05-18 21:35:06,130 WARN o.a.j.t.JMeterThread: Interrupting: Config 1 1-4 sampler: Config 1
+2026-05-18 21:35:06,130 INFO o.a.j.t.JMeterThread: Stopping: Config 2 2-4
+2026-05-18 21:35:06,130 WARN o.a.j.t.JMeterThread: Interrupting: Config 2 2-4 sampler: Config 2
+2026-05-18 21:35:06,130 INFO o.a.j.t.JMeterThread: Stopping: Config 2 2-5
+2026-05-18 21:35:06,130 WARN o.a.j.t.JMeterThread: Interrupting: Config 2 2-5 sampler: Config 2
+2026-05-18 21:35:06,130 INFO o.a.j.t.JMeterThread: Stopping: Config 2 2-3
+2026-05-18 21:35:06,131 WARN o.a.j.t.JMeterThread: Interrupting: Config 2 2-3 sampler: Config 2
+2026-05-18 21:35:06,131 INFO o.a.j.t.JMeterThread: Stopping: Config 2 2-1
+2026-05-18 21:35:06,131 WARN o.a.j.t.JMeterThread: Interrupting: Config 2 2-1 sampler: Config 2
+2026-05-18 21:35:06,131 INFO o.a.j.t.JMeterThread: Stopping: Config 2 2-2
+2026-05-18 21:35:06,131 WARN o.a.j.t.JMeterThread: Interrupting: Config 2 2-2 sampler: Config 2
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Stopping: Config 3 3-1
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Stopping: Config 3 3-2
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Thread finished: Config 1 1-2
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Thread finished: Config 2 2-5
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Thread finished: Config 1 1-3
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Stopping: Config 3 3-5
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Thread finished: Config 1 1-5
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Thread finished: Config 1 1-4
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Stopping: Config 3 3-3
+2026-05-18 21:35:06,132 WARN o.a.j.t.JMeterThread: The delay timer was interrupted - probably did not wait as long as intended.
+2026-05-18 21:35:06,132 WARN o.a.j.t.JMeterThread: The delay timer was interrupted - probably did not wait as long as intended.
+2026-05-18 21:35:06,132 WARN o.a.j.t.JMeterThread: The delay timer was interrupted - probably did not wait as long as intended.
+2026-05-18 21:35:06,132 WARN o.a.j.t.JMeterThread: The delay timer was interrupted - probably did not wait as long as intended.
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Thread finished: Config 1 1-1
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Thread finished: Config 2 2-4
+2026-05-18 21:35:06,133 INFO o.a.j.t.JMeterThread: Thread finished: Config 2 2-2
+2026-05-18 21:35:06,133 INFO o.a.j.t.JMeterThread: Thread finished: Config 3 3-1
+2026-05-18 21:35:06,133 INFO o.a.j.t.JMeterThread: Thread finished: Config 3 3-3
+2026-05-18 21:35:06,133 INFO o.a.j.t.JMeterThread: Thread finished: Config 3 3-2
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Stopping: Config 3 3-4
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Thread finished: Config 2 2-3
+2026-05-18 21:35:06,132 INFO o.a.j.t.JMeterThread: Thread finished: Config 2 2-1
+2026-05-18 21:35:06,133 WARN o.a.j.t.JMeterThread: The delay timer was interrupted - probably did not wait as long as intended.
+2026-05-18 21:35:06,134 INFO o.a.j.t.JMeterThread: Thread finished: Config 3 3-4
+2026-05-18 21:35:06,133 INFO o.a.j.t.JMeterThread: Thread finished: Config 3 3-5
+2026-05-18 21:35:06,135 INFO o.a.j.e.StandardJMeterEngine: Notifying test listeners of end of test
+2026-05-18 21:35:06,136 INFO o.a.j.g.u.JMeterMenuBar: setRunning(false, *local*)
